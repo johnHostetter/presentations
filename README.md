@@ -1,4 +1,4 @@
-# presentations: An open-source repository of my slides! :tada:
+# presentations: My open-source slides! :tada:
 This repository contains slides for my presentations, which are created using 
 [manim-slides](https://github.com/jeertmans/manim-slides) and my personal extension called 
 [manim-beamer](https://github.com/johnHostetter/manim-beamer). Some slides may even utilize 
