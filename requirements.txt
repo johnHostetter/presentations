@@ -130,6 +130,7 @@ Mako==1.3.2
 manim==0.18.0
 manim-beamer==0.0.2
 manim-slides==5.1.3
+manim_timeline @ git+https://github.com/johnHostetter/manim-timeline.git
 ManimPango==0.5.0
 mapbox-earcut==1.0.1
 Markdown==3.5.2
@@ -259,7 +260,6 @@ skorch==0.15.0
 smmap==5.0.1
 sniffio==1.3.1
 soft @ git+https://github.com/Hostetter-Lab/PySoft.git
-manim_timeline @ git+https://github.com/johnHostetter/manim-timeline.git
 SQLAlchemy==2.0.27
 srt==3.5.3
 stable-baselines3==2.2.1
