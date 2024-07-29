@@ -1,6 +1,5 @@
 from functools import partial
 from itertools import groupby
-from dataclasses import dataclass
 from typing import Tuple, Set, Dict as DictType, List as ListType, Union as UnionType
 
 import torch
@@ -9,6 +8,7 @@ from manim import *
 from manim_slides import Slide
 
 from manim_beamer import MANIM_BLUE
+from manim_timeline.graph_helper import GraphPair
 from examples.common import make_axes, AxisConfig
 from soft.datasets import LabeledDataset
 from soft.computing.organize import SelfOrganize
@@ -44,22 +44,6 @@ def get_self_organize(input_size: int = 4, output_size: int = 1) -> SelfOrganize
             data=torch.rand((250, input_size)), labels=torch.rand((250, output_size))
         )
     )
-
-
-@dataclass
-class GraphPair:
-    igraph: ig.Graph  # the igraph.Graph representation of the graph
-    digraph: DiGraph  # the manim representation of the igraph.Graph
-
-    def __len__(self) -> int:
-        return len(self.igraph.vs)
-
-    def __getitem__(self, item: UnionType[str, int]) -> Tuple[ig.Vertex, Dot]:
-        index = item  # assume the given item is a vertex index
-        if isinstance(item, str):
-            # the given item is a vertex name, get its index
-            index = self.igraph.vs.select(name_eq=item).indices[0]
-        return self.igraph.vs[index], self.digraph.vertices[index]
 
 
 class MyGraph(Slide, MovingCameraScene):
