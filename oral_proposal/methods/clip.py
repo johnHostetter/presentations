@@ -1,5 +1,8 @@
 from manim import *
 from manim_slides import Slide
+from manim_timeline import ItemColor
+from manim_timeline.axes import make_axes, AxisConfig
+
 from soft.datasets import LabeledDataset
 from soft.fuzzy.logic.rules import LinguisticVariables
 from soft.utilities.reproducibility import set_rng, load_configuration
@@ -8,12 +11,7 @@ from soft.fuzzy.unsupervised.granulation.online.clip import (
     apply_categorical_learning_induced_partitioning as CLIP,
 )
 from unit_tests.computing.test_self_organize import get_cart_pole_example_data
-from examples.common import (
-    ItemColor,
-    make_axes,
-    get_data_and_env,
-    AxisConfig,
-)
+
 
 set_rng(1)
 
@@ -284,7 +282,7 @@ class CLIPDemo(Slide, MovingCameraScene):
                 selected_X = X[: idx + 1]
                 if selected_X.ndim == 1:
                     selected_X = selected_X.unsqueeze(dim=1)
-                config = load_configuration()
+                config = load_configuration(file_name="default_configuration.yaml")
                 with config.unfreeze():
                     config.fuzzy.partition.adjustment = 0.2
                 linguistic_variables: LinguisticVariables = CLIP(
