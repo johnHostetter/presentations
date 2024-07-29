@@ -1,7 +1,6 @@
 from manim import *
 
-
-from soft.utilities.reproducibility import path_to_project_root
+from src.manim_presentation.utils import get_project_root
 
 config.background_color = WHITE
 light_theme_style = {
@@ -19,7 +18,7 @@ class PySoftLogo(MovingCameraScene):
     def construct(self):
         # load the PySoft logo as a manim SVGMobject
         logo = SVGMobject(
-            path_to_project_root() / "logo" / "bolder_italicized_vector_icon.svg"
+            get_project_root() / "assets" / "logo" / "bolder_italicized_vector_icon.svg"
         )
         introduction = (
             Text("Powered by", font="TeX Gyre Termes").scale(0.7).next_to(logo, UP)

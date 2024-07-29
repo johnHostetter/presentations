@@ -8,19 +8,14 @@ from manim import *
 from manim_slides import Slide
 
 from manim_beamer import MANIM_BLUE
-from manim_timeline.graph_helper import GraphPair
-from examples.common import make_axes, AxisConfig
+from manim_timeline.graph import GraphPair
+from manim_timeline.axes import make_axes, AxisConfig
 from soft.datasets import LabeledDataset
 from soft.computing.organize import SelfOrganize
 from soft.computing.knowledge import KnowledgeBase
 from soft.computing.blueprints.factory import SystematicDesignProcess
-from soft.fuzzy.logic.controller import (
-    FuzzyLogicController as FLC,
-    Specifications,
-    Engine,
-    Mapping,
-    SpaceConfiguration,
-)
+from soft.fuzzy.logic.inference import SpaceConfiguration, Mapping, Engine, Specifications
+from soft.fuzzy.logic.controller import FuzzyLogicController as FLC
 from soft.fuzzy.sets.continuous.impl import Gaussian, Lorentzian
 from soft.fuzzy.sets.continuous.abstract import ContinuousFuzzySet
 from soft.utilities.reproducibility import load_configuration

@@ -1,5 +1,7 @@
 from manim import *
 
+from src.manim_presentation.utils import get_project_root
+
 config.background_color = WHITE
 light_theme_style = {
     "fill_color": BLACK,
@@ -38,7 +40,7 @@ class WW2(MovingCameraScene):
         for svg_file_name, caption in zip(svg_file_names, captions):
             svg = (
                 SVGMobject(
-                    Path(__file__).parent.parent
+                    get_project_root()
                     / "assets"
                     / "ww2"
                     / f"{svg_file_name}.svg"
