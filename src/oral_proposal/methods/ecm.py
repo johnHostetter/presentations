@@ -16,7 +16,7 @@ from soft.fuzzy.unsupervised.cluster.online.ecm import (
     apply_evolving_clustering_method as ECM,
     LabeledClusters,
 )
-from examples.common import (
+from src.oral_proposal.methods.common import (
     display_cart_pole,
     get_data_and_env,
 )

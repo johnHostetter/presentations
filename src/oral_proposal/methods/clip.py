@@ -1,3 +1,5 @@
+import numpy as np
+import torch
 from manim import *
 from manim_slides import Slide
 from manim_timeline import ItemColor
@@ -10,6 +12,8 @@ from soft.fuzzy.sets.continuous.impl import Gaussian
 from soft.fuzzy.unsupervised.granulation.online.clip import (
     apply_categorical_learning_induced_partitioning as CLIP,
 )
+
+from src.manim_presentation.utils import get_project_root
 from unit_tests.computing.test_self_organize import get_cart_pole_example_data
 
 
@@ -47,13 +51,17 @@ class CLIPDemo(Slide, MovingCameraScene):
         if width < 0.1:
             # width is too small for animation
             width = 0.1
-        temp_gaussian: Gaussian = Gaussian(centers=center, widths=width)
+
+        if isinstance(center, float) and isinstance(width, float):
+            center, width = [center], [width]
+
+        temp_gaussian: Gaussian = Gaussian(centers=np.array(center), widths=np.array(width), device="cuda")
         print(center, width)
         step_val: float = (
             x_axis_config.max_value - x_axis_config.min_value
         ) / 1000  # the default is 1.0
         gaussian_graph = axes.plot(
-            lambda x: temp_gaussian(x).degrees.item(),
+            lambda x: temp_gaussian(torch.tensor(x)).degrees.item(),
             x_range=(x_axis_config.min_value, x_axis_config.max_value, step_val),
             stroke_color=ItemColor.ACTIVE_2,
             stroke_width=(3 * scale),
@@ -72,7 +80,7 @@ class CLIPDemo(Slide, MovingCameraScene):
             Create(gaussian_graph),
             FadeIn(gaussian_label),
             dot.animate.move_to(
-                axes.c2p(element, new_terms(element).degrees.max().item())
+                axes.c2p(element, new_terms(torch.tensor(element)).degrees.max().item())
             ),
         )
         target_scene.wait()
@@ -86,9 +94,9 @@ class CLIPDemo(Slide, MovingCameraScene):
     def revise_fuzzy_sets(self, axes, new_terms, X, scale, target_scene):
         if new_terms is not None:
             animations = []
-            for idx, center in enumerate(new_terms.centers.flatten()):
+            for idx, center in enumerate(new_terms.get_centers().flatten()):
                 gaussian_graph = axes.plot(
-                    lambda x: new_terms(x).degrees[idx].detach().numpy().item(),
+                    lambda x: new_terms(torch.tensor(x)).degrees[idx].cpu().detach().numpy().item(),
                     stroke_color=ItemColor.INACTIVE_2,
                     stroke_width=(self.default_scale_multiplier * scale),
                     # use_smoothing=True,
@@ -237,7 +245,7 @@ class CLIPDemo(Slide, MovingCameraScene):
                 target_scene.play(dot.animate.move_to(axes.c2p(x, 0)))
 
                 if old_terms is not None:
-                    degree = old_terms(x).degrees.max().item()
+                    degree = old_terms(torch.tensor(x)).degrees.max().item()
                     target_scene.play(dot.animate.move_to(axes.c2p(x, degree)))
                     target_scene.wait()
                     target_scene.next_slide(loop=True)
@@ -282,12 +290,14 @@ class CLIPDemo(Slide, MovingCameraScene):
                 selected_X = X[: idx + 1]
                 if selected_X.ndim == 1:
                     selected_X = selected_X.unsqueeze(dim=1)
-                config = load_configuration(file_name="default_configuration.yaml")
+                config = load_configuration(
+                    get_project_root().parent / "YACS" / "default_configuration.yaml"
+                )
                 with config.unfreeze():
                     config.fuzzy.partition.adjustment = 0.2
                 linguistic_variables: LinguisticVariables = CLIP(
                     dataset=LabeledDataset(data=selected_X, labels=None),
-                    config=config,
+                    config=config, device="cuda",
                 )
                 new_terms = linguistic_variables.inputs[0]
                 self.revise_fuzzy_sets(
@@ -296,19 +306,19 @@ class CLIPDemo(Slide, MovingCameraScene):
 
                 if (
                     old_terms is None
-                    or new_terms.centers.flatten().shape[0]
-                    > old_terms.centers.flatten().shape[0]
+                    or new_terms.get_centers().flatten().shape[0]
+                    > old_terms.get_centers().flatten().shape[0]
                 ):
                     # new fuzzy set
-                    if new_terms.centers.ndim == 0:
+                    if new_terms.get_centers().ndim == 0:
                         center, width = (
-                            new_terms.centers.item(),
-                            new_terms.widths.item(),
+                            new_terms.get_centers().item(),
+                            new_terms.get_widths().item(),
                         )
                     else:
                         center, width = (
-                            new_terms.centers[-1].item(),
-                            new_terms.widths[-1].item(),
+                            new_terms.get_centers()[-1].item(),
+                            new_terms.get_widths()[-1].item(),
                         )
 
                     self.add_fuzzy_set(

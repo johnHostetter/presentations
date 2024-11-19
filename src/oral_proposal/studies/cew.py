@@ -113,4 +113,4 @@ def cew_summary() -> SlideWithList:
 
 
 if __name__ == "__main__":
-    CEW().render()
+    CEWDiagram().render()

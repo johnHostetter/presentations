@@ -1,8 +1,10 @@
 from typing import Set
 
 import torch
+import numpy as np
 
-from manim import *
+from manim import config, Axes, BLACK, Create, FadeIn, FadeOut, ORIGIN, Text, UP, VGroup, WHITE, \
+    Write, DL, Unwrite
 from manim_slides import Slide
 from manim_beamer import MANIM_BLUE
 from manim_timeline import ItemColor
@@ -10,6 +12,7 @@ from manim_timeline import ItemColor
 from soft.datasets import LabeledDataset
 from soft.fuzzy.relation.continuous.tnorm import TNorm
 from soft.fuzzy.logic.rules import LinguisticVariables, Rule
+from soft.fuzzy.sets.continuous.abstract import ContinuousFuzzySet
 from soft.utilities.reproducibility import set_rng, load_configuration
 from soft.fuzzy.sets.continuous.impl import Gaussian
 from soft.fuzzy.unsupervised.cluster.online.ecm import (
@@ -20,7 +23,9 @@ from soft.fuzzy.logic.rules.creation.wang_mendel import wang_mendel_method
 from soft.fuzzy.unsupervised.granulation.online.clip import (
     apply_categorical_learning_induced_partitioning as CLIP,
 )
-from examples.common import get_data_and_env, display_cart_pole
+
+from src.manim_presentation.utils import get_project_root
+from src.oral_proposal.methods.common import get_data_and_env, display_cart_pole
 
 set_rng(0)
 config.disable_caching = True  # may need to disable caching for the timeline
@@ -31,7 +36,7 @@ light_theme_style = {
 }
 
 
-class WMDemo(Slide):
+class ShortWMDemo(Slide):
     def __init__(self, **kwargs):
         super().__init__()
         # background = ImageMobject("background.png").scale(2).set_color("#FFFFFF")
@@ -42,7 +47,11 @@ class WMDemo(Slide):
         max_x: float = ax.x_range[1]
         step_val: float = (max_x - min_x) / 100  # the default is 1.0
         gaussian_graph = ax.plot(
-            lambda x: Gaussian(centers=center, widths=width)(x).degrees.item(),
+            lambda x: Gaussian(
+                centers=center.cpu().detach().unsqueeze(0).numpy(),
+                widths=width.cpu().detach().unsqueeze(0).numpy(),
+                device="cuda"
+            )(torch.tensor(x, device="cuda")).degrees.item(),
             x_range=(min_x, max_x, step_val),
             stroke_color=MANIM_BLUE,
         )
@@ -54,28 +63,32 @@ class WMDemo(Slide):
     def draw(self, origin, scale, target_scene=None, animate=True):
         if target_scene is None:
             target_scene = self
-        method = (
-            Text("Wang-Mendel Method", color=str(BLACK))
-            .scale(scale_factor=scale)
-            .move_to(origin)
-        )
 
-        if not animate:
-            target_scene.add(method)
-            return
+        if False:
+            method = (
+                Text("Wang-Mendel Method", color=str(BLACK))
+                .scale(scale_factor=scale)
+                .move_to(origin)
+            )
 
-        self.play(Write(method, run_time=1))
-        self.wait(3)
-        self.next_slide()
-        self.play(FadeOut(method))
-        _, env = get_data_and_env(n_samples=1000)
+            if not animate:
+                target_scene.add(method)
+                return
+
+            self.play(Write(method, run_time=1))
+            self.wait(3)
+            self.next_slide()
+            self.play(FadeOut(method))
+        _, env = get_data_and_env(n_samples=200)
         self.env_img = (
             display_cart_pole(env, env.state, scale=scale, add_border=False)
             .scale(1)
             .shift(UP * 1.1)
         )
         self.fuzzy_sets = {}
-        my_config = load_configuration()
+        my_config = load_configuration(
+            file_name=get_project_root().parent / "YACS" / "default_configuration.yaml"
+        )
         with my_config.unfreeze():
             my_config.fuzzy.partition.kappa = 0.1
             my_config.fuzzy.partition.epsilon = 0.8
@@ -98,13 +111,30 @@ class WMDemo(Slide):
         )
 
         linguistic_variables: LinguisticVariables = CLIP(
-            LabeledDataset(data=X, labels=None), my_config
+            LabeledDataset(data=X, labels=None), my_config, device="cuda"
         )
+
+        X = X[:5, :]  # keep only the first 5 exemplars to make the demo faster
         terms: List[Gaussian] = linguistic_variables.inputs
+        sorted_terms = []
         for term in terms:
-            result = term.centers.sort()
-            term.centers = torch.nn.Parameter(result.values)
-            term.widths = torch.nn.Parameter(term.widths[result.indices])
+            result = term.get_centers().sort()
+            # term.centers = torch.nn.Parameter(result.values)
+            # term.widths = torch.nn.Parameter(term.widths[result.indices])
+            # term._centers = torch.nn.ParameterList([term.make_parameter(result.values)])
+            # term._widths = torch.nn.ParameterList([term.make_parameter(term.get_widths()[result.indices])])
+            widths = term.get_widths().detach().cpu().numpy()[0]
+            width_indices = result.indices[0].cpu().numpy()
+            sorted_terms.append(
+                Gaussian(
+                    centers=result.values.detach().cpu().numpy()[0],
+                    widths=np.array([widths[idx] for idx in width_indices]),
+                    device="cuda",
+                )
+            )
+        terms = sorted_terms
+        # reset the linguistic variables
+        linguistic_variables = LinguisticVariables(inputs=terms, targets=[])
 
         # labeled_clusters: LabeledClusters = ECM(
         #     SupervisedDataset(inputs=X, targets=None), my_config
@@ -123,39 +153,39 @@ class WMDemo(Slide):
         linguistic_terms = []
         for idx, term in enumerate(terms):
             if idx == 0:  # cart position
-                if term.centers.shape[0] == 2:
+                if term.get_centers()[0].shape[0] == 2:
                     linguistic_terms.append(["Left", "Right"])
-                elif term.centers.shape[0] == 3:
-                    linguistic_terms.append(["Left", "Middle", "Right"])
-                elif term.centers.shape[0] == 4:
+                elif term.get_centers()[0].shape[0] == 3:
+                    linguistic_terms.append(["Left", "Center", "Right"])
+                elif term.get_centers()[0].shape[0] == 4:
                     linguistic_terms.append(
-                        ["Left", "Slightly Left", "Slightly Right", "Right"]
+                        ["Far Left", "Left", "Center", "Somewhat Far Right"]
                     )
             elif idx == 1 or idx == 3:  # cart velocity or pole angle velocity
-                if term.centers.shape[0] == 2:
+                if term.get_centers()[0].shape[0] == 2:
                     linguistic_terms.append(["Low", "High"])
-                elif term.centers.shape[0] == 3:
+                elif term.get_centers()[0].shape[0] == 3:
                     linguistic_terms.append(["Low", "Moderate", "High"])
-                elif term.centers.shape[0] == 4:
-                    linguistic_terms.append(["Very Low", "Low", "Moderate", "High"])
-                elif term.centers.shape[0] == 5:
+                elif term.get_centers()[0].shape[0] == 4:  # idx == 1
+                    linguistic_terms.append(["Very Negative", "Negative", "Near Zero", "Positive"])
+                elif term.get_centers()[0].shape[0] == 5:  # idx == 3
                     linguistic_terms.append(
-                        ["Very Low", "Low", "Moderate", "High", "Very High"]
+                        ["Very Negative", "Negative", "Near Zero", "Somewhat Positive", "Positive"]
                     )
             elif idx == 2:  # pole angle
-                if term.centers.shape[0] == 2:
+                if term.get_centers()[0].shape[0] == 2:
                     linguistic_terms.append(
                         ["Left of the Vertical", "Right of the Vertical"]
                     )
-                elif term.centers.shape[0] == 3:
+                elif term.get_centers()[0].shape[0] == 3:
                     linguistic_terms.append(
                         ["Left of the Vertical", "Near Zero", "Right of the Vertical"]
                     )
-                elif term.centers.shape[0] == 4:
+                elif term.get_centers()[0].shape[0] == 4:
                     linguistic_terms.append(
                         [
                             "Left of the Vertical",
-                            "Slightly Left of the Vertical",
+                            "Near Zero",
                             "Slightly Right of the Vertical",
                             "Right of the Vertical",
                         ]
@@ -186,8 +216,8 @@ class WMDemo(Slide):
             # self.play(Create(VGroup(ax, attribute_title)))
 
             gaussian_graphs = []
-            for idx, center in enumerate(variable.centers):
-                width = variable.widths[idx]
+            for idx, center in enumerate(variable.get_centers()[0]):
+                width = variable.get_widths()[0][idx]
                 if var_idx not in self.fuzzy_sets:
                     self.fuzzy_sets[var_idx] = {"center": [], "plot": []}
                 self.fuzzy_sets[var_idx]["center"].append(center.item())
@@ -233,6 +263,12 @@ class WMDemo(Slide):
             debug_txt = []
             for var_idx, term_idx in animated_rule:
                 debug_txt.append(term_idx)
+                if var_idx >= len(attributes) - 1:
+                    print(f"var_idx exceeds attributes {var_idx} {len(attributes)}")
+                if var_idx >= len(linguistic_terms):
+                    print(f"var_idx exceeds linguistic terms {var_idx} {len(linguistic_terms)}")
+                if term_idx >= len(linguistic_terms[var_idx]):
+                    print(f"term_idx exceeds linguistic terms {term_idx} {len(linguistic_terms[var_idx])}")
                 rule += (
                     attributes[var_idx] + " is " + linguistic_terms[var_idx][term_idx]
                 )
@@ -240,7 +276,7 @@ class WMDemo(Slide):
                     rule += " and\n"
                 center = self.fuzzy_sets[var_idx]["center"][term_idx]
                 fuzzy_set = self.fuzzy_sets[var_idx]["plot"][term_idx]
-                new_center = terms[var_idx].centers[term_idx].item()
+                new_center = terms[var_idx].get_centers()[0][term_idx].item()
                 assert center == new_center
                 new_state.append(new_center)
                 animations.append(fuzzy_set.animate.set_color(ItemColor.ACTIVE_2))
@@ -310,7 +346,7 @@ class WMDemo(Slide):
                     )
                 )
                 animations.append(FadeOut(areas[var_idx]))
-            animations.append(RemoveTextLetterByLetter(text_rule, run_time=1))
+            animations.append(Unwrite(text_rule, run_time=1))
             self.play(*animations)
             print(rule)
             # self.remove(debug_txt)
@@ -318,5 +354,5 @@ class WMDemo(Slide):
 
 
 if __name__ == "__main__":
-    c = WMDemo()
+    c = ShortWMDemo()
     c.render()

@@ -6,7 +6,7 @@ from manim_beamer.slides import PromptSlide
 from manim_beamer.bibtex import BibTexManager
 from manim_beamer.images import CaptionedSVG, CaptionedJPG
 from manim_timeline.timeline_helper import TimelineEvent
-from manim_timeline.utils import get_project_root
+from src.manim_presentation.utils import get_project_root
 from src.oral_proposal.conclusion.existing_issues import curr_limitations
 from src.oral_proposal.conclusion.new_horizons import proposed_studies
 from src.oral_proposal.conclusion.plan import proposed_plan

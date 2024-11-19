@@ -167,7 +167,8 @@ class APFRBDiagram(Slide, MovingCameraScene):
             target_scene.camera.frame.move_to(v_group.get_center()).set(
                 width=v_group.width * 1.5
             )
-            target_scene.play(Create(v_group))
+            target_scene.next_slide()
+            target_scene.play(Create(v_group), run_time=3)
             target_scene.wait(1)
             target_scene.next_slide()
         else:
@@ -177,4 +178,4 @@ class APFRBDiagram(Slide, MovingCameraScene):
 
 
 if __name__ == "__main__":
-    APFRB().render()
+    APFRBDiagram().render()

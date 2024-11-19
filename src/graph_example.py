@@ -2,6 +2,7 @@ from functools import partial
 from itertools import groupby
 from typing import Tuple, Set, Dict as DictType, List as ListType, Union as UnionType
 
+import numpy as np
 import torch
 import igraph as ig
 from manim import *
@@ -14,11 +15,15 @@ from soft.datasets import LabeledDataset
 from soft.computing.organize import SelfOrganize
 from soft.computing.knowledge import KnowledgeBase
 from soft.computing.blueprints.factory import SystematicDesignProcess
-from soft.fuzzy.logic.inference import SpaceConfiguration, Mapping, Engine, Specifications
+from soft.fuzzy.logic.inference import SpaceConfiguration, Mapping, Engine, Specifications, \
+    InferenceType
 from soft.fuzzy.logic.controller import FuzzyLogicController as FLC
+from soft.fuzzy.relation.continuous.tnorm import AlgebraicProduct, TNorm
 from soft.fuzzy.sets.continuous.impl import Gaussian, Lorentzian
 from soft.fuzzy.sets.continuous.abstract import ContinuousFuzzySet
 from soft.utilities.reproducibility import load_configuration
+
+from src.manim_presentation.utils import get_project_root
 
 config.background_color = WHITE
 light_theme_style = {
@@ -29,11 +34,13 @@ light_theme_style = {
 
 # https://stackoverflow.com/questions/76175939/manim-add-labels-near-vertices
 def get_self_organize(input_size: int = 4, output_size: int = 1) -> SelfOrganize:
-    soft_config = load_configuration()
+    soft_config = load_configuration(
+        get_project_root().parent / "YACS" / "default_configuration.yaml"
+    )
     with soft_config.unfreeze():
         soft_config.clustering.distance_threshold = 0.2
     return SystematicDesignProcess(
-        algorithms=["clip", "ecm", "wang_mendel"], config=soft_config
+        algorithms=["clip", "ecm", "wang_mendel"], config=soft_config, t_norm=TNorm.PRODUCT, device="cuda"
     ).build(
         training_data=LabeledDataset(
             data=torch.rand((250, input_size)), labels=torch.rand((250, output_size))
@@ -41,7 +48,7 @@ def get_self_organize(input_size: int = 4, output_size: int = 1) -> SelfOrganize
     )
 
 
-class MyGraph(Slide, MovingCameraScene):
+class NoCodeGraph(Slide, MovingCameraScene):
     def plot_graph(
         self, graph: ig.Graph, layer_types: ListType[str], direction
     ) -> GraphPair:
@@ -226,53 +233,16 @@ class MyGraph(Slide, MovingCameraScene):
         Returns:
             A tuple containing the vertices and edges of the graph.
         """
-        self_organize: SelfOrganize = get_self_organize(
-            input_size=input_size, output_size=output_size
-        )
-        # self.plot_graph(self_organize.graph)
-        # use the SelfOrganize plan and plot the resulting fuzzy logic controller
-        knowledge_base: KnowledgeBase = self_organize.start()
-        flc = FLC(
-            specifications=Specifications(
-                t_norm="algebraic_product",
-                engine=Engine(
-                    type="tsk",
-                    defuzzification="product",
-                    confidences=False,
-                    ignore_missing=False,
-                ),
-                mapping=Mapping(
-                    input=SpaceConfiguration(
-                        dim=input_size, max_terms=3, expandable=True
-                    ),
-                    output=SpaceConfiguration(
-                        dim=output_size, max_terms=3, expandable=True
-                    ),
-                ),
-                number_of_rules=hidden_size,
-            ),
-            knowledge_base=knowledge_base,
-        )
-        print(
-            "Number of fuzzy logic rules: ",
-            len(flc.knowledge_base.get_fuzzy_logic_rules()),
-        )
-        print(flc)
+        flc = NoCodeGraph.make_flc(hidden_size, input_size, output_size)
 
-        # each column is in the form of (input index, term index, rule index)
-        rule_premise_indices: torch.Tensor = (
-            flc.engine.input_links.to_sparse().indices().transpose(0, 1)
-        )
-        sorted_rule_premise_indices: torch.Tensor = rule_premise_indices[
-            rule_premise_indices[:, -1].argsort()
-        ]
+        grouped_premise_indices, max_terms = NoCodeGraph.get_premise_indices_from_flc(flc)
 
-        grouped_premise_indices: Dict[int, torch.Tensor] = {
-            rule_idx.item(): torch.vstack(list(group))[:, :-1]
-            for rule_idx, group in groupby(sorted_rule_premise_indices, lambda x: x[-1])
-        }
-        max_terms: int = flc.granulation_layers["input"].centers.shape[-1]
+        return NoCodeGraph.make_edges_and_vertices_for_flc(grouped_premise_indices, max_terms)
 
+    @staticmethod
+    def make_edges_and_vertices_for_flc(
+            grouped_premise_indices, max_terms
+    ) -> Tuple[DictType[str, int], Set[Tuple[str, str]]]:
         vs = {}
         edges = set()
         for rule_idx, premise_indices in grouped_premise_indices.items():
@@ -303,6 +273,57 @@ class MyGraph(Slide, MovingCameraScene):
             )  # connect the consequence to the output node
             print()
         return vs, edges
+
+    @staticmethod
+    def get_premise_indices_from_flc(flc):
+        # each column is in the form of (input index, term index, rule index)
+        rule_premise_indices: torch.Tensor = (
+            flc.dispersion.input_links(None).to_sparse().indices().transpose(0, 1)
+        )
+        sorted_rule_premise_indices: torch.Tensor = rule_premise_indices[
+            rule_premise_indices[:, -1].argsort()
+        ]
+        grouped_premise_indices: Dict[int, torch.Tensor] = {
+            rule_idx.item(): torch.vstack(list(group))[:, :-1]
+            for rule_idx, group in groupby(sorted_rule_premise_indices, lambda x: x[-1])
+        }
+        max_terms: int = flc.granulation_layers["input"].centers.shape[-1]
+        return grouped_premise_indices, max_terms
+
+    @staticmethod
+    def make_flc(hidden_size, input_size, output_size):
+        self_organize: SelfOrganize = get_self_organize(
+            input_size=input_size, output_size=output_size
+        )
+        # self.plot_graph(self_organize.graph)
+        # use the SelfOrganize plan and plot the resulting fuzzy logic controller
+        knowledge_base: KnowledgeBase = self_organize.start()
+        flc = FLC(
+            specifications=Specifications(
+                t_norm=TNorm.PRODUCT,
+                inference=InferenceType.TSK,
+                engine=Engine(
+                    confidences=False,
+                    ignore_missing=False,
+                ),
+                mapping=Mapping(
+                    input=SpaceConfiguration(
+                        dim=input_size, max_terms=3, expandable=True
+                    ),
+                    output=SpaceConfiguration(
+                        dim=output_size, max_terms=3, expandable=True
+                    ),
+                ),
+                number_of_rules=hidden_size,
+            ),
+            knowledge_base=knowledge_base,
+        )
+        print(
+            "Number of fuzzy logic rules: ",
+            len(flc.knowledge_base.get_fuzzy_logic_rules()),
+        )
+        print(flc)
+        return flc
 
     def animate_code(
         self,
@@ -420,7 +441,8 @@ class MyGraph(Slide, MovingCameraScene):
             self.play(Unwrite(displayed_model_text, run_time=2))
 
             # animate example code for the model
-            self.animate_code(model_type, input_size=4, hidden_size=16, output_size=1)
+            if False:
+                self.animate_code(model_type, input_size=4, hidden_size=16, output_size=1)
 
             # create the igraph.Graph representation of the model
             graph: ig.Graph = self.create_igraph_digraph(edges, vs)
@@ -467,7 +489,7 @@ class MyGraph(Slide, MovingCameraScene):
             model_graphs["dnn"],
             next_graph=model_graphs["flc"],
             activation_funcs=[
-                ("Unit Step", partial(torch.heaviside, values=torch.zeros(1))),
+                ("Unit Step", partial(torch.heaviside, values=torch.zeros(1, dtype=torch.float32))),
                 ("Hard Sigmoid", torch.nn.Hardsigmoid()),
                 ("Sigmoid", torch.nn.Sigmoid()),
                 ("Hard Hyperbolic Tangent", torch.nn.Hardtanh()),
@@ -497,8 +519,8 @@ class MyGraph(Slide, MovingCameraScene):
             model_graphs["flc"],
             next_graph=None,
             activation_funcs=[
-                ("Gaussian", Gaussian(centers=0.0, widths=1.0)),
-                ("Lorentzian", Lorentzian(centers=0.0, widths=1.0)),
+                ("Gaussian", Gaussian(centers=np.array([0.0]), widths=np.array([1.0]), device="cuda")),
+                ("Lorentzian", Lorentzian(centers=np.array([0.0]), widths=np.array([1.0]), device="cuda")),
             ],
             axis_configs=[
                 (AxisConfig(-6.0, 6.0, step=2.0), AxisConfig(0.0, 1.1, step=0.1)),
@@ -640,14 +662,14 @@ class MyGraph(Slide, MovingCameraScene):
                 # ).degrees.item()
                 lambda_func: callable = (
                     lambda x: activation_func.internal_calculate_membership(
-                        observations=torch.Tensor([x]),
-                        centers=torch.Tensor([center_value.get_value()]),
-                        widths=torch.Tensor([width_value.get_value()]),
+                        observations=torch.tensor([x], device="cuda"),
+                        centers=torch.tensor([center_value.get_value()], device="cuda"),
+                        widths=torch.tensor([width_value.get_value()], device="cuda"),
                     ).item()
                 )
             else:
                 lambda_func: callable = lambda x: activation_func(
-                    torch.Tensor([x])
+                    torch.tensor([x], dtype=torch.float32, device="cuda")
                 ).item()
                 if idx == 0:
                     use_smoothing = (
@@ -890,5 +912,5 @@ class MyGraph(Slide, MovingCameraScene):
 
 
 if __name__ == "__main__":
-    c = MyGraph()
+    c = NoCodeGraph()
     c.render()
