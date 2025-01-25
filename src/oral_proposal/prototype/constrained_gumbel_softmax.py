@@ -43,17 +43,26 @@ def constrained_gumbel_softmax() -> SlideWithBlocks:
     # Use the custom command in a LaTeX expression
     myTemplate = TexTemplate()
     myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
-    formula = MathTex(
-        r"\tilde{L''} = \frac{"
-        r"\exp{(\texttt{BoundSigmoid}(\tilde{L'}))} \odot B'}"
-        r"{\sum_{t=1}^{\max_{v} |\mathcal{T}|} "
-        r"\exp{(\texttt{BoundSigmoid}(\tilde{L'}))} \odot B'}",
+    original_constrained_gumbel_formula = MathTex(
+        r"\varphi(\tilde{\mathbf{I'}}) = \frac{"
+        r"\exp{(\texttt{BoundSigmoid}(\tilde{\mathbf{I'}}))} \odot \mathbf{M'}}"
+        r"{\sum_{j=1}^{\max_{i \in I_{\mathcal{C}}} ( | \mathcal{M}_{i} | )} "
+        r"\exp{(\texttt{BoundSigmoid}(\tilde{\mathbf{I'}}))} \odot \mathbf{M'}}",
         color=BLACK,
     )
+    # ste_formula = MathTex(
+    #     r"\mathbf{I} = \hat{\mathbf{I}'} - {{\varphi (\tilde{\mathbf{I}'})^{T}}_\texttt{detached}} + {\varphi (\tilde{\mathbf{I}'})^{T}}",
+    #     color=BLACK,
+    # )
+    # argmax_formula = MathTex(
+    #     r"\hat{\mathbf{I}}_{i, u, j} = argmax_{j} \left( \varphi(\tilde{\mathbf{I}})_{i, u, j} \right)",
+    #     color=BLACK,
+    # )
     return SlideWithBlocks(
         title="Constrained Gumbel-Softmax",
         subtitle=None,
-        blocks=[alert_block, example_block, formula, remark_block],
+        
+        blocks=[alert_block, example_block, original_constrained_gumbel_formula, remark_block],
     )
 
 

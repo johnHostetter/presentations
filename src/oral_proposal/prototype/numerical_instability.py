@@ -39,12 +39,12 @@ def fix_numerical_stability() -> SlideWithBlocks:
     myTemplate = TexTemplate()
     myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
     formula = MathTex(
-        r"\texttt{BoundSigmoid}(\tilde{L'}) = \frac{2\kappa}"
-        r"{1 + \exp^{(-\tilde{L'} / {2\kappa})}} - \kappa",
+        r"\texttt{BoundSigmoid}(\tilde{\mathbf{I}'}) = \frac{2\kappa}"
+        r"{1 + \exp^{(-\tilde{\mathbf{I}'} / {2\kappa})}} - \kappa",
         color=BLACK,
     ).next_to(sentence_1, DOWN)
     sentence_2 = Tex(
-        r"applies a simple bounding operation to $\tilde{L}'$.", color=BLACK
+        r"applies a simple bounding operation to $\tilde{\mathbf{I}}'$.", color=BLACK
     ).next_to(formula, DOWN)
     return SlideWithBlocks(
         title="Fix Numerical Instability",

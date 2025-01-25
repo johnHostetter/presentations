@@ -18,14 +18,14 @@ def why_e_delayed() -> SlideWithBlocks:
         The slide with the issue, remark and proposed solution.
     """
     alert_block = AlertBlock(
-        title="Issue", content="Naively adding a new fuzzy set will not work."
+        title="Issue", content="Naively adding a new fuzzy set may not work."
     )
     remark_block = RemarkBlock(
         title="Remark",
-        content="It causes membership thrashing downstream during Gumbel Max Trick.",
+        content="It may cause membership thrashing downstream during Gumbel Max Trick.",
     )
     example_block = ExampleBlock(
-        title="Proposed Solution", content="Batch-delayed morphism."
+        title="Proposed Solution", content="Batch-delayed neurogenesis."
     )
     return SlideWithBlocks(
         title="Why ϵ-Delayed?",

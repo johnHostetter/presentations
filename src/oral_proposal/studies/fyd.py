@@ -3,9 +3,8 @@ from typing import Set, Tuple
 import igraph as ig
 from manim import *
 from manim_slides import Slide
-
+from manim_timeline.graph import GraphPair
 from manim_beamer.blocks import AlertBlock, ExampleBlock
-from examples.graph_example import MyGraph, GraphPair
 from manim_beamer.slides import (
     SlideShow,
     SlideWithList,
@@ -19,10 +18,12 @@ from manim_beamer.lists import (
     DisadvantagesList,
     AdvantagesList,
 )
+
+from src.graph_example import NoCodeGraph
 from src.oral_proposal.studies.pyrenees import (
     IntelligentTutoringSystemResults,
 )
-from manim_timeline.utils import get_project_root
+from src.manim_presentation.utils import get_project_root
 
 config.background_color = WHITE
 light_theme_style = {
@@ -48,11 +49,11 @@ class FYD(SlideShow):
 def get_scalar_cardinality() -> MathTex:
     return MathTex(
         r"""
-        S = \begin{bmatrix} 
+        \mathbf{S} = \begin{bmatrix} 
         \sum_{\mathbf{x}} \mu_{1, 1}(x_{1}) & \sum_{\mathbf{x}} \mu_{1, 2}(x_{1}) & \dots \\
         \vdots & \ddots & \\
-        \sum_{\mathbf{x}} \mu_{n, 1}(x_{n}) &        
-        & \sum_{\mathbf{x}} \mu_{n, \max_{v} \mid \mathcal{T}_{v} \mid }(x_{n}) 
+        \sum_{\mathbf{x}} \mu_{|I_{\mathcal{C}}|, 1}(x_{|I_{\mathcal{C}}|}) &        
+        & \sum_{\mathbf{x}} \mu_{|I_{\mathcal{C}}|, \max_{i \in I_{\mathcal{C}}} ( | \mathcal{M}_{i} | ) }(x_{|I_{\mathcal{C}}|}) 
         \end{bmatrix}
         \qquad
         """,
@@ -281,15 +282,15 @@ class FYDDiagram(Slide, MovingCameraScene):
         for model_type in ["flc"]:
             if model_type == "flc":
                 displayed_model_name = "Neuro-Fuzzy Network"
-                vs, edges = MyGraph.get_vertices_and_edges_for_flc()
+                vs, edges = NoCodeGraph.get_vertices_and_edges_for_flc()
                 layer_types = ["input", "premise", "rule", "consequence", "output"]
             else:
                 raise ValueError(f"Unknown model type: {model_type}")
 
             # create the igraph.Graph representation of the model
-            graph: ig.Graph = MyGraph.create_igraph_digraph(edges, vs)
+            graph: ig.Graph = NoCodeGraph.create_igraph_digraph(edges, vs)
 
-            digraph, grouped_vertices = MyGraph.create_manim_digraph(graph, layer_types)
+            digraph, grouped_vertices = NoCodeGraph.create_manim_digraph(graph, layer_types)
             digraph.rotate(PI / 2)
             self.graphs[displayed_model_name] = GraphPair(igraph=graph, digraph=digraph)
 

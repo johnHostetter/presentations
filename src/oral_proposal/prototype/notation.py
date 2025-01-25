@@ -30,19 +30,19 @@ def get_notation() -> SlideWithList:
                     items=[
                         VGroup(
                             Text("Let  ", color=BLACK),
-                            MathTex(r"M(\mathbf{x})", color=BLACK),
+                            MathTex(r"\boldsymbol{\mu}(\mathbf{x})", color=BLACK),
                             Text(" be the resulting membership matrix.", color=BLACK),
                         ),
                         VGroup(
                             Text("Shape of  ", color=BLACK),
-                            MathTex(r"M(\mathbf{x})", color=BLACK),
+                            MathTex(r"\boldsymbol{\mu}(\mathbf{x})", color=BLACK),
                             Text(" is ", color=BLACK),
                             VGroup(
-                                MathTex(r"|{\mathcal{V}}|", color=BLACK),
+                                MathTex(r"|I_{\mathcal{C}}|", color=BLACK),
                                 Cross(color=BLACK, stroke_width=3).scale(
                                     scale_factor=0.1
                                 ),
-                                MathTex(r"{\max_{v} |\mathcal{T}}|", color=BLACK),
+                                MathTex(r"\max_{i \in I_{\mathcal{C}}}(|\mathcal{M}_{i}|)", color=BLACK),
                             ),
                         ),
                     ]
@@ -52,23 +52,23 @@ def get_notation() -> SlideWithList:
                     items=[
                         VGroup(
                             Text("A binary mask matrix  ", color=BLACK),
-                            MathTex(r"B", color=BLACK),
+                            MathTex(r"\mathbf{M}", color=BLACK),
                             Text(
                                 " contains a 1 iff linguistic term exists at ",
                                 color=BLACK,
                             ),
-                            MathTex(r"v, t.", color=BLACK),
+                            MathTex(r"i, j.", color=BLACK),
                         ),
                         VGroup(
                             Text("Shape of  ", color=BLACK),
-                            MathTex(r"B", color=BLACK),
+                            MathTex(r"\mathbf{M}", color=BLACK),
                             Text(" is ", color=BLACK),
                             VGroup(
-                                MathTex(r"|{\mathcal{V}}|", color=BLACK),
+                                MathTex(r"|I_{\mathcal{C}}|", color=BLACK),
                                 Cross(color=BLACK, stroke_width=3).scale(
                                     scale_factor=0.1
                                 ),
-                                MathTex(r"{\max_{v} |\mathcal{T}}|", color=BLACK),
+                                MathTex(r"\max_{i \in I_{\mathcal{C}}}(|\mathcal{M}_{i}|)", color=BLACK),
                             ),
                         ),
                     ]
@@ -77,7 +77,7 @@ def get_notation() -> SlideWithList:
                 BL(
                     items=[
                         "Non-existing memberships are dropped by Hadamard product",
-                        VGroup(MathTex(r"M(\mathbf{x}) \odot B", color=BLACK)),
+                        VGroup(MathTex(r"\boldsymbol{\mu}(\mathbf{x}) \odot \mathbf{M}", color=BLACK)),
                     ]
                 ),
                 "Rule Connection Matrix",
@@ -85,7 +85,7 @@ def get_notation() -> SlideWithList:
                     items=[
                         VGroup(
                             Text("Let  ", color=BLACK),
-                            MathTex(r"L", color=BLACK),
+                            MathTex(r"\mathbf{I}", color=BLACK),
                             Text(
                                 " be the link matrix between premise and rule layer.",
                                 color=BLACK,
@@ -93,30 +93,29 @@ def get_notation() -> SlideWithList:
                         ),
                         VGroup(
                             Text("Shape of  ", color=BLACK),
-                            MathTex(r"L", color=BLACK),
+                            MathTex(r"\mathbf{I}", color=BLACK),
                             Text(" is ", color=BLACK),
                             VGroup(
-                                MathTex(r"|{\mathcal{V}}|", color=BLACK),
+                                MathTex(r"|I_{\mathcal{C}}|", color=BLACK),
                                 Cross(color=BLACK, stroke_width=3).scale(
                                     scale_factor=0.1
                                 ),
-                                MathTex(r"{\max_{v} |\mathcal{T}}|", color=BLACK),
+                                MathTex(r"\max_{i \in I_{\mathcal{C}}}(|\mathcal{M}_{i}|)", color=BLACK),
                                 Cross(color=BLACK, stroke_width=3).scale(
                                     scale_factor=0.1
                                 ),
-                                MathTex(r"|{\mathcal{R}}|", color=BLACK),
+                                MathTex(r"|U|", color=BLACK),
                             ),
                         ),
                         VGroup(
                             Text("Entry at  ", color=BLACK),
-                            MathTex(r"L_{v, t, r}", color=BLACK),
+                            MathTex(r"\mathbf{I}_{i, j, u}", color=BLACK),
                             Text(" is 0 or 1 iff the ", color=BLACK),
-                            MathTex(r"t^{th}", color=BLACK),
+                            MathTex(r"j^{th}", color=BLACK),
                             Text(" term of ", color=BLACK),
-                            MathTex(r"v^{th}", color=BLACK),
-                            Text(" variable is in ", color=BLACK),
-                            MathTex(r"r^{th}", color=BLACK),
-                            Text(" rule' premise.", color=BLACK),
+                            MathTex(r"i^{th}", color=BLACK),
+                            Text(" variable is in the premise of rule ", color=BLACK),
+                            MathTex(r"u.", color=BLACK),
                         ),
                     ]
                 ),

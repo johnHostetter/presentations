@@ -28,18 +28,18 @@ def issue_with_logits() -> SlideWithBlocks:
         title="Proposed Solution",
         content=AdvantagesList(
             items=[
-                "Use a (Modified) Gumbel-Max Trick.",
+                "Use a (Constrained) Gumbel-Max Trick.",
                 VGroup(
-                    MathTex(r"\tilde{L}", color=BLACK),
+                    MathTex(r"\tilde{\mathbf{I}}", color=BLACK),
                     Text(
                         " are logits or raw non-normalized probabilities.", color=BLACK
                     ),
                 ),
                 VGroup(
                     Text("Differentiable sample from ", color=BLACK),
-                    MathTex(r"\tilde{L}", color=BLACK),
+                    MathTex(r"\tilde{\mathbf{I}}", color=BLACK),
                     Text(" to yield ", color=BLACK),
-                    MathTex(r"L.", color=BLACK),
+                    MathTex(r"\mathbf{I}.", color=BLACK),
                 ),
             ]
         ),

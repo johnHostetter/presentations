@@ -56,54 +56,59 @@ def gumbel_max_trick() -> SlideWithList:
         beamer_list=ItemizedList(
             items=[
                 VGroup(
-                    Text("For stochasticity, we add Gumbel noise, ", color=BLACK),
-                    MathTex(r"N", color=BLACK),
+                    Tex("For stochasticity, we add Gumbel noise, ", color=BLACK),
+                    MathTex(r"\mathbf{N}", color=BLACK),
                 ),
                 VGroup(
-                    Text("Soften distribution w/ temperature parameter ", color=BLACK),
+                    Tex("Soften distribution w/ temperature parameter ", color=BLACK),
                     MathTex(r"\tau", color=BLACK),
                 ),
                 VGroup(
-                    Text("For noise matrix ", color=BLACK),
-                    MathTex(r"N", color=BLACK),
+                    Tex("For noise matrix ", color=BLACK),
+                    MathTex(r"\mathbf{N}", color=BLACK),
                 ),
                 BL(
                     items=[
-                        "If training, sample from Gumbel distribution",
+                        VGroup(
+                            Tex("If training, sample from Gumbel distribution", color=BLACK)
+                        ),
                         ItemizedList(
                             items=[
                                 VGroup(
-                                    Text("Let ", color=BLACK),
-                                    MathTex(r"N", color=BLACK),
-                                    Text(" be a matrix of sampled noise", color=BLACK),
+                                    Tex("Let ", color=BLACK),
+                                    MathTex(r"\mathbf{N}", color=BLACK),
+                                    Tex(" be a matrix of sampled noise", color=BLACK),
                                     # MathTex(r"\mathcal{R}", color=BLACK)
                                 ),
                                 VGroup(
-                                    Text("Shape is", color=BLACK),
+                                    Tex("Shape is", color=BLACK),
                                     VGroup(
-                                        MathTex(r"|{\mathcal{R}}|", color=BLACK),
+                                        MathTex(r"|U|", color=BLACK),
                                         Cross(color=BLACK, stroke_width=3).scale(
                                             scale_factor=0.1
                                         ),
-                                        MathTex(r"|{\mathcal{V}}|", color=BLACK),
+                                        MathTex(r"|I_{\mathcal{C}}|", color=BLACK),
                                         Cross(color=BLACK, stroke_width=3).scale(
                                             scale_factor=0.1
                                         ),
                                         MathTex(
-                                            r"{\max_{v} |\mathcal{T}|}|", color=BLACK
+                                            r"{\max_{i \in I_{\mathcal{C}}} |\mathcal{M}_{i}|}", color=BLACK
                                         ),
                                     ),
                                 ),
                             ]
                         ),
                         VGroup(
-                            Text("If evaluating, let ", color=BLACK),
-                            MathTex(r"N", color=BLACK),
-                            Text(" contain all zeros", color=BLACK),
+                            Tex("If evaluating, let ", color=BLACK),
+                            MathTex(r"\mathbf{N} = \mathbf{0}", color=BLACK),
+                            # Tex(" contain all zeros", color=BLACK),
                         ),
-                    ]
+                    ],
+                    # font_size=46,
+                    # default_m_object=Tex,
                 ),
-            ]
+            ],
+            # default_m_object=Tex,
         ),
     )
 

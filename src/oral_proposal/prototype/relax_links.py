@@ -24,7 +24,7 @@ def relax_links() -> SlideWithBlocks:
             items=[
                 VGroup(
                     Text("Sparse, constrained, binary matrix "),
-                    MathTex(r"L", color=BLACK),
+                    MathTex(r"\mathbf{I}", color=BLACK),
                 ),
                 "Rules' premises cannot change",
             ]
@@ -36,9 +36,9 @@ def relax_links() -> SlideWithBlocks:
             items=[
                 VGroup(
                     Text("Relax "),
-                    MathTex(r"L", color=BLACK),
+                    MathTex(r"\mathbf{I}", color=BLACK),
                     Text(" to be real-valued, ", color=BLACK),
-                    MathTex(r"\tilde{L}", color=BLACK),
+                    MathTex(r"\tilde{\mathbf{I}}", color=BLACK),
                 )
             ]
         ),

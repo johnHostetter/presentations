@@ -45,7 +45,7 @@ def avoiding_invalid_selections() -> SlideWithBlocks:
                 ),
                 VGroup(
                     Text("Temporarily modify binary mask "),
-                    MathTex(r"B' = (B \odot S) > \theta."),
+                    MathTex(r"\mathbf{M'} = (\mathbf{M} \odot \mathbf{S}) > \theta."),
                 ),
             ]
         ),
