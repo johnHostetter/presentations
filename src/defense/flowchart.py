@@ -31,8 +31,10 @@ class Flowchart(MovingCameraScene):
             ]
         )
 
-        image_paths = natsorted((self.image_dir / "inputs" / "original_no_axes").iterdir())[500:]
-        resized_paths = natsorted((self.image_dir / "inputs" / "resized_no_axes").iterdir())[500:]
+        START_IDX: int = 470  # was 470 or 500 for 'test_images' directory (long is 4434)
+        END_IDX: int = 530  # was 530 for 'test_images' directory (long is 4499)
+        image_paths = natsorted((self.image_dir / "inputs" / "original_no_axes").iterdir())[START_IDX:]
+        resized_paths = natsorted((self.image_dir / "inputs" / "resized_no_axes").iterdir())[START_IDX:]
 
         prev_group_jpg = None
         for original_path, resized_path in zip(image_paths, resized_paths):
@@ -64,7 +66,8 @@ class Flowchart(MovingCameraScene):
             del left_jpg, left_text, right_text, group_jpg  # free up memory
             self.wait(1/10)
 
-            if int(original_path.stem) in time_steps:  # stem is the time-step
+            curr_time_step: int = int(original_path.stem)
+            if curr_time_step in time_steps:  # stem is the time-step
                 # self.shift_objects(direction=RIGHT)  # send the objects out of view
 
                 # reveal optuma figure for the time-step
@@ -186,7 +189,7 @@ class Flowchart(MovingCameraScene):
                 self.wait(1)
 
             i += 1
-            if i > 30:
+            if curr_time_step == END_IDX:
                 break
 
     def shift_objects(self, direction):
