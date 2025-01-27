@@ -58,6 +58,8 @@ class Flowchart(Slide, MovingCameraScene):
                 Group(right_jpg, right_text)
             ).move_to(ORIGIN)
             if prev_group_jpg is None:
+                self.wait(1)
+                self.next_slide()
                 self.play(FadeIn(group_jpg, run_time=1))
             elif isinstance(prev_group_jpg, Group):
                 self.play(
@@ -70,7 +72,8 @@ class Flowchart(Slide, MovingCameraScene):
             curr_time_step: int = int(original_path.stem)
             if curr_time_step in time_steps:  # stem is the time-step
                 # self.shift_objects(direction=RIGHT)  # send the objects out of view
-
+                self.wait(1)
+                self.next_slide()
                 # reveal optuma figure for the time-step
                 optuna_path = self.image_dir / "optuna" / original_path.stem
                 occlusion_jpg = ImageMobject(optuna_path / "occlusion.png").scale(0.89).move_to(right_jpg).shift(0.125 * DOWN).shift(4.53 * RIGHT)
@@ -88,6 +91,7 @@ class Flowchart(Slide, MovingCameraScene):
                     self.camera.frame.animate.move_to(occlusion_jpg)
                 )
                 self.wait(1)
+                self.next_slide()
                 self.play(
                     FadeOut(occlusion_jpg, rectangle)
                 )
@@ -101,6 +105,7 @@ class Flowchart(Slide, MovingCameraScene):
                     (self.image_dir / "after_conv" / original_path.stem).iterdir()
                 )
                 self.wait(1)
+                self.next_slide()
                 right_most_jpg = right_jpg
                 for conv_idx, conv_path in enumerate(conv_paths):
                     print(conv_path)
@@ -138,6 +143,7 @@ class Flowchart(Slide, MovingCameraScene):
                             conv_jpg, conv_text
                         )
                     self.wait(1)
+                    self.next_slide()
 
                 # compare to the NFN's center exemplars
                 mu_paths = natsorted(
@@ -155,23 +161,27 @@ class Flowchart(Slide, MovingCameraScene):
                 # objects_to_be_shifted.append(right_most_jpg)
                 self.play(self.camera.frame.animate.set(height=right_most_jpg.get_height() * INCREASE_HEIGHT_FACTOR))
                 self.wait(2)
+                self.next_slide()
                 right_most_jpg = self.add_mu_items(
                     mu_paths, right_most_jpg[0][0], regex_pattern=mu_degrees_pattern, text="Membership Degrees"
                 )
                 # objects_to_be_shifted.append(right_most_jpg)
                 self.play(self.camera.frame.animate.set(height=right_most_jpg.get_height() * INCREASE_HEIGHT_FACTOR))
                 self.wait(2)
+                self.next_slide()
                 right_most_jpg = self.add_mu_items(
                     mu_paths, right_most_jpg[0][0], regex_pattern=rule_exemplar_pattern, text="Fuzzy Logic Rules", idx_to_start_from=1
                 )
                 # objects_to_be_shifted.append(right_most_jpg)
                 self.play(self.camera.frame.animate.set(height=right_most_jpg.get_height() * INCREASE_HEIGHT_FACTOR))
                 self.wait(2)
+                self.next_slide()
                 right_most_jpg = self.add_mu_items(
                     mu_paths, right_most_jpg[0][1], regex_pattern=rule_mu_pattern, text="Rule Applicability", idx_to_start_from=1
                 )
                 # objects_to_be_shifted.append(right_most_jpg)
                 self.wait(2)
+                self.next_slide()
 
                 # go back to the original image
                 self.play(
@@ -188,6 +198,7 @@ class Flowchart(Slide, MovingCameraScene):
                     Restore(self.camera.frame),
                 )
                 self.wait(1)
+                self.next_slide()
 
             i += 1
             if curr_time_step == END_IDX:
@@ -252,4 +263,4 @@ class Flowchart(Slide, MovingCameraScene):
 
 if __name__ == "__main__":
     # Flowchart(Path("test_images/mu")).construct()
-    Flowchart().construct()
+    Flowchart().render()
