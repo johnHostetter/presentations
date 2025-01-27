@@ -1,8 +1,9 @@
 from typing import Tuple
+from collections import OrderedDict
 
 import numpy as np
 from manim import *
-from sqlalchemy.util import OrderedDict
+from manim_slides import Slide
 
 config.background_color = WHITE
 light_theme_style = {
@@ -10,7 +11,7 @@ light_theme_style = {
     "background_stroke_color": WHITE,
 }
 
-class ParallelCoords(MovingCameraScene):
+class ParallelCoords(Slide, MovingCameraScene):
     def __init__(self):
         super().__init__()
         # this is hardcoded for my setup and may need to be changed, but want to dynamically
@@ -23,7 +24,7 @@ class ParallelCoords(MovingCameraScene):
         self.available_environments = list(self.output_dir.glob("*"))
         self.select_environments = [
             # "predict_position",
-            # "defend_the_center",
+            "defend_the_center",
             # "health_gathering",
             # "take_cover",
         ]
@@ -98,7 +99,7 @@ class ParallelCoords(MovingCameraScene):
                 evaluator_title.next_to(
                     hyperparameter_importance_img, 0.1 * UP
                 ).shift(0.5 * DOWN )
-                
+
                 # make parallel coordinate plot
                 parallel_coord_all_params_img = ImageMobject(
                     str(curr_dir / f"{parallel_coord_all_params_img_stem}{suffixes[0]}.png")
@@ -288,6 +289,7 @@ class ParallelCoords(MovingCameraScene):
 
                     self.play(animation_group)
                     self.wait(1)
+                    self.next_slide()
 
                     # replace the parallel coordinate plot with only the top parameters
                     parallel_coord_top_params_img = ImageMobject(
@@ -299,6 +301,7 @@ class ParallelCoords(MovingCameraScene):
                         )
                     )
                     self.wait(1)
+                    self.next_slide()
                     prev_evaluator_title = evaluator_title
                     prev_environment_title = environment_title
 
@@ -354,7 +357,7 @@ class ParallelCoords(MovingCameraScene):
 
             tmp_df = pd.DataFrame(all_hyperparameters)
             table = self.make_table(
-                img_group, tmp_df, top_k=7, shift_value=18
+                img_group, tmp_df, top_k=7, shift_value=30
             )
             caption = Tex(
                 f"Trials grouped by the most important hyperparameters for concurrent optimization, as determined by {evaluator_display_name}.",
@@ -374,7 +377,6 @@ class ParallelCoords(MovingCameraScene):
             self.play(
                 self.camera.frame.animate.move_to(captioned_table.get_center()),
             )
-            self.wait(3)
             return captioned_table
 
         table = None
@@ -386,6 +388,8 @@ class ParallelCoords(MovingCameraScene):
                 )
                 # keep track of the data for the final slide
                 all_findings = create_data(all_hyperparameters=all_findings)
+                self.wait(1)
+                self.next_slide()
 
         columns_to_remove = [
             "Learning Rate",
@@ -400,6 +404,8 @@ class ParallelCoords(MovingCameraScene):
         inner_make_evaluator_table(
             evaluator_display_name="ALL", prev_table=table, all_hyperparameters=all_findings
         )
+        self.wait(1)
+        self.next_slide()
 
 
     def make_table(self, img_group, pos_df, top_k: int = 7, shift_value: float=0.5) -> Table:
@@ -461,4 +467,4 @@ class ParallelCoords(MovingCameraScene):
 
 
 if __name__ == "__main__":
-    ParallelCoords().construct()
+    ParallelCoords().render()

@@ -1,5 +1,6 @@
 import re
 from manim import *
+from manim_slides import Slide
 from natsort import natsorted
 
 config.background_color = WHITE
@@ -8,7 +9,7 @@ light_theme_style = {
     "background_stroke_color": WHITE,
 }
 
-class Flowchart(MovingCameraScene):
+class Flowchart(Slide, MovingCameraScene):
     def __init__(self):
     # def __init__(self, image_dir: Path):
         super().__init__()
@@ -31,7 +32,7 @@ class Flowchart(MovingCameraScene):
             ]
         )
 
-        START_IDX: int = 470  # was 470 or 500 for 'test_images' directory (long is 4434)
+        START_IDX: int = 397  # was 470 or 500 for 'test_images' directory (long is 4434)
         END_IDX: int = 530  # was 530 for 'test_images' directory (long is 4499)
         image_paths = natsorted((self.image_dir / "inputs" / "original_no_axes").iterdir())[START_IDX:]
         resized_paths = natsorted((self.image_dir / "inputs" / "resized_no_axes").iterdir())[START_IDX:]
