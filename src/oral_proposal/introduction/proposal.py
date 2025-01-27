@@ -49,7 +49,7 @@ def get_proposal() -> SlideWithBlocks:
         title=None,
         content=AdvantagesList(
             items=[
-                "Capable of adding new knowledge just in time (network morphism)",
+                "Capable of adding new knowledge just in time (i.e., neurogenesis)",
             ]
         ),
     )
@@ -65,7 +65,7 @@ def get_proposal() -> SlideWithBlocks:
         title=None,
         content=AdvantagesList(
             items=[
-                "A task-independent solution",
+                "A task-independent solution (i.e., gradient-based learning)",
             ]
         ),
     )

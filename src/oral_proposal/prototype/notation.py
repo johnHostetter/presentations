@@ -110,7 +110,7 @@ def get_notation() -> SlideWithList:
                         VGroup(
                             Text("Entry at  ", color=BLACK),
                             MathTex(r"\mathbf{I}_{i, j, u}", color=BLACK),
-                            Text(" is 0 or 1 iff the ", color=BLACK),
+                            Text(" is 1 iff the ", color=BLACK),
                             MathTex(r"j^{th}", color=BLACK),
                             Text(" term of ", color=BLACK),
                             MathTex(r"i^{th}", color=BLACK),

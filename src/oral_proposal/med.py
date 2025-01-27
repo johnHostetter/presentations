@@ -7,7 +7,7 @@ from src.oral_proposal.prototype.avoiding_invalid import (
 from src.oral_proposal.prototype.constrained_gumbel_softmax import (
     constrained_gumbel_softmax,
 )
-from src.oral_proposal.prototype.gumbel_max_trick import gumbel_max_trick
+from src.oral_proposal.prototype.gumbel_max_trick import gumbel_noise
 from src.oral_proposal.prototype.issue_with_logits import issue_with_logits
 from src.oral_proposal.prototype.notation import get_notation
 from src.oral_proposal.prototype.numerical_instability import (
@@ -38,9 +38,9 @@ class MED(SlideShow):
                 why_modify_gumbel(),
                 avoiding_invalid_selections(),
                 # introduce the gumbel max-trick formula
-                gumbel_max_trick(),
+                gumbel_noise(),
                 # bound the logits used for it to prevent numerical instability
-                fix_numerical_stability(),
+                # fix_numerical_stability(),  # NO LONGER NEEDED FOR DEFENSE
                 # constrain gumbel-softmax to avoid invalid rules that violate epsilon-completeness
                 constrained_gumbel_softmax(),
                 # briefly mention epsilon-delayed update to premise layer

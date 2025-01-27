@@ -103,12 +103,12 @@ def get_fyd_formula() -> SlideWithBlocks:
                     items=[
                         VGroup(
                             Text("Calculate closeness centrality", color=BLACK),
-                            MathTex(r"C", color=BLACK),
+                            MathTex(r"\mathbf{C}", color=BLACK),
                             Text(" for each vertex", color=BLACK),
                         ),
                         VGroup(
                             Text("Matrix ", color=BLACK),
-                            MathTex(r"C", color=BLACK),
+                            MathTex(r"\mathbf{C}", color=BLACK),
                             Text(
                                 " is how reachable other premises are from shared rules",
                                 color=BLACK,
@@ -116,9 +116,10 @@ def get_fyd_formula() -> SlideWithBlocks:
                         ),
                         VGroup(
                             Text("Input variable ", color=BLACK),
-                            Text("usage", color=BLACK, slant=ITALIC),
-                            Text(" is its frequency across rules: ", color=BLACK),
-                            MathTex(r"\deg(\mu_{v, t}) / |\mathcal{R}|", color=BLACK),
+                            Text("usage, ", color=BLACK, slant=ITALIC),
+                            MathTex(r"\mathbf{U}", color=BLACK),
+                            Text(", is its frequency across rules: ", color=BLACK),
+                            MathTex(r"\deg(\mu_{i, j}) / |U|", color=BLACK),
                         ),
                         VGroup(
                             Text(
@@ -126,7 +127,7 @@ def get_fyd_formula() -> SlideWithBlocks:
                                 color=BLACK,
                             ),
                             Text("scalar cardinality", color=BLACK, slant=ITALIC),
-                            MathTex(r"S", color=BLACK),
+                            MathTex(r"\mathbf{S}", color=BLACK),
                         ),
                     ]
                 ),
@@ -135,14 +136,27 @@ def get_fyd_formula() -> SlideWithBlocks:
     )
     myTemplate = TexTemplate()
     myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
+    ind_formula = MathTex(
+        r"""
+        \mathbf{IND} = \mathbf{C} \wedge \mathbf{U} = \mathbf{C} \odot \mathbf{U}
+        """,
+        color=BLACK,
+    )
     fyd_formula = MathTex(
         r"""
-        \textit{FYD}(\mu_{v, t}) = 
-        \overbrace{\frac{S_{v, t}}{\max(S)}}^{\text{Frequent}} 
-        \overbrace{\wedge}^{\text{Yet}} \overbrace{\big ( 1 - (C_{v, t} 
-        \wedge 
-        (\deg(\mu_{v, t}) / |\mathcal{R}|) \big ))}^{\text{Discernible}}
+        \mathbf{FYD} = \overbrace{\frac{\mathbf{S} - \min(\mathbf{S})}{\max(\mathbf{S}) - \min(\mathbf{S})}}^{\text{Frequent}} 
+        \overbrace{\wedge}^{\text{Yet}} \overbrace{\Big (1 - \frac{\mathbf{IND} - \min(\mathbf{IND})}{\max(\mathbf{IND}) - \min(\mathbf{IND})}\Big)}^{\text{Discernible}}
         """,
+        # r"""
+        # \textit{FYD}(\mu_{i, j}) =
+        # \overbrace{
+        # \frac{\mathbf{S}_{i, j}}
+        # {\max(\mathbf{S}) - \min(\mathbf{S})}
+        # }^{\text{Frequent}}
+        # \overbrace{\wedge}^{\text{Yet}} \overbrace{\big ( 1 - (\mathbf{C}_{i, j}
+        # \wedge
+        # (\deg(\mu_{i, j}) / |U|) \big ))}^{\text{Discernible}}
+        # """,
         color=BLACK,
     )
     return SlideWithBlocks(
@@ -153,6 +167,8 @@ def get_fyd_formula() -> SlideWithBlocks:
             example_block,
             get_scalar_cardinality(),
             fyd_formula,
+            Tex("where", color=BLACK),
+            ind_formula,
         ],
     )
 
@@ -190,7 +206,7 @@ def fyd_summary() -> SlideWithList:
             items=[
                 "Hostetter, John Wesley et al., "
                 "Self-Organizing Epsilon-Complete Neuro-Fuzzy Q-Networks\n"
-                "from Frequent Yet Discernible Patterns in Reward-Based Scenarios (Draft)",
+                "from Frequent Yet Discernible Patterns in Reward-Based Scenarios (In Review)",
                 "Primary Intuition",
                 ItemizedList(
                     items=[

@@ -18,7 +18,7 @@ def why_e_delayed() -> SlideWithBlocks:
         The slide with the issue, remark and proposed solution.
     """
     alert_block = AlertBlock(
-        title="Issue", content="Naively adding a new fuzzy set may not work."
+        title="Issue", content="Naively adding a new fuzzy set (i.e., neurogenesis) may not work."
     )
     remark_block = RemarkBlock(
         title="Remark",

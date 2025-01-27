@@ -24,11 +24,16 @@ def issue_with_logits() -> SlideWithBlocks:
             items=["NFN cannot have real-numbered weight matrices."]
         ),
     )
+    remark_block = RemarkBlock(
+        title="Remark",
+        content="The Gumbel Max Trick (GMT) allows us to differentiably sample from a\n"
+        "categorical distribution.",
+    )
     example_block = ExampleBlock(
         title="Proposed Solution",
         content=AdvantagesList(
             items=[
-                "Use a (Constrained) Gumbel-Max Trick.",
+                "Use GMT to modify NFNs' structure.",
                 VGroup(
                     MathTex(r"\tilde{\mathbf{I}}", color=BLACK),
                     Text(
@@ -36,18 +41,13 @@ def issue_with_logits() -> SlideWithBlocks:
                     ),
                 ),
                 VGroup(
-                    Text("Differentiable sample from ", color=BLACK),
+                    Text("Differentiably sample from ", color=BLACK),
                     MathTex(r"\tilde{\mathbf{I}}", color=BLACK),
                     Text(" to yield ", color=BLACK),
                     MathTex(r"\mathbf{I}.", color=BLACK),
                 ),
             ]
         ),
-    )
-    remark_block = RemarkBlock(
-        title="Remark",
-        content="The Gumbel Max Trick allows us to differentiably sample from a\n"
-        "categorical distribution.",
     )
     return SlideWithBlocks(
         title="Why the Gumbel-Max Trick?",

@@ -1,4 +1,5 @@
 from manim import *
+from manim_slides import Slide
 from manim_timeline.quotes import quotable_person
 
 from src.manim_presentation.utils import get_project_root
@@ -10,7 +11,7 @@ light_theme_style = {
 }
 
 
-class Godel(Scene):
+class Godel(Slide):
     # Godel actually worked on multivalued logic, called Gödel-Dummett logic
     # https://link.springer.com/article/10.1023/A:1022997524909
     def construct(self):

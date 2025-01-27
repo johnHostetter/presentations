@@ -10,7 +10,7 @@ light_theme_style = {
 }
 
 
-def gumbel_max_trick() -> SlideWithList:
+def gumbel_noise() -> SlideWithList:
     """
     Create a slide discussing how to use the Gumbel-Max Trick.
 
@@ -56,8 +56,10 @@ def gumbel_max_trick() -> SlideWithList:
         beamer_list=ItemizedList(
             items=[
                 VGroup(
-                    Tex("For stochasticity, we add Gumbel noise, ", color=BLACK),
+                    Tex("For stochasticity, Gumbel noise, ", color=BLACK),
                     MathTex(r"\mathbf{N}", color=BLACK),
+                    Tex(" is added to logits ", color=BLACK),
+                    MathTex(r"\tilde{\mathbf{I}}", color=BLACK)
                 ),
                 VGroup(
                     Tex("Soften distribution w/ temperature parameter ", color=BLACK),
@@ -70,34 +72,50 @@ def gumbel_max_trick() -> SlideWithList:
                 BL(
                     items=[
                         VGroup(
+                            Tex("Shape is", color=BLACK),
+                            VGroup(
+                                MathTex(r"|U|", color=BLACK),
+                                Cross(color=BLACK, stroke_width=3).scale(
+                                    scale_factor=0.1
+                                ),
+                                MathTex(r"|I_{\mathcal{C}}|", color=BLACK),
+                                Cross(color=BLACK, stroke_width=3).scale(
+                                    scale_factor=0.1
+                                ),
+                                MathTex(
+                                    r"{\max_{i \in I_{\mathcal{C}}} |\mathcal{M}_{i}|}", color=BLACK
+                                ),
+                            ),
+                        ),
+                        VGroup(
                             Tex("If training, sample from Gumbel distribution", color=BLACK)
                         ),
-                        ItemizedList(
-                            items=[
-                                VGroup(
-                                    Tex("Let ", color=BLACK),
-                                    MathTex(r"\mathbf{N}", color=BLACK),
-                                    Tex(" be a matrix of sampled noise", color=BLACK),
-                                    # MathTex(r"\mathcal{R}", color=BLACK)
-                                ),
-                                VGroup(
-                                    Tex("Shape is", color=BLACK),
-                                    VGroup(
-                                        MathTex(r"|U|", color=BLACK),
-                                        Cross(color=BLACK, stroke_width=3).scale(
-                                            scale_factor=0.1
-                                        ),
-                                        MathTex(r"|I_{\mathcal{C}}|", color=BLACK),
-                                        Cross(color=BLACK, stroke_width=3).scale(
-                                            scale_factor=0.1
-                                        ),
-                                        MathTex(
-                                            r"{\max_{i \in I_{\mathcal{C}}} |\mathcal{M}_{i}|}", color=BLACK
-                                        ),
-                                    ),
-                                ),
-                            ]
-                        ),
+                        # ItemizedList(
+                        #     items=[
+                        #         VGroup(
+                        #             Tex("Let ", color=BLACK),
+                        #             MathTex(r"\mathbf{N}", color=BLACK),
+                        #             Tex(" be a matrix of sampled noise", color=BLACK),
+                        #             # MathTex(r"\mathcal{R}", color=BLACK)
+                        #         ),
+                        #         VGroup(
+                        #             Tex("Shape is", color=BLACK),
+                        #             VGroup(
+                        #                 MathTex(r"|U|", color=BLACK),
+                        #                 Cross(color=BLACK, stroke_width=3).scale(
+                        #                     scale_factor=0.1
+                        #                 ),
+                        #                 MathTex(r"|I_{\mathcal{C}}|", color=BLACK),
+                        #                 Cross(color=BLACK, stroke_width=3).scale(
+                        #                     scale_factor=0.1
+                        #                 ),
+                        #                 MathTex(
+                        #                     r"{\max_{i \in I_{\mathcal{C}}} |\mathcal{M}_{i}|}", color=BLACK
+                        #                 ),
+                        #             ),
+                        #         ),
+                        #     ]
+                        # ),
                         VGroup(
                             Tex("If evaluating, let ", color=BLACK),
                             MathTex(r"\mathbf{N} = \mathbf{0}", color=BLACK),
@@ -114,4 +132,4 @@ def gumbel_max_trick() -> SlideWithList:
 
 
 if __name__ == "__main__":
-    gumbel_max_trick().render()
+    gumbel_noise().render()

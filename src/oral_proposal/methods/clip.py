@@ -2,7 +2,7 @@ import numpy as np
 import torch
 from manim import *
 from manim_slides import Slide
-from manim_timeline import ItemColor
+# from manim_timeline import ItemColor
 from manim_timeline.axes import make_axes, AxisConfig
 
 from soft.datasets import LabeledDataset
@@ -13,9 +13,9 @@ from soft.fuzzy.unsupervised.granulation.online.clip import (
     apply_categorical_learning_induced_partitioning as CLIP,
 )
 
+from src.oral_proposal.methods.common import ItemColor
 from src.manim_presentation.utils import get_project_root
 from unit_tests.computing.test_self_organize import get_cart_pole_example_data
-
 
 set_rng(1)
 
@@ -70,7 +70,7 @@ class CLIPDemo(Slide, MovingCameraScene):
         )
         gaussian_label = axes.get_graph_label(
             gaussian_graph,
-            Text("New Fuzzy Set").scale(scale_factor=scale),
+            Tex("New Fuzzy Set").scale(scale_factor=scale),
             color=ItemColor.ACTIVE_2,
             direction=UP * scale,
         )
@@ -96,7 +96,7 @@ class CLIPDemo(Slide, MovingCameraScene):
             animations = []
             for idx, center in enumerate(new_terms.get_centers().flatten()):
                 gaussian_graph = axes.plot(
-                    lambda x: new_terms(torch.tensor(x)).degrees[idx].cpu().detach().numpy().item(),
+                    lambda x: new_terms(torch.tensor(x)).degrees[0][idx].cpu().detach().numpy().item(),
                     stroke_color=ItemColor.INACTIVE_2,
                     stroke_width=(self.default_scale_multiplier * scale),
                     # use_smoothing=True,
@@ -131,7 +131,7 @@ class CLIPDemo(Slide, MovingCameraScene):
         if target_scene is None:
             target_scene = self
         method = (
-            Text("Categorical Learning-Induced Partitioning", color=BLACK)
+            Tex("Categorical Learning-Induced Partitioning", color=BLACK)
             .scale(scale_factor=scale)
             .move_to(origin)
         )
@@ -171,8 +171,9 @@ class CLIPDemo(Slide, MovingCameraScene):
             # }
 
             self.fuzzy_sets, self.data_dots = [], []
+            x_step_size = (X.max() - X.min()) / 10
             x_axis_config = AxisConfig(
-                X.min().item(), X.max().item(), step=0.1, length=8
+                X.min().item(), X.max().item(), step=x_step_size, length=8
             )  # step was 0.1
             axes = make_axes(
                 target_scene,
@@ -261,7 +262,7 @@ class CLIPDemo(Slide, MovingCameraScene):
                     target_scene.next_slide()
                     line_graph = axes.plot(
                         lambda x: config.fuzzy.partition.epsilon,
-                        stroke_color=RED,
+                        stroke_color=ItemColor.BACKGROUND,
                         stroke_width=(self.default_scale_multiplier * scale),
                     )
                     dashed_line_graph = DashedVMobject(line_graph)
@@ -275,8 +276,8 @@ class CLIPDemo(Slide, MovingCameraScene):
                     # message_str = ''
                     dashed_line_label = axes.get_graph_label(
                         line_graph,
-                        Text(message_str).scale(scale_factor=scale),
-                        color=RED,
+                        Tex(message_str).scale(scale_factor=scale),
+                        color=ItemColor.BACKGROUND,
                         direction=UP * scale,
                     )
                     target_scene.play(FadeIn(dashed_line_label))
@@ -317,8 +318,8 @@ class CLIPDemo(Slide, MovingCameraScene):
                         )
                     else:
                         center, width = (
-                            new_terms.get_centers()[-1].item(),
-                            new_terms.get_widths()[-1].item(),
+                            new_terms.get_centers()[0][-1].item(),
+                            new_terms.get_widths()[0][-1].item(),
                         )
 
                     self.add_fuzzy_set(
@@ -336,7 +337,7 @@ class CLIPDemo(Slide, MovingCameraScene):
                 else:
                     target_scene.play(
                         dot.animate.move_to(
-                            axes.c2p(x, new_terms(x).degrees.max().item())
+                            axes.c2p(x, new_terms(torch.tensor([x])).degrees.max().item())
                         ),
                         # dot.animate.set_color(PURPLE_A),
                         dot.animate.set_glow_factor(1.0),

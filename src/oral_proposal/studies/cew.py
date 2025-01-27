@@ -16,9 +16,9 @@ light_theme_style = {
 }
 
 
-class CEW(SlideShow):
+class CEWStudy(SlideShow):
     def __init__(self, **kwargs):
-        super().__init__(slides=[CEWDiagram(), CEWResults(), cew_summary()], **kwargs)
+        super().__init__(slides=[CEWResults(), cew_summary()], **kwargs)
 
 
 class CEWDiagram(SlideDiagram):
@@ -113,4 +113,4 @@ def cew_summary() -> SlideWithList:
 
 
 if __name__ == "__main__":
-    CEWDiagram().render()
+    CEWStudy().render()

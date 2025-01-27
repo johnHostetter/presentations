@@ -19,7 +19,7 @@ def constrained_gumbel_softmax() -> SlideWithBlocks:
         The slide with the issue, proposed solution, formula and remarks.
     """
     alert_block = AlertBlock(
-        title="Issue",
+        title="Suspected Issue",
         content="Gumbel-softmax may allow invalid selections to have non-zero probability\n"
         "as it approximates a categorical distribution.",
     )
@@ -42,27 +42,56 @@ def constrained_gumbel_softmax() -> SlideWithBlocks:
 
     # Use the custom command in a LaTeX expression
     myTemplate = TexTemplate()
+    myTemplate.add_to_preamble(r"\usepackage{amsmath}")  # for piecewise formula
     myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
-    original_constrained_gumbel_formula = MathTex(
+    # original_constrained_gumbel_formula = MathTex(
+    #     r"\varphi(\tilde{\mathbf{I'}}) = \frac{"
+    #     r"\exp{(\texttt{BoundSigmoid}(\tilde{\mathbf{I'}}))} \odot \mathbf{M'}}"
+    #     r"{\sum_{j=1}^{\max_{i \in I_{\mathcal{C}}} ( | \mathcal{M}_{i} | )} "
+    #     r"\exp{(\texttt{BoundSigmoid}(\tilde{\mathbf{I'}}))} \odot \mathbf{M'}}",
+    #     color=BLACK, tex_template=myTemplate
+    # )
+    constrained_gumbel_formula = MathTex(
         r"\varphi(\tilde{\mathbf{I'}}) = \frac{"
-        r"\exp{(\texttt{BoundSigmoid}(\tilde{\mathbf{I'}}))} \odot \mathbf{M'}}"
+        r"\exp{(\tilde{\mathbf{I'}})} \odot \mathbf{M'}}"
         r"{\sum_{j=1}^{\max_{i \in I_{\mathcal{C}}} ( | \mathcal{M}_{i} | )} "
-        r"\exp{(\texttt{BoundSigmoid}(\tilde{\mathbf{I'}}))} \odot \mathbf{M'}}",
+        r"\exp{(\tilde{\mathbf{I'}})} \odot \mathbf{M'}}",
+        color=BLACK, tex_template=myTemplate
+    )
+    ste_formula = MathTex(
+        r"\mathbf{I} = \hat{\mathbf{I}'} - {{\varphi (\tilde{\mathbf{I}'})^{T}}_\texttt{detached}} + {\varphi (\tilde{\mathbf{I}'})^{T}}",
         color=BLACK,
     )
-    # ste_formula = MathTex(
-    #     r"\mathbf{I} = \hat{\mathbf{I}'} - {{\varphi (\tilde{\mathbf{I}'})^{T}}_\texttt{detached}} + {\varphi (\tilde{\mathbf{I}'})^{T}}",
-    #     color=BLACK,
-    # )
     # argmax_formula = MathTex(
     #     r"\hat{\mathbf{I}}_{i, u, j} = argmax_{j} \left( \varphi(\tilde{\mathbf{I}})_{i, u, j} \right)",
     #     color=BLACK,
     # )
+    argmax_formula = MathTex(
+        r"""
+        \hat{\mathbf{I}}_{i, u, j} = 
+        \begin{cases} 
+            0 & \varphi(\tilde{\mathbf{I}})_{i, u, j} < \max_{j'}(\varphi(\tilde{\mathbf{I}})_{i, u, j'}) \\
+            1 & \text{otherwise} \\
+        \end{cases}
+        """,
+        color=BLACK,
+        tex_template=myTemplate
+    )
     return SlideWithBlocks(
         title="Constrained Gumbel-Softmax",
         subtitle=None,
         
-        blocks=[alert_block, example_block, original_constrained_gumbel_formula, remark_block],
+        blocks=[
+            alert_block,
+            example_block,
+            remark_block,
+            constrained_gumbel_formula,
+            Tex("followed by", color=BLACK),
+            ste_formula,
+            Tex("where ", color=BLACK),
+            argmax_formula,
+
+        ],
     )
 
 

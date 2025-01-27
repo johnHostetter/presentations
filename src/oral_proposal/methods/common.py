@@ -1,4 +1,3 @@
-from typing import Tuple
 from dataclasses import dataclass
 
 import cv2  # pip install opencv-python
@@ -9,6 +8,16 @@ import matplotlib.pyplot as plt
 from manim import *
 from d3rlpy.datasets import get_cartpole
 
+
+@dataclass
+class ItemColor:
+    ACTIVE_1: str = "#004488"  # dark blue
+    INACTIVE_1: str = "#6699CC"  # light blue
+    ACTIVE_2: str = "#997700"  # dark yellow
+    INACTIVE_2: str = "#EECC66"  # light yellow
+    ACTIVE_3: str = "#994455"  # dark pink
+    INACTIVE_3: str = "#EE99AA"  # light pink
+    BACKGROUND: str = "#000000"  # black
 
 def get_data_and_env(n_samples=100):
     data, _ = get_cartpole(dataset_type="replay")

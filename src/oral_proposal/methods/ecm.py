@@ -8,7 +8,8 @@ from sklearn import manifold
 from sklearn.manifold import TSNE
 
 from manim_beamer import MANIM_BLUE
-from manim_timeline import ItemColor
+# from manim_timeline import ItemColor
+from src.oral_proposal.methods.common import ItemColor
 from manim_timeline.axes import make_axes, AxisConfig
 from soft.datasets import LabeledDataset
 from soft.utilities.reproducibility import set_rng, load_configuration
@@ -16,6 +17,8 @@ from soft.fuzzy.unsupervised.cluster.online.ecm import (
     apply_evolving_clustering_method as ECM,
     LabeledClusters,
 )
+
+from src.manim_presentation.utils import get_project_root
 from src.oral_proposal.methods.common import (
     display_cart_pole,
     get_data_and_env,
@@ -23,6 +26,12 @@ from src.oral_proposal.methods.common import (
 
 set_rng(2)
 
+config.disable_caching = False  # may need to disable caching for the timeline
+config.background_color = WHITE
+light_theme_style = {
+    "fill_color": BLACK,
+    "background_stroke_color": WHITE,
+}
 
 def extract_sequence(tsne, X):
     sklearn_grad = manifold._t_sne._gradient_descent
@@ -123,7 +132,7 @@ def extract_sequence(tsne, X):
 class ECMDemo(Slide, MovingCameraScene):
     def __init__(self, **kwargs):
         super().__init__()
-        self.default_scale_multiplier: float = 5.0
+        self.default_scale_multiplier: float = 1.0
         # background = ImageMobject("background.png").scale(2).set_color("#FFFFFF")
         # self.add(background)
 
@@ -136,12 +145,14 @@ class ECMDemo(Slide, MovingCameraScene):
                 tsne_X.max(0)[None, :] - tsne_X.min(0)[None, :]
             )
 
-            config = load_configuration()
+            config = load_configuration(
+                get_project_root().parent / "YACS" / "default_configuration.yaml"
+            )
             with config.unfreeze():
                 config.clustering.distance_threshold = 0.4
             labeled_clusters: LabeledClusters = ECM(
                 LabeledDataset(data=torch.tensor(tsne_X[: iter + 1]), labels=None),
-                config=config,
+                config=config, device=torch.device("cpu"),
             )
             new_clusters_supports = np.array(labeled_clusters.supports)
             dot = self.data_dots[iter]
@@ -154,14 +165,14 @@ class ECMDemo(Slide, MovingCameraScene):
             previous_spot_dot = deepcopy(dot)
             scene.add(previous_spot_dot)
             animations.append(previous_spot_dot.animate.set_opacity(0.25))
-            center = labeled_clusters.clusters.centers[cluster_idx].detach().numpy()
+            center = labeled_clusters.clusters.get_centers()[cluster_idx].detach().numpy()
             circle = Circle(
                 radius=config.clustering.distance_threshold,
                 stroke_width=self.default_scale_multiplier * scale,
             )
             # reset stroke width too
             circle.set_stroke(
-                str(ItemColor.ACTIVE_1), self.default_scale_multiplier * scale
+                str(ItemColor.ACTIVE_2), self.default_scale_multiplier * scale
             )
             circle.move_to(axes.c2p(center[0], center[1]))
             animations.append(dot.animate.move_to(axes.c2p(center[0], center[1])))
@@ -206,7 +217,7 @@ class ECMDemo(Slide, MovingCameraScene):
         if target_scene is None:
             target_scene = self
         method = (
-            Text("Evolving Clustering Method", color=BLACK)
+            Tex("Evolving Clustering Method", color=BLACK)
             .scale(scale_factor=scale)
             .move_to(origin)
         )
@@ -272,7 +283,7 @@ class ECMDemo(Slide, MovingCameraScene):
                                 dot.animate.move_to(axes.c2p(tsne_x[0], tsne_x[1]))
                             )
                         except IndexError:
-                            dot = Dot(color=MANIM_BLUE).scale(
+                            dot = Dot(color=ItemColor.ACTIVE_1).scale(
                                 scale_factor=(
                                     (self.default_scale_multiplier / 3) * scale
                                 )
