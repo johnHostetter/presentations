@@ -224,8 +224,8 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             tex_template=myTemplate,  # IMPORTANT
         )
         softmax_formula = VGroup(Tex(r"\textbf{(Eq. 5)}", color=BLACK), softmax_formula).arrange(RIGHT)
-        brace = Brace(softmax_formula, DOWN, color=DARK_BLUE)
-        softmax_lbl = Tex(r"\texttt{softmax}", color=DARK_BLUE).next_to(brace, DOWN)
+        brace = Brace(softmax_formula, DOWN, color=GREEN)
+        softmax_lbl = Tex(r"\texttt{softmax}", color=GREEN).next_to(brace, DOWN)
         labeled_brace = VGroup(brace, softmax_lbl)
         such_that_tex = (
             Tex("such that", color=BLACK)
@@ -341,6 +341,66 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             weight_mean_term_formula, color=DARK_BLUE
         )
         labeled_mean_brace = VGroup(mean_brace, mean_brace_lbl, mean_surrounding_rectangle)
+
+        # begin adding layer normalization formulas
+
+        layer_normalization_formula = MathTex(
+            r"w_{u}'(\mathbf{x}) = \frac{w_{u}(\mathbf{x}) - \overline{\mu}}{\overline{\sigma}} * \kappa + \beta",
+            color=BLACK,
+            tex_template=myTemplate,  # IMPORTANT
+        )
+        layer_normalization_formula = VGroup(
+            Tex(r"\textbf{(Eq. 8)}", color=BLACK),
+            layer_normalization_formula,
+        ).arrange(RIGHT).next_to(weight_term_formulas, DOWN).shift(2 * DOWN)
+        layer_norm_surrounding_rectangle = SurroundingRectangle(
+            layer_normalization_formula, color=ORANGE
+        )
+        layer_norm_brace = Brace(layer_normalization_formula, UP, color=ORANGE)
+        layer_norm_brace_lbl = Tex(r"\texttt{layer normalization}", color=ORANGE).next_to(
+            layer_norm_brace, UP
+        )
+        labeled_layer_norm_brace = VGroup(
+            layer_norm_brace, layer_norm_brace_lbl
+        )
+        layer_normalization_formula = VGroup(
+            layer_norm_surrounding_rectangle, layer_normalization_formula, labeled_layer_norm_brace
+        )
+        where_tex_1 = (
+            Tex("where", color=BLACK)
+            .next_to(layer_normalization_formula, DOWN)
+            .align_to(layer_normalization_formula, LEFT)
+        )
+        layer_normalization_1 = MathTex(
+            r"\overline{\mu} = \frac{1}{|U|} \sum_{u \in U} w_{u}(\mathbf{x})",
+            color=BLACK,
+            tex_template=myTemplate,  # IMPORTANT
+        )
+        layer_normalization_2 = MathTex(
+            r"\overline{\sigma} = \sqrt{\frac{1}{|U|} \sum_{u \in U} (w_{u}(\mathbf{x}) - \overline{\mu})^2 + 1e-5}",
+            color=BLACK,
+            tex_template=myTemplate,  # IMPORTANT
+        )
+        layer_norm_params = MathTex(
+            r"\kappa, \beta \in \mathbb{R}",
+            color=BLACK,
+            tex_template=myTemplate,  # IMPORTANT
+        )
+        layer_normalization_1 = VGroup(
+            Tex(r"\textbf{(Eq. 9)}", color=BLACK), layer_normalization_1
+        ).arrange(RIGHT)
+        layer_normalization_2 = VGroup(
+            Tex(r"\textbf{(Eq. 10)}", color=BLACK), layer_normalization_2
+        ).arrange(RIGHT)
+        additional_layer_norm = VGroup(
+            where_tex_1, VGroup(
+                layer_normalization_1,
+                Tex("and", color=BLACK),
+                layer_normalization_2,
+                Tex("with", color=BLACK),
+                layer_norm_params
+            ).arrange(RIGHT, buff=0.5)
+        ).arrange(DOWN, buff=0.25, aligned_edge=LEFT).next_to(layer_normalization_formula, DOWN)
 
         self.play(Create(tsk_all), Create(annotation_table))
 
@@ -461,15 +521,15 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
         self.next_slide()
 
         # emphasize this is the softmax formula
-        surrounding_rectangle = SurroundingRectangle(softmax_formula, color=DARK_BLUE)
+        surrounding_rectangle = SurroundingRectangle(softmax_formula, color=GREEN)
         self.play(Create(surrounding_rectangle), Create(labeled_brace))
         self.wait(1)
         self.next_slide()
 
         softmax_common_trick_formula.shift(1.5 * RIGHT)
-        new_surrounding_rectangle = SurroundingRectangle(softmax_common_trick_formula, color=DARK_BLUE)
-        new_brace = Brace(softmax_common_trick_formula, DOWN, color=DARK_BLUE)
-        new_brace_lbl = Tex(r"\texttt{softmax}", color=DARK_BLUE).next_to(new_brace, DOWN)
+        new_surrounding_rectangle = SurroundingRectangle(softmax_common_trick_formula, color=GREEN)
+        new_brace = Brace(softmax_common_trick_formula, DOWN, color=GREEN)
+        new_brace_lbl = Tex(r"\texttt{softmax}", color=GREEN).next_to(new_brace, DOWN)
         labeled_new_brace = VGroup(new_brace, new_brace_lbl)
         self.play(
             LaggedStart(
@@ -481,20 +541,19 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
                 lag_ratio=0.5,
             )
         )
-        # group.remove(softmax_formula)
-        # self.wait(1)
-        # self.next_slide()
-        #
-        # # incl. everything so it can all be seen
-        # group.add(citation_tex)
-        # group.add(tsk_formula)
-        # group.add(tsk_function_tex)
-        # group.add(gaussian_tsk_formula)
-        # self.play(
-        #     self.camera.frame.animate.move_to(group.get_center()).set(
-        #         width=group.width + 2, height=group.height + 2,
-        #     ),
-        # )
+
+        self.wait(1)
+        self.next_slide()
+
+        group.add(layer_normalization_formula, additional_layer_norm)
+        self.play(
+            Create(VGroup(layer_normalization_formula, additional_layer_norm)),
+            self.camera.frame.animate.move_to(group.get_center()).set(
+                width=group.width + 2, height=group.height + 2,
+            ),
+        )
+
+        self.wait(1)
 
 
 if __name__ == "__main__":
