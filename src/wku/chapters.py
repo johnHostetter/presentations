@@ -17,5 +17,6 @@ class ShortHistory(Timeline):
             **kwargs
         )
 
+
 if __name__ == "__main__":
     ShortHistory().render()

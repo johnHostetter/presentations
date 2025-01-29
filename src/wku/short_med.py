@@ -147,11 +147,14 @@ class TransformGraphs(Slide, MovingCameraScene):
         """
         # shuffle to illustrate the randomness of the network morphism
         import random
+
         values = list(grouped_premise_indices.values())
         random.shuffle(values)
         grouped_premise_indices = {idx: v for idx, v in enumerate(values)}
 
-        vs, edges = NoCodeGraph.make_edges_and_vertices_for_flc(grouped_premise_indices, max_terms)
+        vs, edges = NoCodeGraph.make_edges_and_vertices_for_flc(
+            grouped_premise_indices, max_terms
+        )
 
         # sort the vertices so they remain in the same order
         vs = dict(sorted(vs.items(), key=lambda item: int(item[0][1:])))
@@ -165,18 +168,33 @@ class TransformGraphs(Slide, MovingCameraScene):
     @staticmethod
     def make_premise_indices_for_flc(hidden_size, input_size, output_size):
         flc = NoCodeGraph.make_flc(hidden_size, input_size, output_size)
-        grouped_premise_indices, max_terms = NoCodeGraph.get_premise_indices_from_flc(flc)
+        grouped_premise_indices, max_terms = NoCodeGraph.get_premise_indices_from_flc(
+            flc
+        )
         return grouped_premise_indices, max_terms
 
     def construct(self):
         # iterate over creating each type of model and plotting its graph
         model_graphs = {}
         all_models: UnionType[None, Group] = None
-        grouped_premise_indices, max_terms = TransformGraphs.make_premise_indices_for_flc(
-            input_size=4, hidden_size=16, output_size=1
+        grouped_premise_indices, max_terms = (
+            TransformGraphs.make_premise_indices_for_flc(
+                input_size=4, hidden_size=16, output_size=1
+            )
         )
         vs = None
-        for model_type in ["flc0", "flc1", "flc2", "flc3", "flc4", "flc5", "flc6", "flc7", "flc8", "flc9"]:
+        for model_type in [
+            "flc0",
+            "flc1",
+            "flc2",
+            "flc3",
+            "flc4",
+            "flc5",
+            "flc6",
+            "flc7",
+            "flc8",
+            "flc9",
+        ]:
             if model_type == "dnn":
                 displayed_model_name = "Dense Feed-Forward Artificial Neural Network"
                 vs, edges = NoCodeGraph.get_vertices_and_edges_for_dnn()
@@ -210,7 +228,9 @@ class TransformGraphs(Slide, MovingCameraScene):
 
             # create the manim DiGraph representation of the model
 
-            digraph, grouped_vertices = NoCodeGraph.create_manim_digraph(graph, layer_types)
+            digraph, grouped_vertices = NoCodeGraph.create_manim_digraph(
+                graph, layer_types
+            )
             digraph.scale(1.35)
             digraph.rotate(PI / 2)
             self.camera.frame.move_to(digraph.get_center())
@@ -245,16 +265,22 @@ class TransformGraphs(Slide, MovingCameraScene):
         backward_arrow: UnionType[None, Arrow] = None
         for model_type, graph_pair in model_graphs.items():
             if forward_arrow is None:
-                forward_arrow = Arrow(DOWN, UP, color=BLUE).next_to(graph_pair.digraph, LEFT)
+                forward_arrow = Arrow(DOWN, UP, color=BLUE).next_to(
+                    graph_pair.digraph, LEFT
+                )
             if backward_arrow is None:
-                backward_arrow = Arrow(UP, DOWN, color=RED).next_to(graph_pair.digraph, LEFT)
+                backward_arrow = Arrow(UP, DOWN, color=RED).next_to(
+                    graph_pair.digraph, LEFT
+                )
             if prev_graph is None:
                 # make the arrows for the forward and backward passes
                 self.play(Create(graph_pair.digraph))
             else:
                 self.play(Unwrite(forward_arrow))
                 del forward_arrow
-                forward_arrow = Arrow(DOWN, UP, color=BLUE).next_to(graph_pair.digraph, LEFT)
+                forward_arrow = Arrow(DOWN, UP, color=BLUE).next_to(
+                    graph_pair.digraph, LEFT
+                )
                 self.play(Write(backward_arrow))
                 self.play(
                     AnimationGroup(
@@ -265,7 +291,9 @@ class TransformGraphs(Slide, MovingCameraScene):
                 )
                 self.play(Unwrite(backward_arrow))
                 del backward_arrow
-                backward_arrow = Arrow(UP, DOWN, color=RED).next_to(graph_pair.digraph, LEFT)
+                backward_arrow = Arrow(UP, DOWN, color=RED).next_to(
+                    graph_pair.digraph, LEFT
+                )
             self.play(Write(forward_arrow))
             prev_graph = graph_pair.digraph
         # self.wait(3)

@@ -17,6 +17,7 @@ class Linguistics(SlideWithList):
     Returns:
         The slide with definitions and examples.
     """
+
     def __init__(self):
         myTemplate = TexTemplate()
         myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
@@ -81,7 +82,7 @@ class Linguistics(SlideWithList):
                         ]
                     ),
                 ]
-            )
+            ),
         )
 
 

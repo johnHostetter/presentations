@@ -27,9 +27,7 @@ class Imperfection(Slide, MovingCameraScene):
     @staticmethod
     def draw(scene, origin, scale, animate: bool = True):
         imperfect_circle = SVGMobject(
-            get_project_root()
-            / "assets"
-            / "imperfect_circle.svg"
+            get_project_root() / "assets" / "imperfect_circle.svg"
         ).scale(2.5)
         perfect_circle = Circle(
             radius=imperfect_circle.height / 2, color=BLACK

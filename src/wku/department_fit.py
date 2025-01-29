@@ -16,6 +16,7 @@ class WKUFit(SlideWithList):
     Returns:
         The slide with a list of studies.
     """
+
     def __init__(self):
         super().__init__(
             title="Plan for the Next 5 Years",

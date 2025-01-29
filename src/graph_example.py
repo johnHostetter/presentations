@@ -15,8 +15,13 @@ from soft.datasets import LabeledDataset
 from soft.computing.organize import SelfOrganize
 from soft.computing.knowledge import KnowledgeBase
 from soft.computing.blueprints.factory import SystematicDesignProcess
-from soft.fuzzy.logic.inference import SpaceConfiguration, Mapping, Engine, Specifications, \
-    InferenceType
+from soft.fuzzy.logic.inference import (
+    SpaceConfiguration,
+    Mapping,
+    Engine,
+    Specifications,
+    InferenceType,
+)
 from soft.fuzzy.logic.controller import FuzzyLogicController as FLC
 from soft.fuzzy.relation.continuous.tnorm import AlgebraicProduct, TNorm
 from soft.fuzzy.sets.continuous.impl import Gaussian, Lorentzian
@@ -40,7 +45,10 @@ def get_self_organize(input_size: int = 4, output_size: int = 1) -> SelfOrganize
     with soft_config.unfreeze():
         soft_config.clustering.distance_threshold = 0.2
     return SystematicDesignProcess(
-        algorithms=["clip", "ecm", "wang_mendel"], config=soft_config, t_norm=TNorm.PRODUCT, device="cuda"
+        algorithms=["clip", "ecm", "wang_mendel"],
+        config=soft_config,
+        t_norm=TNorm.PRODUCT,
+        device="cuda",
     ).build(
         training_data=LabeledDataset(
             data=torch.rand((250, input_size)), labels=torch.rand((250, output_size))
@@ -235,13 +243,17 @@ class NoCodeGraph(Slide, MovingCameraScene):
         """
         flc = NoCodeGraph.make_flc(hidden_size, input_size, output_size)
 
-        grouped_premise_indices, max_terms = NoCodeGraph.get_premise_indices_from_flc(flc)
+        grouped_premise_indices, max_terms = NoCodeGraph.get_premise_indices_from_flc(
+            flc
+        )
 
-        return NoCodeGraph.make_edges_and_vertices_for_flc(grouped_premise_indices, max_terms)
+        return NoCodeGraph.make_edges_and_vertices_for_flc(
+            grouped_premise_indices, max_terms
+        )
 
     @staticmethod
     def make_edges_and_vertices_for_flc(
-            grouped_premise_indices, max_terms
+        grouped_premise_indices, max_terms
     ) -> Tuple[DictType[str, int], Set[Tuple[str, str]]]:
         vs = {}
         edges = set()
@@ -442,7 +454,9 @@ class NoCodeGraph(Slide, MovingCameraScene):
 
             # animate example code for the model
             if False:
-                self.animate_code(model_type, input_size=4, hidden_size=16, output_size=1)
+                self.animate_code(
+                    model_type, input_size=4, hidden_size=16, output_size=1
+                )
 
             # create the igraph.Graph representation of the model
             graph: ig.Graph = self.create_igraph_digraph(edges, vs)
@@ -489,7 +503,12 @@ class NoCodeGraph(Slide, MovingCameraScene):
             model_graphs["dnn"],
             next_graph=model_graphs["flc"],
             activation_funcs=[
-                ("Unit Step", partial(torch.heaviside, values=torch.zeros(1, dtype=torch.float32))),
+                (
+                    "Unit Step",
+                    partial(
+                        torch.heaviside, values=torch.zeros(1, dtype=torch.float32)
+                    ),
+                ),
                 ("Hard Sigmoid", torch.nn.Hardsigmoid()),
                 ("Sigmoid", torch.nn.Sigmoid()),
                 ("Hard Hyperbolic Tangent", torch.nn.Hardtanh()),
@@ -519,8 +538,18 @@ class NoCodeGraph(Slide, MovingCameraScene):
             model_graphs["flc"],
             next_graph=None,
             activation_funcs=[
-                ("Gaussian", Gaussian(centers=np.array([0.0]), widths=np.array([1.0]), device="cuda")),
-                ("Lorentzian", Lorentzian(centers=np.array([0.0]), widths=np.array([1.0]), device="cuda")),
+                (
+                    "Gaussian",
+                    Gaussian(
+                        centers=np.array([0.0]), widths=np.array([1.0]), device="cuda"
+                    ),
+                ),
+                (
+                    "Lorentzian",
+                    Lorentzian(
+                        centers=np.array([0.0]), widths=np.array([1.0]), device="cuda"
+                    ),
+                ),
             ],
             axis_configs=[
                 (AxisConfig(-6.0, 6.0, step=2.0), AxisConfig(0.0, 1.1, step=0.1)),

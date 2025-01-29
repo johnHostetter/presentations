@@ -108,7 +108,9 @@ class LERSDiagram(Slide, MovingCameraScene):
             # create the igraph.Graph representation of the model
             graph: ig.Graph = NoCodeGraph.create_igraph_digraph(edges, vs)
 
-            digraph, grouped_vertices = NoCodeGraph.create_manim_digraph(graph, layer_types)
+            digraph, grouped_vertices = NoCodeGraph.create_manim_digraph(
+                graph, layer_types
+            )
             digraph.rotate(PI / 2)
             self.graphs[displayed_model_name] = GraphPair(igraph=graph, digraph=digraph)
 
@@ -388,7 +390,9 @@ def lers_summary() -> SlideWithList:
     Returns:
         The slide with a short summary.
     """
-    bibtex_manager = BibTexManager(path=get_project_root() / "oral_proposal" / "ref.bib")
+    bibtex_manager = BibTexManager(
+        path=get_project_root() / "oral_proposal" / "ref.bib"
+    )
     return SlideWithList(
         title="A Minimal Discriminant Description of Fuzzy Rules",
         subtitle="Testing the Viability of Human-Readable Fuzzy Rules in Reinforcement Learning",

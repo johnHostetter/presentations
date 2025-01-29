@@ -8,12 +8,14 @@ class PastResearch(PromptSlide):
             skip=False,
         )
 
+
 class CurrentResearch(PromptSlide):
     def __init__(self):
         super().__init__(
             prompt="Current Research",
             skip=False,
         )
+
 
 if __name__ == "__main__":
     PastResearch().render()

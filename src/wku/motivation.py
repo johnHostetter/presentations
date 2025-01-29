@@ -16,6 +16,7 @@ light_theme_style = {
     "background_stroke_color": WHITE,
 }
 
+
 def wku_outline() -> SlideWithList:
     """
     Create a slide with my proposed studies for the completion of my dissertation.
