@@ -1,4 +1,4 @@
-from manim import config, BLACK, WHITE, Tex
+from manim import config, BLACK, WHITE, Tex, VGroup, ORIGIN
 
 from manim_beamer.bibtex import BibTexManager
 from manim_beamer.lists import ItemizedList
@@ -11,10 +11,12 @@ light_theme_style = {
     "background_stroke_color": WHITE,
 }
 
+
 class Publications(SlideWithList):
     """
     Create a slide containing a list of my publications.
     """
+
     def __init__(self):
         bib = BibTexManager(path=get_project_root() / "oral_proposal" / "ref.bib")
         from functools import partial
@@ -32,20 +34,46 @@ class Publications(SlideWithList):
             bib["abdelshiheed2022power"],
         ]
         for i, entry in enumerate(entries):
-            authors = bib.get_author_last_names_only(entry, et_al=False)
+            authors = bib.get_author_last_names_only(entry, et_al=False).replace(
+                r"Hostetter", r"\textbf{Hostetter}"
+            )
             title = entry["title"].replace("{", "").replace("}", "")
             place = entry["booktitle"] if "booktitle" in entry else entry["journal"]
             place = "In " + place.replace("{", "").replace("}", "")
-            entries[i] = BibTexManager.wrap_by_word(f"{authors}. {title} {place}, {entry['year']}.", num_of_words=8)
+            entries[i] = VGroup(
+                Tex(
+                    BibTexManager.wrap_by_word(
+                        f"{authors}. {title} {place}, {entry['year']}.", num_of_words=8
+                    ),
+                    color=BLACK,
+                    tex_environment="flushleft",
+                )
+            )
+
+        pending_pub = VGroup(
+            Tex(
+                r"\textit{(In Review at IJCAI 2025)}. "
+                r"\textbf{Hostetter}, Saha, Islam, Barnes, and Chi. "
+                r"Human-Readable Neuro-Fuzzy Networks from Frequent Yet Discernible Patterns "
+                r"in Reward-Based Environments.",
+                color=BLACK,
+                tex_environment="flushleft",
+            )
+        )
+        entries.insert(0, pending_pub)
 
         super().__init__(
             title="Publications",
             subtitle="",
             beamer_list=ItemizedList(
                 items=entries,
-                default_m_object=partial(Tex, tex_environment="flushleft")
+                default_m_object=partial(Tex, tex_environment="flushleft"),
             ),
         )
+
+    def construct(self):
+        self.draw(ORIGIN, 1.0, target_scene=self, animate=True)
+
 
 if __name__ == "__main__":
     Publications().render()

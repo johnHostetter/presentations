@@ -16,6 +16,7 @@ light_theme_style = {
     "background_stroke_color": WHITE,
 }
 
+
 def defense_outline() -> SlideWithList:
     """
     Create a slide with my proposed studies for the completion of my dissertation.
@@ -30,20 +31,20 @@ def defense_outline() -> SlideWithList:
         beamer_list=ItemizedList(
             items=[
                 "Introduction & Background",
-                "Past Work",
+                "Prior Research in Existing Construction Paradigms",
                 BL(
                     items=[
                         "I: Translation",
                         "II: Self-Organization",
                     ]
                 ),
-                "Present Work",
+                "A New Construction Paradigm",
                 BL(
                     items=[
                         "III: Concurrent Optimization",
                     ]
                 ),
-                "Future Work",
+                "Conclusion",
             ]
         ),
     )

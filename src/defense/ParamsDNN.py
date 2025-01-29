@@ -9,6 +9,7 @@ light_theme_style = {
     "background_stroke_color": WHITE,
 }
 
+
 class ParamsDNN(SlideWithList):
     def __init__(self, **kwargs):
         title: str = "Deep Neural Networks (DNNs)"
@@ -16,73 +17,118 @@ class ParamsDNN(SlideWithList):
 
         myTemplate = TexTemplate()
         myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
-        beamer_list=ItemizedList(
+        myTemplate.add_to_preamble(r"\usepackage[cal=boondox]{mathalfa}")
+
+        beamer_list = ItemizedList(
             items=[
-                VGroup(Text("Environment", weight=BOLD)),
+                VGroup(Tex(r"\textbf{Environment:}", color=BLACK)),
                 BL(
                     items=[
-                        "Number of frames skipped: 4, 8 or 12",
+                        VGroup(
+                            Tex("Number of frames skipped: 4, 8, or 12", color=BLACK)
+                        ),
                     ],
-                    default_m_object=Text
                 ),
-                VGroup(Text("Algorithm", weight=BOLD)),
+                VGroup(Tex(r"\textbf{Algorithm:}", color=BLACK)),
                 BL(
                     items=[
                         VGroup(
-                            Text("Learning rate, "),
-                            MathTex("\eta:", tex_template=myTemplate),
-                            Text(
-                                "[1e-5, 1e-3]"
+                            Tex(
+                                r"Learning rate, $\eta$: [1e-5, 1e-3]",
+                                color=BLACK,
+                                tex_template=myTemplate,
                             ),
                         ),
                         VGroup(
-                            Text("Batch size (used in experience replay), "),
-                            MathTex("|\mathbf{X}|:", tex_template=myTemplate),
-                            Text(
-                                "8, 16, 24, 32, 40, 48, 56, 64"
+                            Tex(
+                                r"Batch size (in experience replay), $|\mathbf{X}|$: "
+                                r"8, 16, 24, 32, 40, 48, 56, 64",
+                                color=BLACK,
+                                tex_template=myTemplate,
                             ),
                         ),
                         VGroup(
-                            Text("Memory size (used in experience replay), Rep. Memory: 10k, 20k, 30k, 40k, 50k"),
+                            Tex(
+                                r"Memory size (in experience replay), Rep. Memory: "
+                                r"10k, 20k, 30k, 40k, 50k",
+                                color=BLACK,
+                                tex_template=myTemplate,
+                            ),
                         ),
                         VGroup(
-                            Text("Discount factor, "),
-                            MathTex("\gamma:", tex_template=myTemplate),
-                            Text(
-                                "[0.9, 0.99]"
+                            Tex(
+                                r"Discount factor, $\gamma$: [0.9, 0.99]",
+                                color=BLACK,
+                                tex_template=myTemplate,
                             ),
                         ),
                     ]
                 ),
-                VGroup(Text("Architecture", weight=BOLD)),
+                VGroup(Tex(r"\textbf{Architecture:}", color=BLACK)),
                 BL(
                     items=[
                         VGroup(
-                            Text("Number of hidden neurons, "),
-                            MathTex("|\mathcal{N}|:", tex_template=myTemplate),
-                            Text(
-                                "128, 256, 384, 512"
+                            Tex(
+                                r"Number of hidden neurons, $|\mathcal{N}|$: "
+                                r"128, 256, 384, 512",
+                                color=BLACK,
+                                tex_template=myTemplate,
                             ),
                         ),
-                        "Activation function: ",
+                        VGroup(
+                            Tex(
+                                r"Activation function, $\mathcal{h}_{n}$: ",
+                                color=BLACK,
+                                tex_template=myTemplate,
+                            ),
+                        ),
                         ItemizedList(
                             items=[
-                                "ELU, PReLU, ReLU, ReLU6, RReLU, LeakyReLU",
-                                "SELU, CELU, GELU, SiLU, Mish",
-                                "Hardshrink, Hardtanh, Hardsigmoid, Hardswish",
-                                "Softplus, Softshrink, Softsign, LogSigmoid",
-                                "Tanh, Tanhshrink, Sigmoid",
+                                VGroup(
+                                    Tex(
+                                        "ELU, PReLU, ReLU, ReLU6, RReLU, LeakyReLU",
+                                        color=BLACK,
+                                        tex_template=myTemplate,
+                                    )
+                                ),
+                                VGroup(
+                                    Tex(
+                                        "SELU, CELU, GELU, SiLU, Mish",
+                                        color=BLACK,
+                                        tex_template=myTemplate,
+                                    )
+                                ),
+                                VGroup(
+                                    Tex(
+                                        "Hardshrink, Hardtanh, Hardsigmoid, Hardswish",
+                                        color=BLACK,
+                                        tex_template=myTemplate,
+                                    )
+                                ),
+                                VGroup(
+                                    Tex(
+                                        "Softplus, Softshrink, Softsign, LogSigmoid",
+                                        color=BLACK,
+                                        tex_template=myTemplate,
+                                    )
+                                ),
+                                VGroup(
+                                    Tex(
+                                        "Tanh, Tanhshrink, Sigmoid",
+                                        color=BLACK,
+                                        tex_template=myTemplate,
+                                    )
+                                ),
                             ],
-                            default_m_object=Text
-                        )
+                        ),
                     ],
-                    default_m_object=Text
                 ),
             ],
-            default_m_object=Text
         )
 
-        super().__init__(**kwargs, title=title, subtitle=subtitle, beamer_list=beamer_list)
+        super().__init__(
+            **kwargs, title=title, subtitle=subtitle, beamer_list=beamer_list
+        )
 
 
 if __name__ == "__main__":

@@ -21,20 +21,20 @@ class Conclusion(SlideWithBlocks):
     Returns:
         The slide with the two blocks.
     """
+
     def __init__(self):
         example_block = ExampleBlock(
-            title="Concurrent Optimization of NFNs",
+            title="Overall Contributions",
             content=AdvantagesList(
                 items=[
-                    "NFNs can be designed according to gradient descent",
-                    "This works online or offline",
-                    "Can easily work with other neural networks",
-                    "Hierarchical NFNs are possible (as shown here)",
+                    "NFNs' structure & parameters are designed according to gradient descent",
+                    "Can easily work online or offline with other neural networks",
+                    "Hierarchical NFNs are possible (as done here)",
                     "Recurrent NFNs are possible (future work)",
                     "As well as the usual advantages of NFNs:",
                     ItemizedList(
                         items=[
-                            'Transparent',
+                            "Transparent",
                             "Sample efficient (if initialized well)",
                             "Robust to missing values (not shown here)",
                         ]
@@ -59,7 +59,7 @@ class Conclusion(SlideWithBlocks):
                             "A plethora of possible solutions are already published",
                             "Future work: explore these solutions",
                         ]
-                    )
+                    ),
                 ]
             ),
         )
@@ -68,6 +68,7 @@ class Conclusion(SlideWithBlocks):
             subtitle=None,
             blocks=[example_block, alert_block],
         )
+
 
 if __name__ == "__main__":
     Conclusion().render()

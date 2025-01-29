@@ -2,16 +2,21 @@ from manim import TexTemplate, BOLD, Text, VGroup
 from manim_beamer.slides import SlideWithList
 from manim_beamer.lists import ItemizedList, BulletedList as BL
 
+
 class Setup(SlideWithList):
     def __init__(self, **kwargs):
-        title: str = "Playing A First-Person Shooter - DOOM"
-        subtitle: str = "Experimental Setup"
+        title: str = "Experimental Setup"
+        # subtitle: str = "Experimental Setup"
 
         myTemplate = TexTemplate()
         myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
-        beamer_list=ItemizedList(
+        beamer_list = ItemizedList(
             items=[
-                VGroup(Text("Details of the environment, actions, and rewards", weight=BOLD)),
+                VGroup(
+                    Text(
+                        "Details of the environment, actions, and rewards", weight=BOLD
+                    )
+                ),
                 BL(
                     items=[
                         "Each environment state is a RGB24 image of size 640x480 resolution",
@@ -19,7 +24,7 @@ class Setup(SlideWithList):
                         "Reward is particular to the current task",
                         "Each image is preprocessed to a 84x84x3 tensor",
                     ],
-                    default_m_object=Text
+                    default_m_object=Text,
                 ),
                 VGroup(Text("Experimental conditions", weight=BOLD)),
                 BL(
@@ -28,7 +33,7 @@ class Setup(SlideWithList):
                         "10 Epochs; evaluated for 25 episodes at end of each epoch",
                         "NFN is hierarchical and interpretable",
                     ],
-                    default_m_object=Text
+                    default_m_object=Text,
                 ),
                 VGroup(Text("Common mechanisms and processes", weight=BOLD)),
                 BL(
@@ -41,18 +46,18 @@ class Setup(SlideWithList):
                                 "(3, 8, 3, 2)",
                                 "(8, 8, 3, 2)",
                                 "(8, 8, 5, 1)",
-                                "(8, 16, 7, 1)"
+                                "(8, 16, 7, 1)",
                             ]
                         ),
                         "Final input shape to the DNN or NFN is (16, 10, 10)",
-                        "Adam optimization"
+                        "Adam optimization",
                     ]
                 ),
             ],
-            default_m_object=Text
+            default_m_object=Text,
         )
 
-        super().__init__(**kwargs, title=title, subtitle=subtitle, beamer_list=beamer_list)
+        super().__init__(**kwargs, title=title, subtitle=None, beamer_list=beamer_list)
 
 
 if __name__ == "__main__":

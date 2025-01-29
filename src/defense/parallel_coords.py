@@ -11,15 +11,20 @@ light_theme_style = {
     "background_stroke_color": WHITE,
 }
 
+
 class ParallelCoords(Slide, MovingCameraScene):
     def __init__(self):
         super().__init__()
         # this is hardcoded for my setup and may need to be changed, but want to dynamically
         # fetch the images from another project
-        self.pycharm_dir = Path(__file__).resolve().parents[3]  # 'home/username/PycharmProjects'
+        self.pycharm_dir = (
+            Path(__file__).resolve().parents[3]
+        )  # 'home/username/PycharmProjects'
         self.pysoft_dir = self.pycharm_dir / "PySoft"
         # point to the VizDOOM directory
-        self.output_dir = self.pysoft_dir / "output" / "experiments" / "online-rl" / "vizdoom"
+        self.output_dir = (
+            self.pysoft_dir / "output" / "experiments" / "online-rl" / "vizdoom"
+        )
         self.intermediate_dir = Path("custom") / "CO-FIS" / "DDQL" / "optuna"
         self.available_environments = list(self.output_dir.glob("*"))
         self.select_environments = [
@@ -60,9 +65,11 @@ class ParallelCoords(Slide, MovingCameraScene):
             if environment_dir.is_file():
                 continue
 
-            environment_title = Tex(
-                " ".join(environment_dir.stem.split("_")).title(), color=BLACK
-            ).scale(1.25).set_z_index(100)  # bring to front with a very high z-index
+            environment_title = (
+                Tex(" ".join(environment_dir.stem.split("_")).title(), color=BLACK)
+                .scale(1.25)
+                .set_z_index(100)
+            )  # bring to front with a very high z-index
 
             # if environment_dir.stem not in self.select_environments:
             #     continue
@@ -87,26 +94,37 @@ class ParallelCoords(Slide, MovingCameraScene):
                     }
 
                 # create the evaluator image & its title
-                evaluator_title = Tex(
-                    self.evaluators_display_names[evaluator_name], color=BLACK
-                ).scale(0.75).set_z_index(100)  # bring to front with a very high z-index
-                hyperparameter_importance_img_stem = f"{evaluator_name}_hyperparameter_importance"
-                parallel_coord_all_params_img_stem = f"parallel_coordinate_sorted_by_{evaluator_name}"
+                evaluator_title = (
+                    Tex(self.evaluators_display_names[evaluator_name], color=BLACK)
+                    .scale(0.75)
+                    .set_z_index(100)
+                )  # bring to front with a very high z-index
+                hyperparameter_importance_img_stem = (
+                    f"{evaluator_name}_hyperparameter_importance"
+                )
+                parallel_coord_all_params_img_stem = (
+                    f"parallel_coordinate_sorted_by_{evaluator_name}"
+                )
                 suffixes = ["_all_params", "_top_params"]
                 hyperparameter_importance_img = ImageMobject(
                     str(curr_dir / f"{hyperparameter_importance_img_stem}.png")
                 ).scale(1.5)
-                evaluator_title.next_to(
-                    hyperparameter_importance_img, 0.1 * UP
-                ).shift(0.5 * DOWN )
+                evaluator_title.next_to(hyperparameter_importance_img, 0.1 * UP).shift(
+                    0.5 * DOWN
+                )
 
                 # make parallel coordinate plot
                 parallel_coord_all_params_img = ImageMobject(
-                    str(curr_dir / f"{parallel_coord_all_params_img_stem}{suffixes[0]}.png")
+                    str(
+                        curr_dir
+                        / f"{parallel_coord_all_params_img_stem}{suffixes[0]}.png"
+                    )
                 ).scale(1.5)
-                img_group = Group(
-                    hyperparameter_importance_img, parallel_coord_all_params_img
-                ).arrange(buff=0.25).move_to(ORIGIN)
+                img_group = (
+                    Group(hyperparameter_importance_img, parallel_coord_all_params_img)
+                    .arrange(buff=0.25)
+                    .move_to(ORIGIN)
+                )
                 # shift the parallel coord image to the left to accommodate the image's margins
                 parallel_coord_all_params_img.shift(LEFT)
 
@@ -122,23 +140,18 @@ class ParallelCoords(Slide, MovingCameraScene):
                     evaluator_title.move_to(prev_evaluator_title.get_center())
                     animations.extend(
                         [
+                            ReplacementTransform(prev_evaluator_title, evaluator_title),
                             ReplacementTransform(
-                                prev_evaluator_title,
-                                evaluator_title
-                            ),
-                            ReplacementTransform(
-                                prev_environment_title,
-                                environment_title
+                                prev_environment_title, environment_title
                             ),
                         ]
                     )
                 # only create & add the table once - this data does not change
                 # get the table of data to show
                 import pandas as pd
+
                 # load and round the data to 2 decimal places
-                df: pd.DataFrame = pd.read_csv(
-                    curr_dir / "all_trials_sorted.csv"
-                )
+                df: pd.DataFrame = pd.read_csv(curr_dir / "all_trials_sorted.csv")
                 # cols = [
                 #     'Certainty', 'Constraint', "Cui, Y. et al. ('21)", 'Gumbel Noise',
                 #     'Normalize', 'Use Entmax', 'Use GMT', 'Mean Reward', 'Std. Dev.', 'Slope'
@@ -160,16 +173,22 @@ class ParallelCoords(Slide, MovingCameraScene):
                 )
                 for param, importance in sorted_importance_results:
                     total_importance += importance
-                    if round(total_importance, ndigits=2) < IMPORTANCE_THRESHOLD:  # keep the top % of the importance
+                    if (
+                        round(total_importance, ndigits=2) < IMPORTANCE_THRESHOLD
+                    ):  # keep the top % of the importance
                         top_params.append(param)
                     else:
                         break
                 # get the ordering for this particular evaluator
-                hyperparameter_ordering_df = pd.read_csv(curr_dir / "hyperparameter_index_ordering.csv")
+                hyperparameter_ordering_df = pd.read_csv(
+                    curr_dir / "hyperparameter_index_ordering.csv"
+                )
                 hyperparameter_ordering_df.set_index("Evaluator", inplace=True)
-                hyperparameter_ordering: List[str] = hyperparameter_ordering_df.loc[
-                    evaluator_name
-                ].sort_values().index.tolist()  # sort the columns by their importance ordering
+                hyperparameter_ordering: List[str] = (
+                    hyperparameter_ordering_df.loc[evaluator_name]
+                    .sort_values()
+                    .index.tolist()
+                )  # sort the columns by their importance ordering
                 hyperparameter_ordering = [
                     col for col in hyperparameter_ordering if col in pos_df
                 ]  # only keep the columns that are in the dataframe
@@ -179,26 +198,33 @@ class ParallelCoords(Slide, MovingCameraScene):
                     # "Slope",
                     # "Count",
                 ]
-                new_pos_df = pos_df.copy()[hyperparameter_ordering + target_columns]  # rearrange the columns
+                new_pos_df = pos_df.copy()[
+                    hyperparameter_ordering + target_columns
+                ]  # rearrange the columns
 
                 # simplify the data
-                new_pos_df.loc[:, "Constraint"] = new_pos_df.loc[:, "Constraint"].astype(bool)
+                new_pos_df.loc[:, "Constraint"] = new_pos_df.loc[
+                    :, "Constraint"
+                ].astype(bool)
                 # median-split floats
                 for float_param in ["Learning Rate", "Epsilon", "Temperature", "Rules"]:
                     from decimal import Decimal
+
                     median_split: float = new_pos_df[float_param].median()
                     if float_param == "Learning Rate":
                         median_split_display: str = "{:.2e}".format(
                             Decimal(new_pos_df[float_param].median())
                         )
                     else:
-                        median_split_display: str = str(round(new_pos_df[float_param].median(), 2))
+                        median_split_display: str = str(
+                            round(new_pos_df[float_param].median(), 2)
+                        )
                     new_pos_df.loc[:, float_param] = (
-                            new_pos_df.loc[:, float_param] <= median_split
+                        new_pos_df.loc[:, float_param] <= median_split
                     ).map(
                         {
                             True: f"$\leq$ {median_split_display}",
-                            False: f"$>$ {median_split_display}"
+                            False: f"$>$ {median_split_display}",
                         }
                     )
                 # anything greater than 1
@@ -219,15 +245,22 @@ class ParallelCoords(Slide, MovingCameraScene):
                 def pooled_variance(group) -> float:
                     n_samples = 25  # number of samples per group
                     sample_sizes: np.ndarray[int] = np.array([n_samples] * len(group))
-                    return ((
-                        (sample_sizes - 1) * (group["Std. Dev."] ** 2)
-                    ).sum() / (sample_sizes - 1).sum()) ** 0.5
+                    return (
+                        ((sample_sizes - 1) * (group["Std. Dev."] ** 2)).sum()
+                        / (sample_sizes - 1).sum()
+                    ) ** 0.5
 
-                agg_df.loc[:, "Std. Dev."] = tmp_group_df.apply(pooled_variance).reset_index()[0]  # the result is stored in column 0
+                agg_df.loc[:, "Std. Dev."] = tmp_group_df.apply(
+                    pooled_variance
+                ).reset_index()[
+                    0
+                ]  # the result is stored in column 0
 
                 # calculate the slope of the mean reward
                 if "Slope" in target_columns:
-                    agg_df.loc[:, "Slope"] = tmp_group_df.median().reset_index()["Slope"]
+                    agg_df.loc[:, "Slope"] = tmp_group_df.median().reset_index()[
+                        "Slope"
+                    ]
 
                 agg_df.loc[:, "Count"] = counts
                 agg_df = agg_df.sort_values("Mean Reward", ascending=False)
@@ -273,7 +306,7 @@ class ParallelCoords(Slide, MovingCameraScene):
                     self.camera.frame.move_to(camera_focus_group.get_center())
                     self.camera.frame.set(
                         width=camera_focus_group.width + 0.2,
-                        height=camera_focus_group.height + 0.2
+                        height=camera_focus_group.height + 0.2,
                     )
                     items_to_fade_in.append(img_group)
                     if prev_table is None:
@@ -292,9 +325,16 @@ class ParallelCoords(Slide, MovingCameraScene):
                     self.next_slide()
 
                     # replace the parallel coordinate plot with only the top parameters
-                    parallel_coord_top_params_img = ImageMobject(
-                        str(curr_dir / f"{parallel_coord_all_params_img_stem}{suffixes[1]}.png")
-                    ).scale(1.5).move_to(parallel_coord_all_params_img)
+                    parallel_coord_top_params_img = (
+                        ImageMobject(
+                            str(
+                                curr_dir
+                                / f"{parallel_coord_all_params_img_stem}{suffixes[1]}.png"
+                            )
+                        )
+                        .scale(1.5)
+                        .move_to(parallel_coord_all_params_img)
+                    )
                     self.play(
                         ReplacementTransform(
                             parallel_coord_all_params_img, parallel_coord_top_params_img
@@ -309,6 +349,7 @@ class ParallelCoords(Slide, MovingCameraScene):
 
     def make_evaluator_table(self, img_group, evaluator_name: str):
         import pandas as pd
+
         def create_data(all_hyperparameters: OrderedDict = None) -> OrderedDict:
             if all_hyperparameters is None:
                 all_hyperparameters = OrderedDict()
@@ -316,20 +357,31 @@ class ParallelCoords(Slide, MovingCameraScene):
             environments = self.evaluators_results[evaluator_name]["environments"]
             for env_idx, environment in enumerate(environments):
                 print(env_idx, environment)
-                curr_hyperparameters = self.evaluators_results[evaluator_name]["hyperparameters"][env_idx]
+                curr_hyperparameters = self.evaluators_results[evaluator_name][
+                    "hyperparameters"
+                ][env_idx]
                 for param_idx, param in enumerate(curr_hyperparameters):
                     new_param_value: str = str(
-                        self.evaluators_results[evaluator_name]["param_values"][env_idx][param_idx]
+                        self.evaluators_results[evaluator_name]["param_values"][
+                            env_idx
+                        ][param_idx]
                     )
                     if param not in all_hyperparameters:
-                        all_hyperparameters[param] = ['n/a'] * len(environments)
-                    if all_hyperparameters[param][env_idx] in ['-', 'n/a']:
-                        all_hyperparameters[param][env_idx] = new_param_value  # overwrite the value
+                        all_hyperparameters[param] = ["n/a"] * len(environments)
+                    if all_hyperparameters[param][env_idx] in ["-", "n/a"]:
+                        all_hyperparameters[param][
+                            env_idx
+                        ] = new_param_value  # overwrite the value
                     elif new_param_value not in all_hyperparameters[param][env_idx]:
                         # not in is important as the concatenated string may already contain the value
                         # append the value to the existing string; this is contested
-                        if new_param_value not in ['-', 'n/a']:  # only append if it's not a placeholder
-                            all_hyperparameters[param][env_idx] = f"{all_hyperparameters[param][env_idx]}, {new_param_value}"
+                        if new_param_value not in [
+                            "-",
+                            "n/a",
+                        ]:  # only append if it's not a placeholder
+                            all_hyperparameters[param][
+                                env_idx
+                            ] = f"{all_hyperparameters[param][env_idx]}, {new_param_value}"
             new_tasks: List[str] = [
                 " ".join(env.split("_")).title()
                 for env in self.evaluators_results[evaluator_name]["environments"]
@@ -337,7 +389,9 @@ class ParallelCoords(Slide, MovingCameraScene):
             if "Task" in all_hyperparameters:
                 curr_tasks = all_hyperparameters["Task"]
                 assert curr_tasks == new_tasks, "Tasks are not the same"
-                del all_hyperparameters["Task"]  # delete it so we can add it to the right of the table
+                del all_hyperparameters[
+                    "Task"
+                ]  # delete it so we can add it to the right of the table
             # add the task to the right of the table
             all_hyperparameters["Task"] = new_tasks
             if "Trials" not in all_hyperparameters:
@@ -353,16 +407,22 @@ class ParallelCoords(Slide, MovingCameraScene):
         ):
             if all_hyperparameters is None:
                 # need to create the data for the first time
-                all_hyperparameters = create_data(all_hyperparameters=all_hyperparameters)
+                all_hyperparameters = create_data(
+                    all_hyperparameters=all_hyperparameters
+                )
 
             tmp_df = pd.DataFrame(all_hyperparameters)
             table = self.make_table(
-                img_group, tmp_df, top_k=7, shift_value=30
+                img_group, tmp_df, top_k=7, shift_value=50, row_id=False
             )
-            caption = Tex(
-                f"Trials grouped by the most important hyperparameters for concurrent optimization, as determined by {evaluator_display_name}.",
-                color=BLACK
-            ).scale(0.75).set_z_index(100)
+            caption = (
+                Tex(
+                    f"Trials grouped by the most important hyperparameters for concurrent optimization, as determined by {evaluator_display_name}.",
+                    color=BLACK,
+                )
+                .scale(0.75)
+                .set_z_index(100)
+            )
             caption.next_to(table, 0.5 * DOWN)
             captioned_table = Group(table, caption)
             if prev_table is None:
@@ -381,10 +441,14 @@ class ParallelCoords(Slide, MovingCameraScene):
 
         table = None
         all_findings = OrderedDict()
-        for evaluator_name, evaluator_display_name in self.evaluators_display_names.items():
+        for (
+            evaluator_name,
+            evaluator_display_name,
+        ) in self.evaluators_display_names.items():
             if evaluator_name in self.evaluators_results:
                 table = inner_make_evaluator_table(
-                    evaluator_display_name, prev_table=table
+                    evaluator_display_name,
+                    prev_table=table,
                 )
                 # keep track of the data for the final slide
                 all_findings = create_data(all_hyperparameters=all_findings)
@@ -402,13 +466,21 @@ class ParallelCoords(Slide, MovingCameraScene):
             if col in all_findings.keys():
                 del all_findings[col]
         inner_make_evaluator_table(
-            evaluator_display_name="ALL", prev_table=table, all_hyperparameters=all_findings
+            evaluator_display_name="ALL",
+            prev_table=table,
+            all_hyperparameters=all_findings,
         )
         self.wait(1)
         self.next_slide()
 
-
-    def make_table(self, img_group, pos_df, top_k: int = 7, shift_value: float=0.5) -> Table:
+    def make_table(
+        self,
+        img_group,
+        pos_df,
+        top_k: int = 7,
+        shift_value: float = 0.5,
+        row_id: bool = True,
+    ) -> Table:
         new_columns = {
             "Use GMT": r"GMT",
             "Constraint": r"$\theta$",
@@ -441,8 +513,15 @@ class ParallelCoords(Slide, MovingCameraScene):
         tmp_df.rename(columns=new_columns, inplace=True)
         tmp_df = tmp_df.round(DECIMAL_PLACES).head(top_k)
         tmp_df_cols = tmp_df.columns.tolist()
-        tmp_df["Row"] = range(1, top_k + 1)
-        tmp_df = tmp_df[["Row"] + tmp_df_cols]
+        if row_id:
+            tmp_df["Row"] = range(1, top_k + 1)
+            tmp_df = tmp_df[["Row"] + tmp_df_cols]
+        elif "Task" in tmp_df_cols and "Trials" in tmp_df_cols:
+            # arrange it so columns are to the left, then Trials, then Task
+            tmp_df_cols = [col for col in tmp_df_cols if col not in ["Task", "Trials"]]
+            tmp_df_cols += ["Trials", "Task"]
+            # cast the columns to the right types
+            tmp_df["Trials"] = tmp_df["Trials"].astype(int)
         table = Table(
             table=tmp_df.values.astype(str).tolist(),
             col_labels=[
@@ -462,7 +541,9 @@ class ParallelCoords(Slide, MovingCameraScene):
         table.get_vertical_lines().set_color(BLACK)
         for entry in table.get_entries():
             entry.set_color(BLACK)
-        table.scale(0.5).move_to(img_group.get_center()).next_to(img_group, shift_value * DOWN)
+        table.scale(0.5).move_to(img_group.get_center()).next_to(
+            img_group, shift_value * DOWN
+        )
         return table
 
 

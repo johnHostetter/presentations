@@ -18,7 +18,8 @@ class Greeting(Slide):
             ),
             Tex("© 2025 John Wesley Hostetter", color=BLACK),
             Tex(
-                "Welcome to my dissertation defense.", color=BLACK,
+                "Welcome to my dissertation defense.",
+                color=BLACK,
             ),
             # Tex(
             #     "Presented by John Wesley Hostetter",
