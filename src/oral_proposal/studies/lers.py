@@ -5,7 +5,8 @@ import igraph as ig
 from manim import *
 from manim_slides import Slide
 
-from examples.graph_example import MyGraph, GraphPair
+from src.graph_example import NoCodeGraph as MyGraph
+from manim_timeline.graph import GraphPair
 from manim_timeline.utils import get_project_root
 from manim_beamer.bibtex import BibTexManager
 from manim_beamer.lists import ItemizedList, BulletedList as BL
@@ -386,7 +387,9 @@ def lers_summary() -> SlideWithList:
     Returns:
         The slide with a short summary.
     """
-    bibtex_manager = BibTexManager(path=get_project_root() / "oral_proposal" / "ref.bib")
+    bibtex_manager = BibTexManager(
+        path=get_project_root() / "oral_proposal" / "ref.bib"
+    )
     return SlideWithList(
         title="A Minimal Discriminant Description of Fuzzy Rules",
         subtitle="Testing the Viability of Human-Readable Fuzzy Rules in Reinforcement Learning",
@@ -434,4 +437,4 @@ def lers_summary() -> SlideWithList:
 
 
 if __name__ == "__main__":
-    LERS().render()
+    LERSDiagram().render()

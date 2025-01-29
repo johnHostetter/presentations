@@ -56,7 +56,8 @@ def constrained_gumbel_softmax() -> SlideWithBlocks:
         r"\exp{(\tilde{\mathbf{I'}})} \odot \mathbf{M'}}"
         r"{\sum_{j=1}^{\max_{i \in I_{\mathcal{C}}} ( | \mathcal{M}_{i} | )} "
         r"\exp{(\tilde{\mathbf{I'}})} \odot \mathbf{M'}}",
-        color=BLACK, tex_template=myTemplate
+        color=BLACK,
+        tex_template=myTemplate,
     )
     ste_formula = MathTex(
         r"\mathbf{I} = \hat{\mathbf{I}'} - {{\varphi (\tilde{\mathbf{I}'})^{T}}_\texttt{detached}} + {\varphi (\tilde{\mathbf{I}'})^{T}}",
@@ -75,12 +76,11 @@ def constrained_gumbel_softmax() -> SlideWithBlocks:
         \end{cases}
         """,
         color=BLACK,
-        tex_template=myTemplate
+        tex_template=myTemplate,
     )
     return SlideWithBlocks(
         title="Constrained Gumbel-Softmax",
         subtitle=None,
-        
         blocks=[
             alert_block,
             example_block,
@@ -90,7 +90,6 @@ def constrained_gumbel_softmax() -> SlideWithBlocks:
             ste_formula,
             Tex("where ", color=BLACK),
             argmax_formula,
-
         ],
     )
 

@@ -18,10 +18,12 @@ def why_modify_gumbel() -> SlideWithBlocks:
         The slide with the issue, remark and proposed solution.
     """
     alert_block = AlertBlock(
-        title="Suspected Issue", content="Naively applying Gumbel-Max Trick might not work."
+        title="Suspected Issue",
+        content="Naively applying Gumbel-Max Trick might not work.",
     )
     remark_block = RemarkBlock(
-        title="Reason", content="It may violate ϵ-completeness by sampling poorly activated rules."
+        title="Reason",
+        content="It may violate ϵ-completeness by sampling poorly activated rules.",
     )
     example_block = ExampleBlock(
         title="Proposed Solution",

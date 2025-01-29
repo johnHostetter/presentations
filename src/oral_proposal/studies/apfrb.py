@@ -60,7 +60,9 @@ def apfrb_summary() -> SlideWithList:
     Returns:
         The slide with a list of studies.
     """
-    bibtex_manager = BibTexManager(path=get_project_root() / "oral_proposal" / "ref.bib")
+    bibtex_manager = BibTexManager(
+        path=get_project_root() / "oral_proposal" / "ref.bib"
+    )
     beamer_list = BL(
         items=[
             bibtex_manager.cite_entry(

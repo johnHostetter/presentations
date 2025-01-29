@@ -13,11 +13,7 @@ class SoritesParadox(Scene):
     def construct(self):
         # load the PySoft logo as a manim SVGMobject
         heap_svg = SVGMobject(
-            get_project_root()
-            / "animations"
-            / "demos"
-            / "images"
-            / "Tannin_heap.svg"
+            get_project_root() / "animations" / "demos" / "images" / "Tannin_heap.svg"
         ).scale(2.0)
 
         self.play(Create(heap_svg, run_time=3))

@@ -78,7 +78,9 @@ def get_fyd_formula() -> SlideWithBlocks:
     #         ]
     #     ),
     # )
-    bibtex_manager = BibTexManager(path=get_project_root() / "oral_proposal" / "ref.bib")
+    bibtex_manager = BibTexManager(
+        path=get_project_root() / "oral_proposal" / "ref.bib"
+    )
     myTemplate = TexTemplate()
     myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
     alert_block = AlertBlock(
@@ -197,7 +199,9 @@ def fyd_summary() -> SlideWithList:
     Returns:
         The slide with a short summary.
     """
-    bibtex_manager = BibTexManager(path=get_project_root() / "oral_proposal" / "ref.bib")
+    bibtex_manager = BibTexManager(
+        path=get_project_root() / "oral_proposal" / "ref.bib"
+    )
     return SlideWithList(
         title="Exploiting Frequent-Yet-Discernible Patterns",
         subtitle="Improving the Viability of Human-Readable Fuzzy Rules in Reinforcement Learning",
@@ -306,7 +310,9 @@ class FYDDiagram(Slide, MovingCameraScene):
             # create the igraph.Graph representation of the model
             graph: ig.Graph = NoCodeGraph.create_igraph_digraph(edges, vs)
 
-            digraph, grouped_vertices = NoCodeGraph.create_manim_digraph(graph, layer_types)
+            digraph, grouped_vertices = NoCodeGraph.create_manim_digraph(
+                graph, layer_types
+            )
             digraph.rotate(PI / 2)
             self.graphs[displayed_model_name] = GraphPair(igraph=graph, digraph=digraph)
 

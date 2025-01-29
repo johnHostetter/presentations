@@ -18,19 +18,21 @@ class Godel(Slide):
         paragraph, source_text, person, signature_group = self.draw(
             self, origin=ORIGIN, scale=1.0
         )
-        self.wait(10)
+        self.wait(1)
+        self.next_slide()
         self.play(
-            FadeOut(Group(VGroup(paragraph, person), signature_group), run_time=2)
+            FadeOut(
+                Group(VGroup(paragraph, source_text, person), signature_group),
+                run_time=2,
+            )
         )
-        self.wait(2)
+        self.wait(1)
+        self.next_slide()
 
     @staticmethod
     def draw(scene, origin, scale, animate: bool = True):
         signature = SVGMobject(
-            get_project_root()
-            / "assets"
-            / "signatures"
-            / "Kurt_Gödel_signature.svg",
+            get_project_root() / "assets" / "signatures" / "Kurt_Gödel_signature.svg",
             # color=WHITE
         ).scale(1.0)
         person_svg = SVGMobject(

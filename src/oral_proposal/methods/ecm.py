@@ -8,6 +8,7 @@ from sklearn import manifold
 from sklearn.manifold import TSNE
 
 from manim_beamer import MANIM_BLUE
+
 # from manim_timeline import ItemColor
 from src.oral_proposal.methods.common import ItemColor
 from manim_timeline.axes import make_axes, AxisConfig
@@ -32,6 +33,7 @@ light_theme_style = {
     "fill_color": BLACK,
     "background_stroke_color": WHITE,
 }
+
 
 def extract_sequence(tsne, X):
     sklearn_grad = manifold._t_sne._gradient_descent
@@ -152,7 +154,8 @@ class ECMDemo(Slide, MovingCameraScene):
                 config.clustering.distance_threshold = 0.4
             labeled_clusters: LabeledClusters = ECM(
                 LabeledDataset(data=torch.tensor(tsne_X[: iter + 1]), labels=None),
-                config=config, device=torch.device("cpu"),
+                config=config,
+                device=torch.device("cpu"),
             )
             new_clusters_supports = np.array(labeled_clusters.supports)
             dot = self.data_dots[iter]
@@ -165,7 +168,9 @@ class ECMDemo(Slide, MovingCameraScene):
             previous_spot_dot = deepcopy(dot)
             scene.add(previous_spot_dot)
             animations.append(previous_spot_dot.animate.set_opacity(0.25))
-            center = labeled_clusters.clusters.get_centers()[cluster_idx].detach().numpy()
+            center = (
+                labeled_clusters.clusters.get_centers()[cluster_idx].detach().numpy()
+            )
             circle = Circle(
                 radius=config.clustering.distance_threshold,
                 stroke_width=self.default_scale_multiplier * scale,

@@ -2,6 +2,7 @@ import numpy as np
 import torch
 from manim import *
 from manim_slides import Slide
+
 # from manim_timeline import ItemColor
 from manim_timeline.axes import make_axes, AxisConfig
 
@@ -55,7 +56,9 @@ class CLIPDemo(Slide, MovingCameraScene):
         if isinstance(center, float) and isinstance(width, float):
             center, width = [center], [width]
 
-        temp_gaussian: Gaussian = Gaussian(centers=np.array(center), widths=np.array(width), device="cuda")
+        temp_gaussian: Gaussian = Gaussian(
+            centers=np.array(center), widths=np.array(width), device="cuda"
+        )
         print(center, width)
         step_val: float = (
             x_axis_config.max_value - x_axis_config.min_value
@@ -96,7 +99,12 @@ class CLIPDemo(Slide, MovingCameraScene):
             animations = []
             for idx, center in enumerate(new_terms.get_centers().flatten()):
                 gaussian_graph = axes.plot(
-                    lambda x: new_terms(torch.tensor(x)).degrees[0][idx].cpu().detach().numpy().item(),
+                    lambda x: new_terms(torch.tensor(x))
+                    .degrees[0][idx]
+                    .cpu()
+                    .detach()
+                    .numpy()
+                    .item(),
                     stroke_color=ItemColor.INACTIVE_2,
                     stroke_width=(self.default_scale_multiplier * scale),
                     # use_smoothing=True,
@@ -298,7 +306,8 @@ class CLIPDemo(Slide, MovingCameraScene):
                     config.fuzzy.partition.adjustment = 0.2
                 linguistic_variables: LinguisticVariables = CLIP(
                     dataset=LabeledDataset(data=selected_X, labels=None),
-                    config=config, device="cuda",
+                    config=config,
+                    device="cuda",
                 )
                 new_terms = linguistic_variables.inputs[0]
                 self.revise_fuzzy_sets(
@@ -337,7 +346,9 @@ class CLIPDemo(Slide, MovingCameraScene):
                 else:
                     target_scene.play(
                         dot.animate.move_to(
-                            axes.c2p(x, new_terms(torch.tensor([x])).degrees.max().item())
+                            axes.c2p(
+                                x, new_terms(torch.tensor([x])).degrees.max().item()
+                            )
                         ),
                         # dot.animate.set_color(PURPLE_A),
                         dot.animate.set_glow_factor(1.0),

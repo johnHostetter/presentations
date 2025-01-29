@@ -83,79 +83,125 @@ def define_linguistics() -> SlideWithList:
         ),
     )
 
+
 class Background(SlideWithList):
     def __init__(self, **kwargs):
-        title: str = "Fuzzy Set Theory"
+        title: str = "Fuzzy Set Theory & Fuzzy Logic"
         subtitle: str = "Selected Terminology"
 
         myTemplate = TexTemplate()
         myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
-        beamer_list=ItemizedList(
+        beamer_list = ItemizedList(
             items=[
                 VGroup(
-                    Text("Linguistic terms, "),
-                    MathTex(" \mathcal{M} ", tex_template=myTemplate),
-                    Text(
-                        ", are constrained fuzzy sets w/ semantic meaning of some concept"
+                    Tex(
+                        r"Linguistic terms, $\mathcal{M}$, are constrained fuzzy sets "
+                        r"\\w/ semantic meaning of some concept ",
+                        tex_template=myTemplate,
+                        tex_environment="flushleft",
+                        color=BLACK,
                     ),
                 ),
-                BL(
-                    items=[
-                        '"blue", "tall", "warm", "old", etc.',
-                    ],
-                    default_m_object=Text
-                ),
+                # BL(
+                #     items=[
+                #         VGroup(
+                #             Tex(
+                #                 r"``blue'', ``tall'', ``warm'', ``old'', etc.",
+                #                 tex_template=myTemplate, tex_environment="flushleft", color=BLACK
+                #             )
+                #         ),
+                #     ],
+                # ),
                 VGroup(
-                    Text("Linguistic variables, "),
-                    MathTex(" \mathcal{C} ", tex_template=myTemplate),
-                    Text(", can take on values from a set of linguistic terms"),
+                    Tex(
+                        r"Linguistic variables, $\mathcal{C}$, "
+                        r"can take on values from a set of linguistic terms",
+                        tex_template=myTemplate,
+                        tex_environment="flushleft",
+                        color=BLACK,
+                    ),
                 ),
-                BL(
-                    items=[
-                        '"color"',
-                        '"height"',
-                        '"temperature", "age", etc.',
-                    ],
-                    default_m_object=Text
+                # BL(
+                #     items=[
+                #         VGroup(
+                #             Tex(
+                #                 r"``color'', ``height'', ``temperature'', ``age'', etc.",
+                #                 tex_template=myTemplate, tex_environment="flushleft", color=BLACK
+                #             )
+                #         ),
+                #     ],
+                # ),
+                VGroup(
+                    Tex(
+                        r"Degree to which a linguistic term applies to a linguistic variable "
+                        r"\\is calculated by an atomic fuzzy proposition",
+                        tex_template=myTemplate,
+                        tex_environment="flushleft",
+                        color=BLACK,
+                    )
                 ),
-                "Degree to which a linguistic term applies to a linguistic variable is calculated "
-                "\nby an atomic fuzzy proposition",
                 BL(
                     items=[
                         VGroup(
-                            Text(
-                                'Written as "',
+                            Tex(
+                                r"Written as ``$x$ is $\mu$'' "
+                                r"(or $\mu(x)$) where $\mu \in \mathcal{M}$,",
+                                tex_template=myTemplate,
+                                tex_environment="flushleft",
+                                color=BLACK,
                             ),
-                            MathTex("x"),
-                            Text(" is "),
-                            MathTex("\mu", tex_template=myTemplate),
-                            Text(r'" where '),
-                            MathTex("\mu \in \mathcal{M}", tex_template=myTemplate),
                         ),
-                        ItemizedList(
-                            items=[
-                                'e.g., "the sky is blue", "the temperature is hot", '
-                                '\n"the person is tall", "the car is old", etc.',
-                            ],
-                            default_m_object=Text
-                        ),
-                        "More complex (compound) propositions can be formed by combining atomic "
-                        "\npropositions with logical operators (e.g., AND, OR, NOT, etc.)",
-                        ItemizedList(
-                            items=[
-                                'e.g., "the sky is blue OR the temperature is hot", '
-                                '\n"the person is tall AND the car is old", etc.'
-                            ],
-                            default_m_object=Text
-                        ),
+                        # VGroup(
+                        #     Tex(
+                        #         r"e.g., ``the sky is blue'', ``the temperature is hot'', "
+                        #         r"\\``the person is tall'', ``the car is old'', etc.",
+                        #         tex_template=myTemplate, tex_environment="flushleft", color=BLACK
+                        #     )
+                        # ),
                     ],
-                    default_m_object=Text
-                )
+                ),
+                VGroup(
+                    Tex(
+                        r"More complex (compound) propositions can be formed by combining atomic ",
+                        r"\\propositions with logical operators (e.g., AND ($\wedge$), OR ($\vee$), NOT ($\neg$))",
+                        tex_template=myTemplate,
+                        tex_environment="flushleft",
+                        color=BLACK,
+                    )
+                ),
+                # BL(
+                #     items=[
+                #         VGroup(Tex(
+                #             r"e.g., ``the sky is blue OR the temperature is hot'', "
+                #             r"\\``the person is tall AND the car is old'', etc.",
+                #             tex_template=myTemplate, tex_environment="flushleft", color=BLACK
+                #         ))
+                #     ],
+                # ),
+                VGroup(
+                    Tex(
+                        r"Rules can be expressed as a set of fuzzy propositions, "
+                        r"which can be\\combined to form a fuzzy rule base",
+                        tex_template=myTemplate,
+                        tex_environment="flushleft",
+                        color=BLACK,
+                    )
+                ),
+                # BL(
+                #     items=[
+                #         VGroup(Tex(
+                #             r"e.g., ``IF the temperature is hot THEN the fan is on'', "
+                #             r"\\``IF the person is tall AND the car is old THEN the person is wise'', etc.",
+                #             tex_template=myTemplate, tex_environment="flushleft", color=BLACK
+                #         ))
+                #     ],
+                # ),
             ],
-            default_m_object=Text
         )
 
-        super().__init__(**kwargs, title=title, subtitle=subtitle, beamer_list=beamer_list)
+        super().__init__(
+            **kwargs, title=title, subtitle=subtitle, beamer_list=beamer_list
+        )
 
 
 if __name__ == "__main__":

@@ -60,7 +60,9 @@ def cew_summary() -> SlideWithList:
     Returns:
         The slide with a short summary.
     """
-    bibtex_manager = BibTexManager(path=get_project_root() / "oral_proposal" / "ref.bib")
+    bibtex_manager = BibTexManager(
+        path=get_project_root() / "oral_proposal" / "ref.bib"
+    )
     return SlideWithList(
         title="Offline Model-Free Fuzzy Reinforcement Learning",
         subtitle="A Preliminary Systematic Design Process of NFNs",

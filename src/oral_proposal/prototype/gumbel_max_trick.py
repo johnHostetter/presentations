@@ -59,7 +59,7 @@ def gumbel_noise() -> SlideWithList:
                     Tex("For stochasticity, Gumbel noise, ", color=BLACK),
                     MathTex(r"\mathbf{N}", color=BLACK),
                     Tex(" is added to logits ", color=BLACK),
-                    MathTex(r"\tilde{\mathbf{I}}", color=BLACK)
+                    MathTex(r"\tilde{\mathbf{I}}", color=BLACK),
                 ),
                 VGroup(
                     Tex("Soften distribution w/ temperature parameter ", color=BLACK),
@@ -83,12 +83,16 @@ def gumbel_noise() -> SlideWithList:
                                     scale_factor=0.1
                                 ),
                                 MathTex(
-                                    r"{\max_{i \in I_{\mathcal{C}}} |\mathcal{M}_{i}|}", color=BLACK
+                                    r"{\max_{i \in I_{\mathcal{C}}} |\mathcal{M}_{i}|}",
+                                    color=BLACK,
                                 ),
                             ),
                         ),
                         VGroup(
-                            Tex("If training, sample from Gumbel distribution", color=BLACK)
+                            Tex(
+                                "If training, sample from Gumbel distribution",
+                                color=BLACK,
+                            )
                         ),
                         # ItemizedList(
                         #     items=[

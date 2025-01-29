@@ -3,8 +3,22 @@ from typing import Set
 import torch
 import numpy as np
 
-from manim import config, Axes, BLACK, Create, FadeIn, FadeOut, ORIGIN, Text, UP, VGroup, WHITE, \
-    Write, DL, Unwrite
+from manim import (
+    config,
+    Axes,
+    BLACK,
+    Create,
+    FadeIn,
+    FadeOut,
+    ORIGIN,
+    Text,
+    UP,
+    VGroup,
+    WHITE,
+    Write,
+    DL,
+    Unwrite,
+)
 from manim_slides import Slide
 from manim_beamer import MANIM_BLUE
 from manim_timeline import ItemColor
@@ -50,7 +64,7 @@ class ShortWMDemo(Slide):
             lambda x: Gaussian(
                 centers=center.cpu().detach().unsqueeze(0).numpy(),
                 widths=width.cpu().detach().unsqueeze(0).numpy(),
-                device="cuda"
+                device="cuda",
             )(torch.tensor(x, device="cuda")).degrees.item(),
             x_range=(min_x, max_x, step_val),
             stroke_color=MANIM_BLUE,
@@ -167,10 +181,18 @@ class ShortWMDemo(Slide):
                 elif term.get_centers()[0].shape[0] == 3:
                     linguistic_terms.append(["Low", "Moderate", "High"])
                 elif term.get_centers()[0].shape[0] == 4:  # idx == 1
-                    linguistic_terms.append(["Very Negative", "Negative", "Near Zero", "Positive"])
+                    linguistic_terms.append(
+                        ["Very Negative", "Negative", "Near Zero", "Positive"]
+                    )
                 elif term.get_centers()[0].shape[0] == 5:  # idx == 3
                     linguistic_terms.append(
-                        ["Very Negative", "Negative", "Near Zero", "Somewhat Positive", "Positive"]
+                        [
+                            "Very Negative",
+                            "Negative",
+                            "Near Zero",
+                            "Somewhat Positive",
+                            "Positive",
+                        ]
                     )
             elif idx == 2:  # pole angle
                 if term.get_centers()[0].shape[0] == 2:
@@ -266,9 +288,13 @@ class ShortWMDemo(Slide):
                 if var_idx >= len(attributes) - 1:
                     print(f"var_idx exceeds attributes {var_idx} {len(attributes)}")
                 if var_idx >= len(linguistic_terms):
-                    print(f"var_idx exceeds linguistic terms {var_idx} {len(linguistic_terms)}")
+                    print(
+                        f"var_idx exceeds linguistic terms {var_idx} {len(linguistic_terms)}"
+                    )
                 if term_idx >= len(linguistic_terms[var_idx]):
-                    print(f"term_idx exceeds linguistic terms {term_idx} {len(linguistic_terms[var_idx])}")
+                    print(
+                        f"term_idx exceeds linguistic terms {term_idx} {len(linguistic_terms[var_idx])}"
+                    )
                 rule += (
                     attributes[var_idx] + " is " + linguistic_terms[var_idx][term_idx]
                 )

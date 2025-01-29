@@ -30,47 +30,71 @@ def pros_and_cons() -> SlideWithBlocks:
                 "Reliable",
                 ItemizedList(
                     items=[
-                        "Assist students in learning",
-                        bib.slide_short_cite("abdelshiheed2023leveraging"),
-                        "Predict septic shock",
-                        bib.slide_short_cite("dqn_septic_shock"),
-                        "Able to solve complex games (e.g., Go)",
-                        bib.slide_short_cite("silver2016mastering"),
+                        VGroup(
+                            Tex("Assist students in learning", color=BLACK),
+                            bib.slide_short_cite("abdelshiheed2023leveraging"),
+                        ).arrange(RIGHT),
+                        VGroup(
+                            Tex("Predict septic shock", color=BLACK),
+                            bib.slide_short_cite("dqn_septic_shock"),
+                        ).arrange(RIGHT),
+                        VGroup(
+                            Tex("Able to solve complex games (e.g., Go)", color=BLACK),
+                            bib.slide_short_cite("silver2016mastering"),
+                        ).arrange(RIGHT),
                     ]
                 ),
                 "Flexible",
                 ItemizedList(
                     items=[
-                        "Network morphism (i.e., neurogenesis)",
-                        bib.slide_short_cite("draelos_neurogenesis_2016"),
-                        bib.slide_short_cite("maile_when_2022"),
+                        VGroup(
+                            Tex("Network morphism (i.e., neurogenesis)", color=BLACK),
+                            bib.slide_short_cite("draelos_neurogenesis_2016"),
+                            bib.slide_short_cite("maile_when_2022"),
+                        ).arrange(RIGHT),
                     ]
                 ),
                 "Generalizable",
                 ItemizedList(
                     items=[
-                        "Supervised learning",
-                        bib.slide_short_cite(
-                            "bolat_interpreting_2020"
-                        ),  # nfn paper that uses dnn
-                        "Online reinforcement learning",
-                        bib.slide_short_cite("jaderberg_reinforcement_2016"),
-                        "Offline reinforcement learning",
-                        bib.slide_short_cite("levine_offline_2020"),
-                        "and more...",
-                    ]
+                        VGroup(
+                            Tex("Supervised learning", color=BLACK),
+                            bib.slide_short_cite(
+                                "bolat_interpreting_2020"
+                            ),  # nfn paper that uses dnn
+                        ).arrange(RIGHT),
+                        VGroup(
+                            Tex("Online reinforcement learning", color=BLACK),
+                            bib.slide_short_cite("jaderberg_reinforcement_2016"),
+                        ).arrange(RIGHT),
+                        VGroup(
+                            Tex("Offline reinforcement learning", color=BLACK),
+                            bib.slide_short_cite("levine_offline_2020"),
+                        ).arrange(RIGHT),
+                        VGroup(Tex("and more...", color=BLACK)).arrange(RIGHT),
+                    ],
                 ),
             ]
         ),
+        default_m_object=Tex,
     )
+
     alert_block = AlertBlock(
         title="Disadvantages of DNNs",
         content=DisadvantagesList(
             items=[
-                "Relies upon large quantities of data",
-                bib.slide_short_cite("efficient_processing_of_dnns"),
-                "Difficult to interpret (i.e., black-box)",
-                bib.slide_short_cite("wang_explaining_2021"),
+                VGroup(
+                    Tex("Sample inefficient", color=BLACK),
+                    bib.slide_short_cite("efficient_processing_of_dnns"),
+                ).arrange(RIGHT),
+                VGroup(
+                    Tex("Black-box", color=BLACK),
+                    bib.slide_short_cite("wang_explaining_2021"),
+                ).arrange(RIGHT),
+                # "Relies upon large quantities of data",
+                # bib.slide_short_cite("efficient_processing_of_dnns"),
+                # "Difficult to interpret (i.e., black-box)",
+                # bib.slide_short_cite("wang_explaining_2021"),
             ]
         ),
     )
@@ -79,7 +103,8 @@ def pros_and_cons() -> SlideWithBlocks:
         subtitle=None,
         blocks=[example_block, alert_block],
     )
-    
+
+
 if __name__ == "__main__":
     beamer_slide = pros_and_cons()
     beamer_slide.render()

@@ -42,7 +42,10 @@ def get_notation() -> SlideWithList:
                                 Cross(color=BLACK, stroke_width=3).scale(
                                     scale_factor=0.1
                                 ),
-                                MathTex(r"\max_{i \in I_{\mathcal{C}}}(|\mathcal{M}_{i}|)", color=BLACK),
+                                MathTex(
+                                    r"\max_{i \in I_{\mathcal{C}}}(|\mathcal{M}_{i}|)",
+                                    color=BLACK,
+                                ),
                             ),
                         ),
                     ]
@@ -68,7 +71,10 @@ def get_notation() -> SlideWithList:
                                 Cross(color=BLACK, stroke_width=3).scale(
                                     scale_factor=0.1
                                 ),
-                                MathTex(r"\max_{i \in I_{\mathcal{C}}}(|\mathcal{M}_{i}|)", color=BLACK),
+                                MathTex(
+                                    r"\max_{i \in I_{\mathcal{C}}}(|\mathcal{M}_{i}|)",
+                                    color=BLACK,
+                                ),
                             ),
                         ),
                     ]
@@ -77,7 +83,12 @@ def get_notation() -> SlideWithList:
                 BL(
                     items=[
                         "Non-existing memberships are dropped by Hadamard product",
-                        VGroup(MathTex(r"\boldsymbol{\mu}(\mathbf{x}) \odot \mathbf{M}", color=BLACK)),
+                        VGroup(
+                            MathTex(
+                                r"\boldsymbol{\mu}(\mathbf{x}) \odot \mathbf{M}",
+                                color=BLACK,
+                            )
+                        ),
                     ]
                 ),
                 "Rule Connection Matrix",
@@ -100,7 +111,10 @@ def get_notation() -> SlideWithList:
                                 Cross(color=BLACK, stroke_width=3).scale(
                                     scale_factor=0.1
                                 ),
-                                MathTex(r"\max_{i \in I_{\mathcal{C}}}(|\mathcal{M}_{i}|)", color=BLACK),
+                                MathTex(
+                                    r"\max_{i \in I_{\mathcal{C}}}(|\mathcal{M}_{i}|)",
+                                    color=BLACK,
+                                ),
                                 Cross(color=BLACK, stroke_width=3).scale(
                                     scale_factor=0.1
                                 ),

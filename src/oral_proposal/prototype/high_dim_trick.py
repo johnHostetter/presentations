@@ -21,7 +21,9 @@ def high_dim_trick() -> SlideWithList:
     Returns:
         The slide describing how Gumbel noise is used to add stochasticity.
     """
-    bibtex_manager = BibTexManager(path=get_project_root() / "oral_proposal" / "ref.bib")
+    bibtex_manager = BibTexManager(
+        path=get_project_root() / "oral_proposal" / "ref.bib"
+    )
     return SlideWithBlocks(
         title="High-Dimensional Inference",
         subtitle=bibtex_manager.cite_entry(
@@ -43,11 +45,14 @@ def high_dim_trick() -> SlideWithList:
         ],
     )
 
+
 class CurseOfDimensionality(Slide, MovingCameraScene):
     def __init__(self):
         super().__init__()
         # self.add(Text("Curse of Dimensionality", color=BLACK, slant=ITALIC))
-        self.bibtex_manager = BibTexManager(path=get_project_root() / "oral_proposal" / "ref.bib")
+        self.bibtex_manager = BibTexManager(
+            path=get_project_root() / "oral_proposal" / "ref.bib"
+        )
 
     def construct(self):
         self.camera.frame.save_state()
@@ -67,7 +72,9 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
         # the following line is needed to use the mathcal font
         myTemplate.add_to_preamble(r"\usepackage[cal=boondox]{mathalfa}")
 
-        fuzzy_logic_rule_activation_in_tsk = r"\prod\limits_{i \in I_{\mathcal{C}}} \mathcal{m}_{u}(i)(x_{i})"
+        fuzzy_logic_rule_activation_in_tsk = (
+            r"\prod\limits_{i \in I_{\mathcal{C}}} \mathcal{m}_{u}(i)(x_{i})"
+        )
         # weighed_fuzzy_rule_in_tsk = r"\mathcal{g}_{u} \big(" + fuzzy_logic_rule_activation_in_tsk + r"\big )"
         limit_tsk = r"\sum\limits_{u \in U}"
         # tsk_formula = MathTex(
@@ -106,10 +113,14 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             r"\over",
             rf"{limit_tsk}",
             rf"{fuzzy_logic_rule_activation_in_tsk}",
-        color=BLACK,
+            color=BLACK,
             tex_template=myTemplate,  # IMPORTANT
         )
-        tsk_all = Group(tsk_function_tex, tsk_formula).arrange(RIGHT).next_to(citation_tex, DOWN)
+        tsk_all = (
+            Group(tsk_function_tex, tsk_formula)
+            .arrange(RIGHT)
+            .next_to(citation_tex, DOWN)
+        )
         # tsk_formula[4].set_color(GREEN)
         # tsk_formula[-1].set_color(GREEN)
         # vgroup.add(tsk_formula)
@@ -141,8 +152,10 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             color=BLACK,
             tex_template=myTemplate,  # IMPORTANT
         ).move_to(tsk_all.get_center())
-        where_tex = Tex("where", color=BLACK).next_to(concise_tsk_formula, DOWN).align_to(
-            concise_tsk_formula, LEFT
+        where_tex = (
+            Tex("where", color=BLACK)
+            .next_to(concise_tsk_formula, DOWN)
+            .align_to(concise_tsk_formula, LEFT)
         )
         softmax_formula = MathTex(
             r"\overline{w}_{u}(\mathbf{x}) = \frac{\exp \big ("
@@ -153,8 +166,10 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             tex_template=myTemplate,  # IMPORTANT
         )
 
-        such_that_tex = Tex("such that", color=BLACK).next_to(softmax_formula, DOWN).align_to(
-            softmax_formula, LEFT
+        such_that_tex = (
+            Tex("such that", color=BLACK)
+            .next_to(softmax_formula, DOWN)
+            .align_to(softmax_formula, LEFT)
         )
         weight_sum_term_formula = MathTex(
             r"{w}_{u}(\mathbf{x}) = -\sum_{i \in I_{\mathcal{C}}}"
@@ -169,7 +184,9 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             color=BLACK,
             tex_template=myTemplate,  # IMPORTANT
         )
-        weight_term_formulas = VGroup(weight_sum_term_formula, or_tex, weight_mean_term_formula).arrange()
+        weight_term_formulas = VGroup(
+            weight_sum_term_formula, or_tex, weight_mean_term_formula
+        ).arrange()
         vgroup: VGroup = VGroup(
             concise_tsk_formula,
             where_tex,
@@ -202,7 +219,9 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             *tsk_formula[:2].copy(),
             new_numerator,
             *tsk_formula[3:4].copy(),
-        ).arrange(RIGHT, buff=0.1).move_to(tsk_formula[2])
+        ).arrange(
+            RIGHT, buff=0.1
+        )  # .move_to(tsk_formula[2])
 
         animations = []
         for i in range(2):  # move the items to the left of the replacement
@@ -210,15 +229,25 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
         for i in range(3, 4):  # move the items to the right of the replacement
             animations.append(tsk_formula[i].animate.move_to(numerator_group[i]))
         # determine where the bar will be positioned
-        reference = tsk_formula[4].next_to(numerator_group, DOWN, buff=0.1).get_boundary_point(LEFT)
+        reference = (
+            tsk_formula[4]
+            .next_to(numerator_group, DOWN, buff=0.1)
+            .get_boundary_point(LEFT)
+        )
 
         animations.append(tsk_function_tex.animate.next_to(reference, LEFT, buff=1.5))
         # move the overline down a bit
-        animations.append(tsk_formula[4].animate.next_to(numerator_group, DOWN, buff=0.1))
+        animations.append(
+            tsk_formula[4].animate.next_to(numerator_group, DOWN, buff=0.1)
+        )
         animations.append(tsk_formula[4].animate.stretch(1.5, dim=0))
 
         # replace it in the denominator
-        new_denominator = gaussian_tsk_formula.copy().move_to(tsk_formula[-1]).next_to(numerator_group, DOWN, buff=0.2)
+        new_denominator = (
+            gaussian_tsk_formula.copy()
+            .move_to(tsk_formula[-1])
+            .next_to(numerator_group, DOWN, buff=0.2)
+        )
         animations.append(tsk_formula[5].animate.next_to(new_denominator, LEFT))
 
         self.play(
@@ -229,7 +258,9 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
         self.wait(1)
         self.next_slide()
 
-        old_formulas = VGroup(tsk_function_tex, tsk_formula, new_numerator, new_denominator)
+        old_formulas = VGroup(
+            tsk_function_tex, tsk_formula, new_numerator, new_denominator
+        )
         self.play(TransformMatchingTex(old_formulas, concise_tsk_formula))
         self.wait(1)
         self.next_slide()
@@ -239,7 +270,9 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             # vgroup.animate.arrange(DOWN, buff=0.5, center=False, aligned_edge=LEFT),
             Create(softmax_formula),
             Create(where_tex),
-            self.camera.frame.animate.move_to(curr_focus.get_center()).set(height=vgroup.height + 2),
+            self.camera.frame.animate.move_to(curr_focus.get_center()).set(
+                height=vgroup.height + 2
+            ),
         )
         self.wait(1)
         self.next_slide()
@@ -249,8 +282,9 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             # vgroup.animate.arrange(DOWN, buff=0.5, center=False, aligned_edge=LEFT),
             Create(such_that_tex),
             Create(weight_sum_term_formula),
-            self.camera.frame.animate.move_to(curr_focus.get_center()).set(height=vgroup.height + 2),
-
+            self.camera.frame.animate.move_to(curr_focus.get_center()).set(
+                height=vgroup.height + 2
+            ),
         )
         self.wait(1)
         self.next_slide()

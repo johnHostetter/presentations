@@ -36,7 +36,9 @@ def llm_summary() -> SlideWithList:
     Returns:
         The slide with a list of studies.
     """
-    bibtex_manager = BibTexManager(path=get_project_root() / "oral_proposal" / "ref.bib")
+    bibtex_manager = BibTexManager(
+        path=get_project_root() / "oral_proposal" / "ref.bib"
+    )
     return SlideWithList(
         title="Identifying Exemplars by Leveraging Latent Representations",
         subtitle="The Latent Lockstep Method (LLM)",

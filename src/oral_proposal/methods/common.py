@@ -19,6 +19,7 @@ class ItemColor:
     INACTIVE_3: str = "#EE99AA"  # light pink
     BACKGROUND: str = "#000000"  # black
 
+
 def get_data_and_env(n_samples=100):
     data, _ = get_cartpole(dataset_type="replay")
     X = torch.tensor(np.vstack(([episode.observations for episode in data.episodes])))
