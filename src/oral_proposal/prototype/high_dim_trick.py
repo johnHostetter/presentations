@@ -128,27 +128,44 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
         # tsk_formula[-1].set_color(GREEN)
         # group.add(tsk_formula)
 
+        myTemplate.add_to_preamble(r"\usepackage{soul, xcolor}")
+        myTemplate.add_to_preamble(
+            r"\newcommand{\mathcolorbox}[2]{\fcolorbox{#1!80!black}{#1!30!white}{$\displaystyle #2$}}"
+        )
+
         tsk_all_1 = MathTex(
             r"\mathfrak{F}_{\text{TSK}}(\mathbf{x}) = \frac{"
             r"\sum\limits_{u \in U} \mathcal{g}_{u}"
             r"\Big("
-            r"\prod\limits_{i \in I_{\mathcal{C}}} \exp \big("
+            r"\prod\limits_{i \in I_{\mathcal{C}}} \mathcolorbox{purple}{\exp \big("
             r"-\frac{({x}_{i} - {c}_{i, j, u}) ^ 2}{2\sigma_{i, j, u} ^ 2} "
-            r"\big )"
+            r"\big )}"
             r"\Big )"
             r"}{"
             r"\sum\limits_{u \in U}"
             r"\Big("
-            r"\prod\limits_{i \in I_{\mathcal{C}}} \exp \big("
+            r"\prod\limits_{i \in I_{\mathcal{C}}} \mathcolorbox{purple}{\exp \big("
             r"-\frac{({x}_{i} - {c}_{i, j, u}) ^ 2}{2\sigma_{i, j, u} ^ 2} "
-            r"\big )"
+            r"\big )}"
             r"\Big )"
             r"}",
             color=BLACK,
             tex_template=myTemplate,  # IMPORTANT
         )
 
-        tsk_all_1 = VGroup(Tex(r"\textbf{(Eq. 2)}", color=BLACK), tsk_all_1).arrange(RIGHT).next_to(tsk_all, DOWN)
+        # import re
+        #
+        # # Regular expression pattern to match the target substring
+        # pattern = (
+        #     r"\Big(\prod\limits_{i \in I_{\mathcal{C}}} \exp \big(-\frac{({x}_{i} - {c}_{i, j, u}) ^ 2}{2\sigma_{i, j, u} ^ 2} \big )\Big )"
+        # )
+
+        # Function to highlight matches
+        # highlighted_formula = re.sub(pattern, r"\\color{red}{\g<0>}", tsk_all_1.tex_string)
+
+        tsk_all_1 = VGroup(Tex(
+            r"\textbf{(Eq. 2)}", color=BLACK), tsk_all_1
+        ).arrange(RIGHT).next_to(tsk_all, DOWN)
 
         if self.play_substitute:
             # only need a portion of the formula since it will substitute the previous one
@@ -178,14 +195,14 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
                 r"\sum\limits_{u \in U} \mathcal{g}_{u}"
                 r"\Big("
                 r"\exp \big("
-                r"- \sum\limits_{i \in I_{\mathcal{C}}}"
+                r"- \mathcolorbox{purple}{\sum\limits_{i \in I_{\mathcal{C}}}}"
                 r"\frac{({x}_{i} - {c}_{i, j, u}) ^ 2}{2\sigma_{i, j, u} ^ 2} "
                 r"\big )"
                 r"\Big )"
                 r"}{"
                 r"\sum\limits_{u \in U}"
                 r"\Big("
-                r"\exp \big(- \sum\limits_{i \in I_{\mathcal{C}}}"
+                r"\exp \big(- \mathcolorbox{purple}{\sum\limits_{i \in I_{\mathcal{C}}}}"
                 r"\frac{({x}_{i} - {c}_{i, j, u}) ^ 2}{2\sigma_{i, j, u} ^ 2} "
                 r"\big )"
                 r"\Big )"
@@ -199,7 +216,7 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             ), gaussian_tsk_formula).arrange(RIGHT).next_to(tsk_all_1, DOWN)
 
         concise_tsk_formula = MathTex(
-            r"\mathfrak{F}_{\text{TSK}}(\mathbf{x}) = \sum\limits_{u \in U} \mathcal{g}_{u}(\mathbf{x}) \overline{w}_{u}(\mathbf{x})",
+            r"\mathfrak{F}_{\text{TSK}}(\mathbf{x}) = \sum\limits_{u \in U} \mathcal{g}_{u}(\mathbf{x}) \mathcolorbox{purple}{\overline{w}_{u}(\mathbf{x})}",
             color=BLACK,
             tex_template=myTemplate,  # IMPORTANT
         ).move_to(tsk_all.get_center())
@@ -217,9 +234,9 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
         )
         softmax_formula = MathTex(
             r"\overline{w}_{u}(\mathbf{x}) = \frac{\exp \big ("
-            r"{w}_{u}(\mathbf{x})"
+            r"\mathcolorbox{purple}{{w}_{u}(\mathbf{x})}"
             r"\big)"
-            r"}{\sum_{u}^{U} \exp \big({w}_{u}(\mathbf{x})\big)}",
+            r"}{\sum_{u}^{U} \exp \big(\mathcolorbox{purple}{{w}_{u}(\mathbf{x})}\big)}",
             color=BLACK,
             tex_template=myTemplate,  # IMPORTANT
         )
@@ -269,6 +286,18 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             group_items.insert(0, gaussian_tsk_formula)
         group: Group = Group(*group_items)
         group.arrange(DOWN, buff=0.5, center=False, aligned_edge=LEFT)
+
+        use_gaussian_memberships = Tex(
+            r"\textit{Assume} $\mathcal{m}_{u}$\\"
+            r"\textit{only yields Gaussian memberships}",
+            color=BLACK, tex_template=myTemplate
+        ).next_to(tsk_all_1[0], LEFT, buff=0.5)
+
+        product_law_of_exp = Tex(
+            r"\textit{Product Law of Exponents}", color=BLACK
+        ).next_to(
+            gaussian_tsk_formula[0], LEFT, buff=0.5
+        )
 
         softmax_common_trick_formula = MathTex(
             r"\overline{w}_{u}(\mathbf{x}) = \frac{\exp \big ("
@@ -320,7 +349,7 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             element_to_mobject=lambda x: Tex(
                 x, color=BLACK, tex_template=myTemplate
             ),  # use LaTeX for the entries
-        ).next_to(gaussian_tsk_formula, RIGHT).scale(0.75)
+        ).next_to(gaussian_tsk_formula, RIGHT).scale(1.0)
         annotation_table.get_horizontal_lines().set_color(BLACK)
         annotation_table.get_vertical_lines().set_color(BLACK)
 
@@ -377,7 +406,7 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             tex_template=myTemplate,  # IMPORTANT
         )
         layer_normalization_2 = MathTex(
-            r"\overline{\sigma} = \sqrt{\frac{1}{|U|} \sum_{u \in U} (w_{u}(\mathbf{x}) - \overline{\mu})^2 + 1e-5}",
+            r"\overline{\sigma} = \sqrt{\frac{1}{|U|} \sum_{u \in U} (w_{u}(\mathbf{x}) - \overline{\mu})^2 + \text{1e-5}}",
             color=BLACK,
             tex_template=myTemplate,  # IMPORTANT
         )
@@ -418,7 +447,10 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             annotation_table, labeled_sum_brace, labeled_mean_brace
         )
         self.play(
-            Create(tsk_all_1),
+            LaggedStart(
+                Create(tsk_all_1), Create(use_gaussian_memberships),
+                lag_ratio=0.5
+            ),
             self.camera.frame.animate.move_to(group.get_center()).set(
                 width=group.width + 2, height=group.height + 2,
             ),
@@ -477,7 +509,13 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             )
             self.play(TransformMatchingTex(old_formulas, concise_tsk_formula))
         else:
-            self.play(Create(gaussian_tsk_formula))
+            self.play(
+                LaggedStart(
+                    Create(gaussian_tsk_formula),
+                    Create(product_law_of_exp),
+                    lag_ratio=0.5
+                )
+            )
             self.wait(1)
             self.next_slide()
             self.play(Create(concise_tsk_formula))
