@@ -26,7 +26,7 @@ light_theme_style = {
 }
 
 
-class FinalResults(Slide, MovingCameraScene):
+class BestTrials(Slide, MovingCameraScene):
     def __init__(self):
         super().__init__()
         self.table_ctr: int = 0
@@ -50,7 +50,6 @@ class FinalResults(Slide, MovingCameraScene):
         self.next_slide()
         self.play(Uncreate(all_groups))
         self.wait(1)
-        self.next_slide()
 
     def make_table(self, file_name, architecture):
         tmp_df = pd.read_csv(get_project_root() / f"defense/data/{file_name}.csv")
@@ -106,4 +105,4 @@ class FinalResults(Slide, MovingCameraScene):
 
 
 if __name__ == "__main__":
-    FinalResults().render()
+    BestTrials().render()
