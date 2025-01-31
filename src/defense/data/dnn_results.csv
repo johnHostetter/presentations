@@ -1,0 +1,8 @@
+Task, $|\mathcal{N}|$, $\mathcal{h}_{\mathcal{n}}$, $\eta$, $|\mathbf{X}|$, Rep. Memory, $\gamma$, Frames Skipped, Mean, $\sigma$, $m$
+Basic, 512, \texttt{Hardtanh}, 6.9e-4, 56, 30k, 0.95, 8, 85.40, 9.33, \textbf{26.5}
+Rocket Basic, 256, \texttt{Hardswish}, 9.7e-4, 48, 10k, 0.97, 12, \textbf{58.40}, \textbf{10.0}, \textbf{19.6}
+Predict Position, 512, \texttt{LogSigmoid}, 8.2e-5, 56, 30k, 0.94, 4, \textbf{0.29}, 0.48, \textbf{0.04}
+Defend The Line, 256, \texttt{RReLU}, 5.0e-4, 48, 20k, 0.97, 4, \textbf{27.24}, 5.57, 1.98
+Defend The Center, 128, \texttt{ReLU}, 3.3e-4, 16, 40k, 0.90, 8, \textbf{17.92}, \textbf{1.96}, \textbf{1.12}
+Take Cover, 128, \texttt{LogSigmoid}, 5.9e-4, 24, 30k, 0.94, 12, 481.1, \textbf{297}, 4.22
+Health Gathering, 128, \texttt{RReLU}, 3.7e-5, 16, 30k, 0.94, 12, \textbf{2100}, \textbf{0.0}, 29.9
