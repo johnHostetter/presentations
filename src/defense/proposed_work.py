@@ -27,7 +27,7 @@ class Proposal(SlideWithList):
         # myTemplate.add_to_preamble(r"\newcommand\rev[1]{\highlight{yellow}{red}{#1}}")
 
         super().__init__(
-            title="Proposed Studies",
+            title="Proposed Work",
             subtitle=None,
             beamer_list=BL(
                 items=[
@@ -35,7 +35,7 @@ class Proposal(SlideWithList):
                         Tex(
                             # r"\textbf{\colorbox{darkseagreen}{\strut Computer vision}:}",
                             # r"\sethlcolor{cyan} \hl{\textbf{Computer vision:}}",
-                            r"\textbf{Computer vision:}",
+                            r"\textbf{Computer Vision:}",
                             color=BLACK,
                             tex_environment="flushleft",
                             tex_template=myTemplate,
@@ -72,7 +72,7 @@ class Proposal(SlideWithList):
                     ),
                     VGroup(
                         Tex(
-                            r"\textbf{Neural architecture search:}",
+                            r"\textbf{Neural Architecture Search:}",
                             color=BLACK,
                             tex_environment="flushleft",
                         )

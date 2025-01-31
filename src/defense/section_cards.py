@@ -35,7 +35,11 @@ class Exp(PromptSlide):
     def __init__(self):
         super().__init__(prompt="Experiments", skip=False, default_m_object=Tex)
 
+class Scenarios(PromptSlide):
+    def __init__(self):
+        super().__init__(prompt="Scenarios", skip=False, default_m_object=Tex)
+
 
 if __name__ == "__main__":
-    for slide in [PastResearch, CurrentResearch, Distill, SelfOrganize, Exp]:
+    for slide in [PastResearch, CurrentResearch, Distill, SelfOrganize, Exp, Scenarios]:
         slide().render()

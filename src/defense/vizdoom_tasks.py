@@ -1,3 +1,5 @@
+import time
+
 from manim import config, Tex, ImageMobject, BLACK, WHITE, UP, SurroundingRectangle
 from manim_slides import Slide
 
@@ -34,6 +36,7 @@ class VideoInSlide(Slide):
             idx = 0
             while idx < 600 and flag:
                 flag, frame = cap.read()
+                time.sleep(9 / 30)  # add a delay to slow down the reading to avoid DTS overlap
                 if flag:
                     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                     frame_img = ImageMobject(frame).scale(1.5)
@@ -45,7 +48,7 @@ class VideoInSlide(Slide):
                         items_to_add.append(frame_border)
                     self.add(*items_to_add)
                     self.wait(
-                        1 / 20
+                        1 / 30
                     )  # 30 fps is not possible since Decoding Timestamp (DTS) values may overlap causing them to be non-monotonic
                     self.remove(frame_img)
                 idx += 1
@@ -91,5 +94,7 @@ class TC(VideoInSlide):
 
 
 if __name__ == "__main__":
-    for cls in [BP, BR, DTC, HTL, HG, PP, TC]:
-        cls().render()
+    # HG().render()
+    BP().render()
+    # for cls in [BP, BR, DTC, HTL, HG, PP, TC]:
+    #     cls().render()
