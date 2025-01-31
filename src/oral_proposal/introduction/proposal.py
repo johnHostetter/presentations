@@ -2,9 +2,11 @@ from typing import Type
 
 from manim import *
 
+from manim_beamer.bibtex import BibTexManager
 from manim_beamer.slides import SlideWithBlocks
 from manim_beamer.blocks import AlertBlock, ExampleBlock, Block
 from manim_beamer.lists import AdvantagesList, DisadvantagesList
+from src.manim_presentation.utils import get_project_root
 
 config.background_color = WHITE
 light_theme_style = {
@@ -21,11 +23,21 @@ def get_proposal() -> SlideWithBlocks:
     Returns:
         The slide with the two blocks.
     """
+    bib = BibTexManager(path=get_project_root() / "oral_proposal" / "ref.bib")
+
+    kwargs = {
+        "color": DARK_BLUE,
+        "opacity": 0.0,
+        "font_size": 30,
+    }
+
     alert_block_1 = AlertBlock(
         title=None,
         content=DisadvantagesList(
             items=[
-                "Difficult & expensive to design",
+                VGroup(
+                    Tex("Difficult \& expensive to design", color=BLACK)
+                ),
             ]
         ),
     )
@@ -33,7 +45,11 @@ def get_proposal() -> SlideWithBlocks:
         title=None,
         content=AdvantagesList(
             items=[
-                "Self-organizing, data-driven algorithms",
+                VGroup(
+                    Tex("Data-driven construction", color=BLACK),
+                    bib.slide_short_cite("hostetter2023leveraging", abbrev=True, kwargs=kwargs),
+                    bib.slide_short_cite("hostetter2023latent", abbrev=True, kwargs=kwargs),
+                ).arrange(RIGHT, buff=0.1),
             ]
         ),
     )
@@ -41,7 +57,9 @@ def get_proposal() -> SlideWithBlocks:
         title=None,
         content=DisadvantagesList(
             items=[
-                "Unable to readily adapt to changes (e.g., add new knowledge)",
+                VGroup(
+                    Tex("Unable to readily adapt to changes", color=BLACK),
+                )
             ]
         ),
     )
@@ -49,7 +67,10 @@ def get_proposal() -> SlideWithBlocks:
         title=None,
         content=AdvantagesList(
             items=[
-                "Capable of adding new knowledge just in time (i.e., neurogenesis)",
+                VGroup(
+                    Tex("Capable of adding new knowledge just in time", color=BLACK),
+                    bib.slide_short_cite("hostetter2023self", abbrev=True, kwargs=kwargs),
+                ),
             ]
         ),
     )
@@ -57,15 +78,24 @@ def get_proposal() -> SlideWithBlocks:
         title=None,
         content=DisadvantagesList(
             items=[
-                "NFN research is often specific to a certain task",
+                VGroup(
+                    Tex("NFN research is often specific to a certain task", color=BLACK),
+                )
             ]
         ),
     )
+
     example_block_3 = ExampleBlock(
         title=None,
         content=AdvantagesList(
             items=[
-                "A task-independent solution (i.e., gradient-based learning)",
+                VGroup(
+                    Tex(
+                        "A task-independent solution (i.e., gradient-based learning)",
+                        color=BLACK
+                    ),
+                    Tex("$[$This Dissertation$]$", **kwargs)
+                ).arrange(RIGHT, buff=0.1),
             ]
         ),
     )

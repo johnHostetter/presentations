@@ -35,8 +35,8 @@ class MED(SlideShow):
                 # use gumbel max-trick to sample from a categorical distribution (the rules)
                 issue_with_logits(),
                 # how to avoid violating epsilon-completeness w/ gumbel max-trick
-                why_modify_gumbel(),
-                avoiding_invalid_selections(),
+                # why_modify_gumbel(),  # CUT - don't focus on negative results
+                # avoiding_invalid_selections(),  # CUT - don't focus on negative results
                 # introduce the gumbel max-trick formula
                 gumbel_noise(),
                 # bound the logits used for it to prevent numerical instability

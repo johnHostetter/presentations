@@ -4,6 +4,7 @@ from pyrr.rectangle import height
 
 from manim_beamer.bibtex import BibTexManager
 from manim_beamer.slides import SlideWithList, SlideWithBlocks
+from src.defense.amplify_firing_levels import AmplifyFiringLevels
 
 from src.manim_presentation.utils import get_project_root
 
@@ -46,13 +47,14 @@ def high_dim_trick() -> SlideWithList:
     )
 
 
-class CurseOfDimensionality(Slide, MovingCameraScene):
+class CurseOfDimensionality(AmplifyFiringLevels, MovingCameraScene):
     def __init__(self):
         super().__init__()
         # self.add(Text("Curse of Dimensionality", color=BLACK, slant=ITALIC))
         self.bibtex_manager = BibTexManager(
             path=get_project_root() / "oral_proposal" / "ref.bib"
         )
+        self.image_dir = get_project_root() / "defense" / "images" / "firing_levels"
         self.play_indicate: bool = False
         self.play_substitute: bool = False
 
@@ -109,7 +111,7 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             # r"\mathfrak{F}_{\text{TSK}}(\mathbf{x})",
             # r"=",
             rf"{limit_tsk}",
-            r"\mathcal{g}_{u} \Big(",
+            r"\mathcal{g}_{u}(\mathbf{x}) \Big(",
             rf"{fuzzy_logic_rule_activation_in_tsk}",
             r"\Big )",
             r"\over",
@@ -130,21 +132,21 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
 
         myTemplate.add_to_preamble(r"\usepackage{soul, xcolor}")
         myTemplate.add_to_preamble(
-            r"\newcommand{\mathcolorbox}[2]{\fcolorbox{#1!80!black}{#1!30!white}{$\displaystyle #2$}}"
+            r"\newcommand{\mathcolorbox}[2]{\fcolorbox{#1!90!black}{#1!10!white}{$\displaystyle #2$}}"
         )
 
         tsk_all_1 = MathTex(
             r"\mathfrak{F}_{\text{TSK}}(\mathbf{x}) = \frac{"
-            r"\sum\limits_{u \in U} \mathcal{g}_{u}"
+            r"\sum\limits_{u \in U} \mathcal{g}_{u}(\mathbf{x})"
             r"\Big("
-            r"\prod\limits_{i \in I_{\mathcal{C}}} \mathcolorbox{purple}{\exp \big("
+            r"\mathcolorbox{teal}{\prod\limits_{i \in I_{\mathcal{C}}}} \mathcolorbox{purple}{\exp \big("
             r"-\frac{({x}_{i} - {c}_{i, j, u}) ^ 2}{2\sigma_{i, j, u} ^ 2} "
             r"\big )}"
             r"\Big )"
             r"}{"
             r"\sum\limits_{u \in U}"
             r"\Big("
-            r"\prod\limits_{i \in I_{\mathcal{C}}} \mathcolorbox{purple}{\exp \big("
+            r"\mathcolorbox{teal}{\prod\limits_{i \in I_{\mathcal{C}}}} \mathcolorbox{purple}{\exp \big("
             r"-\frac{({x}_{i} - {c}_{i, j, u}) ^ 2}{2\sigma_{i, j, u} ^ 2} "
             r"\big )}"
             r"\Big )"
@@ -163,9 +165,11 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
         # Function to highlight matches
         # highlighted_formula = re.sub(pattern, r"\\color{red}{\g<0>}", tsk_all_1.tex_string)
 
-        tsk_all_1 = VGroup(Tex(
-            r"\textbf{(Eq. 2)}", color=BLACK), tsk_all_1
-        ).arrange(RIGHT).next_to(tsk_all, DOWN)
+        tsk_all_1 = (
+            VGroup(Tex(r"\textbf{(Eq. 2)}", color=BLACK), tsk_all_1)
+            .arrange(RIGHT)
+            .next_to(tsk_all, DOWN)
+        )
 
         if self.play_substitute:
             # only need a portion of the formula since it will substitute the previous one
@@ -192,17 +196,17 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
         else:
             gaussian_tsk_formula = MathTex(
                 r"\mathfrak{F}_{\text{TSK}}(\mathbf{x}) = \frac{"
-                r"\sum\limits_{u \in U} \mathcal{g}_{u}"
+                r"\sum\limits_{u \in U} \mathcal{g}_{u}(\mathbf{x})"
                 r"\Big("
                 r"\exp \big("
-                r"- \mathcolorbox{purple}{\sum\limits_{i \in I_{\mathcal{C}}}}"
+                r"- \mathcolorbox{teal}{\sum\limits_{i \in I_{\mathcal{C}}}}"
                 r"\frac{({x}_{i} - {c}_{i, j, u}) ^ 2}{2\sigma_{i, j, u} ^ 2} "
                 r"\big )"
                 r"\Big )"
                 r"}{"
                 r"\sum\limits_{u \in U}"
                 r"\Big("
-                r"\exp \big(- \mathcolorbox{purple}{\sum\limits_{i \in I_{\mathcal{C}}}}"
+                r"\exp \big(- \mathcolorbox{teal}{\sum\limits_{i \in I_{\mathcal{C}}}}"
                 r"\frac{({x}_{i} - {c}_{i, j, u}) ^ 2}{2\sigma_{i, j, u} ^ 2} "
                 r"\big )"
                 r"\Big )"
@@ -210,13 +214,15 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
                 color=BLACK,
                 tex_template=myTemplate,  # IMPORTANT
             )
-        # group.add(gaussian_tsk_formula)
-            gaussian_tsk_formula = VGroup(
-                Tex(r"\textbf{(Eq. 3)}", color=BLACK
-            ), gaussian_tsk_formula).arrange(RIGHT).next_to(tsk_all_1, DOWN)
+            # group.add(gaussian_tsk_formula)
+            gaussian_tsk_formula = (
+                VGroup(Tex(r"\textbf{(Eq. 3)}", color=BLACK), gaussian_tsk_formula)
+                .arrange(RIGHT)
+                .next_to(tsk_all_1, DOWN)
+            )
 
         concise_tsk_formula = MathTex(
-            r"\mathfrak{F}_{\text{TSK}}(\mathbf{x}) = \sum\limits_{u \in U} \mathcal{g}_{u}(\mathbf{x}) \mathcolorbox{purple}{\overline{w}_{u}(\mathbf{x})}",
+            r"\mathfrak{F}_{\text{TSK}}(\mathbf{x}) = \sum\limits_{u \in U} \mathcal{g}_{u}(\mathbf{x}) \mathcolorbox{green}{\overline{w}_{u}(\mathbf{x})}",
             color=BLACK,
             tex_template=myTemplate,  # IMPORTANT
         ).move_to(tsk_all.get_center())
@@ -224,7 +230,9 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
         if not self.play_substitute:
             # if we are not playing the substitution animation,
             # we need to reference the lowest formula
-            concise_tsk_formula = VGroup(Tex(r"\textbf{(Eq. 4)}", color=BLACK), concise_tsk_formula).arrange(RIGHT)
+            concise_tsk_formula = VGroup(
+                Tex(r"\textbf{(Eq. 4)}", color=BLACK), concise_tsk_formula
+            ).arrange(RIGHT)
             concise_tsk_formula.next_to(gaussian_tsk_formula, DOWN)
 
         where_tex = (
@@ -233,14 +241,16 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             .align_to(concise_tsk_formula, LEFT)
         )
         softmax_formula = MathTex(
-            r"\overline{w}_{u}(\mathbf{x}) = \frac{\exp \big ("
-            r"\mathcolorbox{purple}{{w}_{u}(\mathbf{x})}"
+            r"\mathcolorbox{green}{\overline{w}_{u}(\mathbf{x})} = \frac{\exp \big ("
+            r"\mathcolorbox{blue}{{w}_{u}(\mathbf{x})}"
             r"\big)"
-            r"}{\sum_{u}^{U} \exp \big(\mathcolorbox{purple}{{w}_{u}(\mathbf{x})}\big)}",
+            r"}{\sum_{u}^{U} \exp \big(\mathcolorbox{blue}{{w}_{u}(\mathbf{x})}\big)}",
             color=BLACK,
             tex_template=myTemplate,  # IMPORTANT
         )
-        softmax_formula = VGroup(Tex(r"\textbf{(Eq. 5)}", color=BLACK), softmax_formula).arrange(RIGHT)
+        softmax_formula = VGroup(
+            Tex(r"\textbf{(Eq. 5)}", color=BLACK), softmax_formula
+        ).arrange(RIGHT)
         brace = Brace(softmax_formula, DOWN, color=GREEN)
         softmax_lbl = Tex(r"\texttt{softmax}", color=GREEN).next_to(brace, DOWN)
         labeled_brace = VGroup(brace, softmax_lbl)
@@ -250,7 +260,7 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             .align_to(softmax_formula, LEFT)
         )
         weight_sum_term_formula = MathTex(
-            r"{w}_{u}(\mathbf{x}) = -\sum_{i \in I_{\mathcal{C}}}"
+            r"\mathcolorbox{blue}{w_{u}(\mathbf{x})} = -\sum_{i \in I_{\mathcal{C}}}"
             r"\frac{({x}_{i} - {c}_{i, j, u}) ^ 2}{2\sigma_{i, j, u} ^ 2}",
             color=BLACK,
             tex_template=myTemplate,  # IMPORTANT
@@ -260,7 +270,7 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
         ).arrange(RIGHT)
         or_tex: Tex = Tex("or", color=BLACK)
         weight_mean_term_formula = MathTex(
-            r"{w}_{u}(\mathbf{x}) = -\frac{1}{|\mathcal{C}|} \sum_{i \in I_{\mathcal{C}}}"
+            r"\mathcolorbox{blue}{w_{u}(\mathbf{x})} = -\frac{1}{|\mathcal{C}|} \sum_{i \in I_{\mathcal{C}}}"
             r"\frac{({x}_{i} - {c}_{i, j, u}) ^ 2}{2\sigma_{i, j, u} ^ 2}",
             color=BLACK,
             tex_template=myTemplate,  # IMPORTANT
@@ -289,111 +299,131 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
 
         use_gaussian_memberships = Tex(
             r"\textit{Assume} $\mathcal{m}_{u}$\\"
-            r"\textit{only yields Gaussian memberships}",
-            color=BLACK, tex_template=myTemplate
+            r"\textit{only yields Gaussian}\\"
+            r"\textit{membership functions}",
+            color=BLACK,
+            tex_template=myTemplate,
         ).next_to(tsk_all_1[0], LEFT, buff=0.5)
 
         product_law_of_exp = Tex(
             r"\textit{Product Law of Exponents}", color=BLACK
-        ).next_to(
-            gaussian_tsk_formula[0], LEFT, buff=0.5
-        )
+        ).next_to(gaussian_tsk_formula[0], LEFT, buff=0.5)
+
+        softmax_belongs_to_entmax_family = Tex(
+            r"\texttt{softmax} \textit{belongs to the}\\"
+            r"$\alpha$\texttt{-entmax} \textit{family when}\\"
+            r"$\alpha = 1$",
+            color=BLACK,
+            tex_template=myTemplate,
+        ).next_to(softmax_formula[0], LEFT, buff=0.5)
 
         softmax_common_trick_formula = MathTex(
-            r"\overline{w}_{u}(\mathbf{x}) = \frac{\exp \big ("
-            r"{w}_{u}(\mathbf{x}) - \max{w}_{u}(\mathbf{x})"
+            r"\mathcolorbox{green}{\overline{w}_{u}(\mathbf{x})} = \frac{\exp \big ("
+            r"\mathcolorbox{blue}{{w}_{u}(\mathbf{x})} - \max\mathcolorbox{blue}{{w}_{u}(\mathbf{x})}"
             r"\big)"
-            r"}{\sum_{u}^{U} \exp \big({w}_{u}(\mathbf{x}) - \max{w}_{u}(\mathbf{x}) \big)}",
+            r"}{\sum_{u}^{U} \exp \big(\mathcolorbox{blue}{{w}_{u}(\mathbf{x})} - \max\mathcolorbox{blue}{{w}_{u}(\mathbf{x})} \big)}",
             color=BLACK,
             tex_template=myTemplate,  # IMPORTANT
         )
-        softmax_common_trick_formula = VGroup(
-            Tex(r"\textbf{(Eq. 5)}", color=BLACK),
-            softmax_common_trick_formula,
-        ).arrange(RIGHT).move_to(softmax_formula.get_center())
+        softmax_common_trick_formula = (
+            VGroup(
+                Tex(r"\textbf{(Eq. 5)}", color=BLACK),
+                softmax_common_trick_formula,
+            )
+            .arrange(RIGHT)
+            .move_to(softmax_formula.get_center())
+        )
         group.add(softmax_common_trick_formula)
 
-        annotation_table = Table(
-            [
-                ["Neuro-Fuzzy Network"],
-                ["Input Vector"],
-                ["Set of Universal Identifiers for Fuzzy Rules"],
-                ["Set of Condition Attributes"],
-                ["Index Set of Condition Attributes"],
-                ["$i^{th}$ condition attribute"],
-                ["$j^{th}$ fuzzy set (i.e., linguistic term)"],
-                ["$u^{th}$ fuzzy rule"],
-                ["Function to Retrieve Fuzzy Rule's Premises"],
-                ["Fuzzy Rule Consequent"],
-                ["Gaussian Center"],
-                ["Gaussian Standard Deviation"],
-            ],
-            row_labels=[
-                MathTex("\mathfrak{F}", color=BLACK, tex_template=myTemplate),
-                MathTex("\mathbf{x}", color=BLACK, tex_template=myTemplate),
-                MathTex("U", color=BLACK, tex_template=myTemplate),
-                MathTex("\mathcal{C}", color=BLACK, tex_template=myTemplate),
-                Tex("$I_\mathcal{C}$", color=BLACK, tex_template=myTemplate),
-                MathTex("i", color=BLACK, tex_template=myTemplate),
-                MathTex("j", color=BLACK, tex_template=myTemplate),
-                MathTex("u", color=BLACK, tex_template=myTemplate),
-                MathTex("\mathcal{m}_{u}", color=BLACK, tex_template=myTemplate),
-                MathTex("\mathcal{g}_{u}", color=BLACK, tex_template=myTemplate),
-                MathTex("c_{i, j, u}", color=BLACK, tex_template=myTemplate),
-                MathTex("\sigma_{i, j, u}", color=BLACK, tex_template=myTemplate),
-            ],
-            col_labels=[
-                # Tex("Symbol", color=BLACK, tex_template=myTemplate),
-                Tex("Meaning", color=BLACK, tex_template=myTemplate)
-            ],
-            element_to_mobject=lambda x: Tex(
-                x, color=BLACK, tex_template=myTemplate
-            ),  # use LaTeX for the entries
-        ).next_to(gaussian_tsk_formula, RIGHT).scale(1.0)
+        annotation_table = (
+            Table(
+                [
+                    ["Neuro-Fuzzy Network"],
+                    ["Input Vector"],
+                    ["Set of Universal Identifiers for Fuzzy Rules"],
+                    ["Set of Condition Attributes"],
+                    ["Index Set of Condition Attributes"],
+                    ["$i^{th}$ condition attribute"],
+                    ["$j^{th}$ fuzzy set (i.e., linguistic term)"],
+                    ["$u^{th}$ fuzzy rule"],
+                    ["Function to Retrieve Fuzzy Rule's Premises"],
+                    ["Fuzzy Rule Consequent"],
+                    ["Gaussian Center"],
+                    ["Gaussian Standard Deviation"],
+                ],
+                row_labels=[
+                    MathTex("\mathfrak{F}", color=BLACK, tex_template=myTemplate),
+                    MathTex("\mathbf{x}", color=BLACK, tex_template=myTemplate),
+                    MathTex("U", color=BLACK, tex_template=myTemplate),
+                    MathTex("\mathcal{C}", color=BLACK, tex_template=myTemplate),
+                    Tex("$I_\mathcal{C}$", color=BLACK, tex_template=myTemplate),
+                    MathTex("i", color=BLACK, tex_template=myTemplate),
+                    MathTex("j", color=BLACK, tex_template=myTemplate),
+                    MathTex("u", color=BLACK, tex_template=myTemplate),
+                    MathTex("\mathcal{m}_{u}", color=BLACK, tex_template=myTemplate),
+                    MathTex("\mathcal{g}_{u}", color=BLACK, tex_template=myTemplate),
+                    MathTex("c_{i, j, u}", color=BLACK, tex_template=myTemplate),
+                    MathTex("\sigma_{i, j, u}", color=BLACK, tex_template=myTemplate),
+                ],
+                col_labels=[
+                    # Tex("Symbol", color=BLACK, tex_template=myTemplate),
+                    Tex("Meaning", color=BLACK, tex_template=myTemplate)
+                ],
+                element_to_mobject=lambda x: Tex(
+                    x, color=BLACK, tex_template=myTemplate
+                ),  # use LaTeX for the entries
+            )
+            .next_to(gaussian_tsk_formula, RIGHT, buff=1.5)
+            .scale(1.0)
+        )
         annotation_table.get_horizontal_lines().set_color(BLACK)
         annotation_table.get_vertical_lines().set_color(BLACK)
 
         # CREATE ALL LABELS AND BRACES FOR SUM & MEAN
         sum_brace = Brace(weight_sum_term_formula, DOWN, color=DARK_BLUE)
-        sum_brace_lbl = Tex(r"\texttt{sum}", color=DARK_BLUE).next_to(
-            sum_brace, DOWN
-        )
+        sum_brace_lbl = Tex(r"\texttt{sum}", color=DARK_BLUE).next_to(sum_brace, DOWN)
         sum_surrounding_rectangle = SurroundingRectangle(
             weight_sum_term_formula, color=DARK_BLUE
         )
         labeled_sum_brace = VGroup(sum_brace, sum_brace_lbl, sum_surrounding_rectangle)
-        mean_brace = Brace(weight_mean_term_formula, DOWN, color=DARK_BLUE)
-        mean_brace_lbl = Tex(r"\texttt{mean}", color=DARK_BLUE).next_to(
-            mean_brace, DOWN
-        )
+        mean_brace = Brace(weight_mean_term_formula, DOWN, color=GOLD)
+        mean_brace_lbl = Tex(r"\texttt{mean}", color=GOLD).next_to(mean_brace, DOWN)
         mean_surrounding_rectangle = SurroundingRectangle(
-            weight_mean_term_formula, color=DARK_BLUE
+            weight_mean_term_formula, color=GOLD
         )
-        labeled_mean_brace = VGroup(mean_brace, mean_brace_lbl, mean_surrounding_rectangle)
+        labeled_mean_brace = VGroup(
+            mean_brace, mean_brace_lbl, mean_surrounding_rectangle
+        )
 
         # begin adding layer normalization formulas
 
         layer_normalization_formula = MathTex(
-            r"w_{u}'(\mathbf{x}) = \frac{w_{u}(\mathbf{x}) - \overline{\mu}}{\overline{\sigma}} * \kappa + \beta",
+            r"\mathcolorbox{purple}{w_{u}'(\mathbf{x})} = "
+            r"\frac{\mathcolorbox{blue}{w_{u}(\mathbf{x})} - \mathcolorbox{yellow}{\overline{\mu}}}{\mathcolorbox{brown}{\overline{\sigma}}} * \kappa + \beta",
             color=BLACK,
             tex_template=myTemplate,  # IMPORTANT
         )
-        layer_normalization_formula = VGroup(
-            Tex(r"\textbf{(Eq. 8)}", color=BLACK),
-            layer_normalization_formula,
-        ).arrange(RIGHT).next_to(weight_term_formulas, DOWN).shift(2 * DOWN)
+        layer_normalization_formula = (
+            VGroup(
+                Tex(r"\textbf{(Eq. 8)}", color=BLACK),
+                layer_normalization_formula,
+            )
+            .arrange(RIGHT)
+            .next_to(weight_term_formulas, DOWN)
+            .shift(2 * DOWN)
+        )
         layer_norm_surrounding_rectangle = SurroundingRectangle(
-            layer_normalization_formula, color=ORANGE
+            layer_normalization_formula, color=MAROON
         )
-        layer_norm_brace = Brace(layer_normalization_formula, UP, color=ORANGE)
-        layer_norm_brace_lbl = Tex(r"\texttt{layer normalization}", color=ORANGE).next_to(
-            layer_norm_brace, UP
-        )
-        labeled_layer_norm_brace = VGroup(
-            layer_norm_brace, layer_norm_brace_lbl
-        )
+        layer_norm_brace = Brace(layer_normalization_formula, UP, color=MAROON)
+        layer_norm_brace_lbl = Tex(
+            r"\texttt{layer normalization}", color=MAROON
+        ).next_to(layer_norm_brace, UP)
+        labeled_layer_norm_brace = VGroup(layer_norm_brace, layer_norm_brace_lbl)
         layer_normalization_formula = VGroup(
-            layer_norm_surrounding_rectangle, layer_normalization_formula, labeled_layer_norm_brace
+            layer_norm_surrounding_rectangle,
+            layer_normalization_formula,
+            labeled_layer_norm_brace,
         )
         where_tex_1 = (
             Tex("where", color=BLACK)
@@ -401,12 +431,19 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
             .align_to(layer_normalization_formula, LEFT)
         )
         layer_normalization_1 = MathTex(
-            r"\overline{\mu} = \frac{1}{|U|} \sum_{u \in U} w_{u}(\mathbf{x})",
+            r"\mathcolorbox{yellow}{\overline{\mu}} = "
+            r"\frac{1}{|U|}"
+            r"\sum_{u \in U} "
+            r"\mathcolorbox{blue}{w_{u}(\mathbf{x})}",
             color=BLACK,
             tex_template=myTemplate,  # IMPORTANT
         )
         layer_normalization_2 = MathTex(
-            r"\overline{\sigma} = \sqrt{\frac{1}{|U|} \sum_{u \in U} (w_{u}(\mathbf{x}) - \overline{\mu})^2 + \text{1e-5}}",
+            r"\mathcolorbox{brown}{\overline{\sigma}} = "
+            r"\sqrt{\frac{1}{|U|} "
+            r"\sum_{u \in U} "
+            r"(\mathcolorbox{blue}{w_{u}(\mathbf{x})} "
+            r"- \mathcolorbox{yellow}{\overline{\mu}})^2 + \text{1e-5}}",
             color=BLACK,
             tex_template=myTemplate,  # IMPORTANT
         )
@@ -421,15 +458,20 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
         layer_normalization_2 = VGroup(
             Tex(r"\textbf{(Eq. 10)}", color=BLACK), layer_normalization_2
         ).arrange(RIGHT)
-        additional_layer_norm = VGroup(
-            where_tex_1, VGroup(
-                layer_normalization_1,
-                Tex("and", color=BLACK),
-                layer_normalization_2,
-                Tex("with", color=BLACK),
-                layer_norm_params
-            ).arrange(RIGHT, buff=0.5)
-        ).arrange(DOWN, buff=0.25, aligned_edge=LEFT).next_to(layer_normalization_formula, DOWN)
+        additional_layer_norm = (
+            VGroup(
+                where_tex_1,
+                VGroup(
+                    layer_normalization_1,
+                    Tex("and", color=BLACK),
+                    layer_normalization_2,
+                    Tex("with", color=BLACK),
+                    layer_norm_params,
+                ).arrange(RIGHT, buff=0.5),
+            )
+            .arrange(DOWN, buff=0.25, aligned_edge=LEFT)
+            .next_to(layer_normalization_formula, DOWN)
+        )
 
         self.play(Create(tsk_all), Create(annotation_table))
 
@@ -443,16 +485,21 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
 
         # incl. everything so it can all be seen
         group.add(
-            citation_tex, tsk_formula, tsk_function_tex, gaussian_tsk_formula,
-            annotation_table, labeled_sum_brace, labeled_mean_brace
+            citation_tex,
+            tsk_formula,
+            tsk_function_tex,
+            gaussian_tsk_formula,
+            annotation_table,
+            labeled_sum_brace,
+            labeled_mean_brace,
         )
         self.play(
             LaggedStart(
-                Create(tsk_all_1), Create(use_gaussian_memberships),
-                lag_ratio=0.5
+                Create(tsk_all_1), Create(use_gaussian_memberships), lag_ratio=0.5
             ),
             self.camera.frame.animate.move_to(group.get_center()).set(
-                width=group.width + 2, height=group.height + 2,
+                width=group.width + 2,
+                height=group.height + 2,
             ),
         )
 
@@ -471,7 +518,9 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
 
             animations = []
             for i in range(2):  # move the items to the left of the replacement
-                animations.append(tsk_formula[1 - i].animate.move_to(numerator_group[i]))
+                animations.append(
+                    tsk_formula[1 - i].animate.move_to(numerator_group[i])
+                )
             for i in range(3, 4):  # move the items to the right of the replacement
                 animations.append(tsk_formula[i].animate.move_to(numerator_group[i]))
             # determine where the bar will be positioned
@@ -481,7 +530,9 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
                 .get_boundary_point(LEFT)
             )
 
-            animations.append(tsk_function_tex.animate.next_to(reference, LEFT, buff=1.5))
+            animations.append(
+                tsk_function_tex.animate.next_to(reference, LEFT, buff=1.5)
+            )
             # move the overline down a bit
             animations.append(
                 tsk_formula[4].animate.next_to(numerator_group, DOWN, buff=0.1)
@@ -513,7 +564,7 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
                 LaggedStart(
                     Create(gaussian_tsk_formula),
                     Create(product_law_of_exp),
-                    lag_ratio=0.5
+                    lag_ratio=0.5,
                 )
             )
             self.wait(1)
@@ -525,8 +576,7 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
         curr_focus: VGroup = VGroup(softmax_formula, where_tex)
         self.play(
             # group.animate.arrange(DOWN, buff=0.5, center=False, aligned_edge=LEFT),
-            Create(softmax_formula),
-            Create(where_tex),
+            LaggedStart(Create(where_tex), Create(softmax_formula), lag_ratio=0.5),
             # self.camera.frame.animate.move_to(curr_focus.get_center()).set(
             #     height=group.height + 2
             # ),
@@ -537,8 +587,9 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
         curr_focus.add(such_that_tex, weight_sum_term_formula)
         self.play(
             # group.animate.arrange(DOWN, buff=0.5, center=False, aligned_edge=LEFT),
-            Create(such_that_tex),
-            Create(weight_sum_term_formula),
+            LaggedStart(
+                Create(such_that_tex), Create(weight_sum_term_formula), lag_ratio=0.5
+            )
             # self.camera.frame.animate.move_to(curr_focus.get_center()).set(
             #     height=group.height + 2
             # ),
@@ -548,8 +599,9 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
 
         curr_focus.add(or_tex, weight_mean_term_formula)
         self.play(
-            Create(or_tex),
-            Create(weight_mean_term_formula),
+            LaggedStart(
+                Create(or_tex), Create(weight_mean_term_formula), lag_ratio=0.5
+            ),
             LaggedStart(Create(labeled_mean_brace), Create(labeled_sum_brace)),
             # self.camera.frame.animate.move_to(group.get_center()).set(
             #     height=group.height + 2, width=weight_term_formulas.width + 2
@@ -564,15 +616,23 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
         self.wait(1)
         self.next_slide()
 
+        self.play(Create(softmax_belongs_to_entmax_family))
+        self.wait(1)
+        self.next_slide()
+
         softmax_common_trick_formula.shift(1.5 * RIGHT)
-        new_surrounding_rectangle = SurroundingRectangle(softmax_common_trick_formula, color=GREEN)
+        new_surrounding_rectangle = SurroundingRectangle(
+            softmax_common_trick_formula, color=GREEN
+        )
         new_brace = Brace(softmax_common_trick_formula, DOWN, color=GREEN)
         new_brace_lbl = Tex(r"\texttt{softmax}", color=GREEN).next_to(new_brace, DOWN)
         labeled_new_brace = VGroup(new_brace, new_brace_lbl)
         self.play(
             LaggedStart(
                 AnimationGroup(
-                    ReplacementTransform(surrounding_rectangle, new_surrounding_rectangle),
+                    ReplacementTransform(
+                        surrounding_rectangle, new_surrounding_rectangle
+                    ),
                     ReplacementTransform(labeled_brace, labeled_new_brace),
                 ),
                 TransformMatchingTex(softmax_formula, softmax_common_trick_formula),
@@ -587,7 +647,8 @@ class CurseOfDimensionality(Slide, MovingCameraScene):
         self.play(
             Create(VGroup(layer_normalization_formula, additional_layer_norm)),
             self.camera.frame.animate.move_to(group.get_center()).set(
-                width=group.width + 2, height=group.height + 2,
+                width=group.width + 2,
+                height=group.height + 2,
             ),
         )
 

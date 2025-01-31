@@ -50,7 +50,7 @@ def issue_with_logits() -> SlideWithBlocks:
         ),
     )
     return SlideWithBlocks(
-        title="Why the Gumbel-Max Trick?",
+        title="The Gumbel-Max Trick",
         subtitle=None,
         blocks=[alert_block, remark_block, example_block],
     )

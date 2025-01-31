@@ -91,6 +91,8 @@ class Background(SlideWithList):
 
         myTemplate = TexTemplate()
         myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
+        myTemplate.add_to_preamble(r"\usepackage[cal=boondox]{mathalfa}")
+
         beamer_list = ItemizedList(
             items=[
                 VGroup(

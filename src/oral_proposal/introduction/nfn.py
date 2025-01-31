@@ -54,7 +54,7 @@ def pros_and_cons() -> SlideWithBlocks:
                     items=[
                         VGroup(
                             Tex(
-                                "Historically designed by human experts (i.e., ``expert-designed'').",
+                                "Historically designed by human experts (i.e., ``expert-designed'')",
                                 color=BLACK,
                             ),
                             bib.slide_short_cite("lee_supervised_1992"),
@@ -71,7 +71,7 @@ def pros_and_cons() -> SlideWithBlocks:
                     items=[
                         VGroup(
                             Tex(
-                                "Due to ``expert design'', they [typically] require less training.",
+                                "Due to ``expert design'', they [typically] require less training",
                                 color=BLACK,
                             ),
                             bib.slide_short_cite("berenji_learning_1992"),
