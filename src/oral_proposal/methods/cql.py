@@ -20,15 +20,20 @@ class CQLDemo(Slide):
         )
         myTemplate = TexTemplate()
         myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
+        # the following line is needed to use the mathcal font
+        myTemplate.add_to_preamble(r"\usepackage[cal=boondox]{mathalfa}")
         upper_text = MathTex(
             "\min_{Q} \\alpha",
-            "\mathbb{E}_{\mathbf{s} \sim \mathcal{D}}",
-            "\Bigg [ " "\log \sum_{a} \exp \\big(Q(\mathbf{s}, a)\\big)" "-",
-            "\mathbb{E}_{a^{\dag} \sim \hat{\pi}_{\\beta}(a^{\dag} \mid \mathbf{s})} "
-            "[Q(\mathbf{s}, a^{\dag})] "
+            "\mathbb{E}_{\mathbf{s} \sim \mathbf{D}}",
+            "\Bigg [ "
+            "\log \sum_{\mathbf{a}} \exp \\big(Q(\mathbf{s}, \mathbf{a})\\big)"
+            "-",
+            "\mathbb{E}_{\mathbf{a}^{\dag} \sim \hat{\pi}_{\\beta}(\mathbf{a}^{\dag} \mid \mathbf{s})} "
+            "[Q(\mathbf{s}, \mathbf{a}^{\dag})] "
             "\Bigg ]",
             color=BLACK,
-            # "+ \\frac{1}{2} \mathbb{E}_{\mathbf{s}, a^{\dag}, \mathbf{s}' \sim \mathcal{D}} "
+            tex_template=myTemplate,
+            # "+ \\frac{1}{2} \mathbb{E}_{\mathbf{s}, a^{\dag}, \mathbf{s}' \sim \mathbf{D}} "
             # "\Bigg [ \Big(Q(\mathbf{s}, a^{\dag}) - \\big( \mathscr{R}(\mathbf{s}, a^{\dag}) + "
             # "\gamma [\max_{a \in \mathscr{A}} Q(\mathbf{s}', a)] \\big ) \Big)^{2} \Bigg ]"
         ).move_to(
@@ -36,17 +41,18 @@ class CQLDemo(Slide):
         )  # .move_to((0.0, 1.0, 0.0))
         lower_text = MathTex(
             "+ \\frac{1}{2} "
-            "\mathbb{E}_{\mathbf{s}, a^{\dag}, \mathbf{s}' \sim \mathcal{D}}",
+            "\mathbb{E}_{\mathbf{s}, \mathbf{a}^{\dag}, \mathbf{s}' \sim \mathbf{D}}",
             "\Bigg [ "
             "\Big("
-            "Q(\mathbf{s}, a^{\dag}) - "
+            "Q(\mathbf{s}, \mathbf{a}^{\dag}) - "
             "\\big( "
-            "\mathcal{R}(\mathbf{s}, a^{\dag}) + "
-            "\gamma [\max_{a \in \mathcal{A}} Q(\mathbf{s}', a)] "
+            "\mathcal{r}(\mathbf{s}, \mathbf{a}^{\dag}) + "
+            "\gamma [\max_{\mathbf{a} \in \mathcal{A}} Q(\mathbf{s}', \mathbf{a})] "
             "\\big ) "
             "\Big)^{2} "
             "\Bigg ]",
             color=BLACK,
+            tex_template=myTemplate,
         ).next_to(
             upper_text, DOWN
         )  # .move_to((0.0, -1.0, 0.0))
@@ -142,7 +148,7 @@ class CQLDemo(Slide):
                 Text("A behavior policy ", font_size=24, color=BLACK),
                 MathTex(r"\hat{\pi}_{\beta}", font_size=36, color=BLACK),
                 Text("collected training data ", font_size=24, color=BLACK),
-                MathTex(r"\mathcal{D},", font_size=36, color=BLACK),
+                MathTex(r"\mathbf{D},", font_size=36, color=BLACK),
                 MathTex(r"\gamma \in [0, 1]", font_size=36, color=BLACK),
                 Text("is the discount factor, ", font_size=24, color=BLACK),
                 MathTex(r"\mathbf{s}'", font_size=36, color=BLACK),
@@ -154,7 +160,9 @@ class CQLDemo(Slide):
                 ),
                 MathTex(r"\mathbf{s}", font_size=36, color=BLACK),
                 Text("and ", font_size=24, color=BLACK),
-                MathTex(r"\mathcal{R}", font_size=36, color=BLACK),
+                MathTex(
+                    r"\mathcal{r}", font_size=36, color=BLACK, tex_template=myTemplate
+                ),
                 Text("is the reward function.", font_size=24, color=BLACK),
             ]
 

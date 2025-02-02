@@ -13,8 +13,18 @@ from manim import (
     Tex,
     Group,
     DOWN,
-    RED, Uncreate, Create, VGroup, TexTemplate, MovingCameraScene, GREEN, SurroundingRectangle,
-    DARK_BLUE, MAROON, BLUE, PURPLE,
+    RED,
+    Uncreate,
+    Create,
+    VGroup,
+    TexTemplate,
+    MovingCameraScene,
+    GREEN,
+    SurroundingRectangle,
+    DARK_BLUE,
+    MAROON,
+    BLUE,
+    PURPLE,
 )
 
 from src.manim_presentation.utils import get_project_root
@@ -37,7 +47,10 @@ class BestTrials(Slide, MovingCameraScene):
         # ).scale(1.5)
 
         all_groups = VGroup()
-        for file_name, architecture in [("dnn_results", "DNNs"), ("nfn_results", "NFNs")]:
+        for file_name, architecture in [
+            ("dnn_results", "DNNs"),
+            ("nfn_results", "NFNs"),
+        ]:
             all_groups.add(self.make_table(file_name, architecture))
         all_groups.arrange(DOWN)
         self.camera.frame.move_to(all_groups).set(
@@ -77,10 +90,18 @@ class BestTrials(Slide, MovingCameraScene):
         table.get_horizontal_lines().set_color(BLACK)
         table.get_vertical_lines().set_color(BLACK)
         if architecture == "NFNs":
-            table.add(SurroundingRectangle(table.get_columns()[2], color=BLUE))  # premise aggregation
-            table.add(SurroundingRectangle(table.get_columns()[4], color=GREEN))  # softmax
-            table.add(SurroundingRectangle(table.get_columns()[7], color=MAROON))  # layer norm
-        table.add(SurroundingRectangle(table.get_columns()[-3], color=PURPLE))  # mean results
+            table.add(
+                SurroundingRectangle(table.get_columns()[2], color=BLUE)
+            )  # premise aggregation
+            table.add(
+                SurroundingRectangle(table.get_columns()[4], color=GREEN)
+            )  # softmax
+            table.add(
+                SurroundingRectangle(table.get_columns()[7], color=MAROON)
+            )  # layer norm
+        table.add(
+            SurroundingRectangle(table.get_columns()[-3], color=PURPLE)
+        )  # mean results
 
         for entry in table.get_entries():
             entry.set_color(BLACK)

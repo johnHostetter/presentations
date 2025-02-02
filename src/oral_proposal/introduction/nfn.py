@@ -23,14 +23,14 @@ def pros_and_cons() -> SlideWithBlocks:
     """
     bib = BibTexManager(path=get_project_root() / "oral_proposal" / "ref.bib")
     example_block = ExampleBlock(
-        title="Advantages of NFNs",
+        title="Advantages",
         content=AdvantagesList(
             items=[
-                VGroup(Tex("Powerful", color=BLACK)),
+                VGroup(Tex(r"\textbf{Powerful}", color=BLACK, font_size=42)),
                 ItemizedList(
                     items=[
                         VGroup(
-                            Tex("Same theoretical guarantees as DNNs", color=BLACK),
+                            Tex("Same theoretical guarantees as DNNs", color=BLACK, font_size=36),
                             bib.slide_short_cite(
                                 "wang_mendel_universal_function_approx"
                             ),
@@ -48,14 +48,19 @@ def pros_and_cons() -> SlideWithBlocks:
                     ]
                 ),
                 VGroup(
-                    Tex("Transparent", color=BLACK),
+                    Tex(r"\textbf{Transparent}", color=BLACK, font_size=42),
                 ),
                 ItemizedList(
                     items=[
                         VGroup(
+                            # Tex(
+                            #     "Historically designed by human experts (i.e., ``expert-designed'')",
+                            #     color=BLACK,
+                            # ),
                             Tex(
-                                "Historically designed by human experts (i.e., ``expert-designed'')",
+                                "Linguistic IF-THEN rules",
                                 color=BLACK,
+                                font_size=36,
                             ),
                             bib.slide_short_cite("lee_supervised_1992"),
                             bib.slide_short_cite("elkan_paradoxical_1994"),
@@ -65,14 +70,15 @@ def pros_and_cons() -> SlideWithBlocks:
                     ]
                 ),
                 VGroup(
-                    Tex("Sample efficient", color=BLACK),
+                    Tex(r"\textbf{Sample efficient}", color=BLACK, font_size=42),
                 ),
                 ItemizedList(
                     items=[
                         VGroup(
                             Tex(
-                                "Due to ``expert design'', they [typically] require less training",
+                                "A priori knowledge as linguistic rules",
                                 color=BLACK,
+                                font_size=36,
                             ),
                             bib.slide_short_cite("berenji_learning_1992"),
                         ).arrange(RIGHT),
@@ -82,11 +88,11 @@ def pros_and_cons() -> SlideWithBlocks:
         ),
     )
     alert_block = AlertBlock(
-        title="Challenges of NFNs",
+        title="Challenges",
         content=DisadvantagesList(
             items=[
                 VGroup(
-                    Tex("Human labor", color=BLACK),
+                    Tex("Human labor", color=BLACK, font_size=42),
                     bib.slide_short_cite("lee_flc_12"),
                     bib.slide_short_cite("klir_yuan"),
                 ).arrange(RIGHT),
@@ -100,7 +106,7 @@ def pros_and_cons() -> SlideWithBlocks:
                 #     ]
                 # ),
                 VGroup(
-                    Tex("Complex mechanisms used to add new knowledge", color=BLACK),
+                    Tex("Complex mechanisms used to add new knowledge", color=BLACK, font_size=42),
                     bib.slide_short_cite("chen_self-organizing_1993"),
                     bib.slide_short_cite("zhou_pseudo_1996"),
                     bib.slide_short_cite("er_online_2004"),
@@ -119,6 +125,7 @@ def pros_and_cons() -> SlideWithBlocks:
                     Tex(
                         "Data-driven methods often specific to a certain task",
                         color=BLACK,
+                        font_size=42,
                     ),
                     bib.slide_short_cite("aghaeipoor_mokblmoms_2019"),
                     bib.slide_short_cite("zhou_reinforcement_2009"),
@@ -134,10 +141,40 @@ def pros_and_cons() -> SlideWithBlocks:
             ]
         ),
     )
+    kwargs = {
+        "color": DARK_BLUE,
+        "opacity": 0.0,
+        "font_size": 30,
+    }
+    remark_block = ExampleBlock(
+        title="Solutions",
+        content=AdvantagesList(
+            items=[
+                VGroup(
+                    Tex("Data-driven construction", color=BLACK, font_size=42),
+                    bib.slide_short_cite("hostetter2023leveraging", abbrev=True),
+                    bib.slide_short_cite("hostetter2023latent", abbrev=True),
+                ).arrange(RIGHT, buff=0.1),
+                VGroup(
+                    Tex("Capable of adding new knowledge just in time", color=BLACK, font_size=42),
+                    bib.slide_short_cite("hostetter2023self", abbrev=True),
+                ),
+                VGroup(
+                    Tex(
+                        "Task-independent (i.e., gradient-based learning)",
+                        color=BLACK,
+                        font_size=42,
+                    ),
+                    Tex("$[$This Dissertation$]$", **kwargs),
+                ).arrange(RIGHT, buff=0.1),
+            ]
+        ),
+    )
+
     return SlideWithBlocks(
         title="Neuro-Fuzzy Networks (NFNs)",
         subtitle=None,
-        blocks=[example_block, alert_block],
+        blocks=[example_block, alert_block, remark_block],
     )
 
 

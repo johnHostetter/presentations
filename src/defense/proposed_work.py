@@ -37,6 +37,7 @@ class Proposal(SlideWithList):
                             # r"\sethlcolor{cyan} \hl{\textbf{Computer vision:}}",
                             r"\textbf{Computer Vision:}",
                             color=BLACK,
+                            font_size=42,
                             tex_environment="flushleft",
                             tex_template=myTemplate,
                         ),
@@ -47,6 +48,7 @@ class Proposal(SlideWithList):
                                 Tex(
                                     "Shown in the video game called DOOM",
                                     color=BLACK,
+                                    font_size=36,
                                     tex_environment="flushleft",
                                 )
                             ),
@@ -56,6 +58,7 @@ class Proposal(SlideWithList):
                         Tex(
                             r"\textbf{Hierarchical NFN:}",
                             color=BLACK,
+                            font_size=42,
                             tex_environment="flushleft",
                         )
                     ),
@@ -65,6 +68,7 @@ class Proposal(SlideWithList):
                                 Tex(
                                     "Tested in this dissertation",
                                     color=BLACK,
+                                    font_size=36,
                                     tex_environment="flushleft",
                                 )
                             )
@@ -74,6 +78,7 @@ class Proposal(SlideWithList):
                         Tex(
                             r"\textbf{Neural Architecture Search:}",
                             color=BLACK,
+                            font_size=42,
                             tex_environment="flushleft",
                         )
                     ),
@@ -83,6 +88,7 @@ class Proposal(SlideWithList):
                                 Tex(
                                     "Explored the impact of different possible configurations",
                                     color=BLACK,
+                                    font_size=36,
                                     tex_environment="flushleft",
                                 ),
                             ),
@@ -92,6 +98,7 @@ class Proposal(SlideWithList):
                         Tex(
                             r"\textbf{Left for Future Work:}",
                             color=BLACK,
+                            font_size=42,
                             tex_environment="flushleft",
                         )
                     ),
@@ -101,6 +108,7 @@ class Proposal(SlideWithList):
                                 Tex(
                                     r"Prove universal approximation property",
                                     color=BLACK,
+                                    font_size=36,
                                     tex_environment="flushleft",
                                 ),
                             ),
@@ -108,6 +116,7 @@ class Proposal(SlideWithList):
                                 Tex(
                                     "Applications in e-learning or healthcare",
                                     color=BLACK,
+                                    font_size=36,
                                     tex_environment="flushleft",
                                 )
                             ),

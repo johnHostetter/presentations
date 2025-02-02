@@ -10,7 +10,7 @@ light_theme_style = {
 }
 
 
-class ParamsNFN(SlideWithList):
+class ParamsNFN(SlideWithList):  # TODO: enable height of the slide to be adjusted
     def __init__(self, **kwargs):
         title: str = "Neuro-Fuzzy Networks (NFNs)"
         subtitle: str = "Available Hyperparameters for TPE"
@@ -22,23 +22,24 @@ class ParamsNFN(SlideWithList):
 
         beamer_list = ItemizedList(
             items=[
-                VGroup(Tex(r"\textbf{Environment:}", color=BLACK)),
+                VGroup(Tex(r"\textbf{Environment:}", color=BLACK, font_size=42)),
                 BL(
                     items=[
                         VGroup(
                             Tex(
-                                "Number of frames skipped: (chosen by DNN)", color=BLACK
+                                "Number of frames skipped: (chosen by DNN)", color=BLACK, font_size=36
                             )
                         ),
                     ],
                 ),
-                VGroup(Tex(r"\textbf{Algorithm:}", color=BLACK)),
+                VGroup(Tex(r"\textbf{Algorithm:}", color=BLACK, font_size=42)),
                 BL(
                     items=[
                         VGroup(
                             Tex(
                                 "Learning rate, $\eta$: [1e-4, 1e-3]",
                                 color=BLACK,
+                                font_size=36,
                                 tex_template=myTemplate,
                             ),
                         ),
@@ -47,6 +48,7 @@ class ParamsNFN(SlideWithList):
                                 "Batch size (in experience replay), $|\mathbf{X}|$: "
                                 "(chosen by DNN)",
                                 color=BLACK,
+                                font_size=36,
                                 tex_template=myTemplate,
                             ),
                         ),
@@ -54,6 +56,7 @@ class ParamsNFN(SlideWithList):
                             Tex(
                                 "Memory size (in experience replay), Rep. Memory: (chosen by DNN)",
                                 color=BLACK,
+                                font_size=36,
                                 tex_template=myTemplate,
                             ),
                         ),
@@ -61,18 +64,20 @@ class ParamsNFN(SlideWithList):
                             Tex(
                                 "Discount factor, $\gamma$: (chosen by DNN)",
                                 color=BLACK,
+                                font_size=36,
                                 tex_template=myTemplate,
                             ),
                         ),
                     ]
                 ),
-                VGroup(Tex(r"\textbf{Architecture}", color=BLACK)),
+                VGroup(Tex(r"\textbf{Architecture}", color=BLACK, font_size=42)),
                 BL(
                     items=[
                         VGroup(
                             Tex(
                                 "Number of fuzzy logic rules, $|U|$: 64, 128, 192, 256",
                                 color=BLACK,
+                                font_size=36,
                                 tex_template=myTemplate,
                             ),
                         ),
@@ -80,6 +85,7 @@ class ParamsNFN(SlideWithList):
                             Tex(
                                 "\hl{Sampling of fuzzy logic rules: STE or GMT}",
                                 color=BLACK,
+                                font_size=36,
                                 tex_template=myTemplate,
                             ),
                         ),
@@ -87,6 +93,7 @@ class ParamsNFN(SlideWithList):
                             Tex(
                                 r"Gumbel temperature, $\tau$: [0.25, 1.25]",
                                 color=BLACK,
+                                font_size=36,
                                 tex_template=myTemplate,
                             ),
                         ),
@@ -95,6 +102,7 @@ class ParamsNFN(SlideWithList):
                                 r"Percentile threshold, $\theta$: "
                                 r"0.0 (disabled) or 0.1 (slightly enabled)",
                                 color=BLACK,
+                                font_size=36,
                                 tex_template=myTemplate,
                             ),
                         ),
@@ -104,6 +112,7 @@ class ParamsNFN(SlideWithList):
                                 r"after \rule{1cm}{0.4pt} batches: "
                                 "1, 32, 64, 128, 256",
                                 color=BLACK,
+                                font_size=36,
                                 tex_template=myTemplate,
                             ),
                         ),
@@ -111,6 +120,7 @@ class ParamsNFN(SlideWithList):
                             Tex(
                                 "Required membership degree, $\epsilon$: [0.1, 0.5]",
                                 color=BLACK,
+                                font_size=36,
                                 tex_template=myTemplate,
                             ),
                         ),
@@ -119,6 +129,7 @@ class ParamsNFN(SlideWithList):
                                 "Number of batches to delay new fuzzy sets, $+\mu$: "
                                 "1 (add immediately), 3, 5",
                                 color=BLACK,
+                                font_size=36,
                                 tex_template=myTemplate,
                             ),
                         ),
@@ -127,6 +138,7 @@ class ParamsNFN(SlideWithList):
                                 "\hl{Premise aggregation, $w_{u}$: "
                                 "Sum (standard) or Mean (Cui et al., 2021)}",
                                 color=BLACK,
+                                font_size=36,
                                 tex_template=myTemplate,
                             ),
                         ),
@@ -135,6 +147,7 @@ class ParamsNFN(SlideWithList):
                                 r"\hl{Activation of fuzzy logic rule, $\overline{w}_{u}'$: "
                                 r"\texttt{softmax} or \texttt{1.5-entmax}}",
                                 color=BLACK,
+                                font_size=36,
                                 tex_template=myTemplate,
                             ),
                         ),
@@ -142,6 +155,7 @@ class ParamsNFN(SlideWithList):
                             Tex(
                                 r"Enable certainty factors, CF: False or True",
                                 color=BLACK,
+                                font_size=36,
                                 tex_template=myTemplate,
                             ),
                         ),
@@ -149,6 +163,7 @@ class ParamsNFN(SlideWithList):
                             Tex(
                                 "\hl{Enable layer normalization, LN: False or True}",
                                 color=BLACK,
+                                font_size=36,
                                 tex_template=myTemplate,
                             ),
                         ),

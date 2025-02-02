@@ -2,11 +2,13 @@ import igraph as ig
 from manim import *
 from manim_slides import Slide
 
-from examples.graph_example import MyGraph, GraphPair
+from manim_timeline.graph import GraphPair
 from manim_beamer.slides import SlideShow, SlideWithList
 from manim_beamer.bibtex import BibTexManager
 from manim_beamer.lists import ItemizedList, BulletedList as BL
+from src.defense.publications import Publications
 from src.manim_presentation.utils import get_project_root
+from src.graph_example import NoCodeGraph as MyGraph
 from src.oral_proposal.studies.pyrenees import (
     IntelligentTutoringSystemResults,
 )
@@ -108,6 +110,7 @@ class APFRBDiagram(Slide, MovingCameraScene):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.graphs = {}
+        self.bib = BibTexManager(path=get_project_root() / "oral_proposal" / "ref.bib")
 
     def construct(self):
         self.draw(origin=ORIGIN, scale=1.0, target_scene=self, animate=True)
@@ -141,7 +144,7 @@ class APFRBDiagram(Slide, MovingCameraScene):
         v_group: VGroup = VGroup()
         for key, value in self.graphs.items():
             new_item = VGroup(
-                Text(key, font_size=18, color=BLACK)
+                Tex(key, font_size=18, color=BLACK)
                 .scale(scale_factor=scale)
                 .next_to(value.digraph, UP),
                 value.digraph,
@@ -157,7 +160,7 @@ class APFRBDiagram(Slide, MovingCameraScene):
 
                 v_group.add(arrow.next_to(v_group[-1], RIGHT))
                 v_group.add(
-                    Text("Distill & APFRB", font_size=18, color=BLACK)
+                    Tex(r"Distill \& APFRB", font_size=18, color=BLACK)
                     .scale(scale_factor=scale)
                     .next_to(arrow, UP)
                 )
@@ -165,6 +168,23 @@ class APFRBDiagram(Slide, MovingCameraScene):
             v_group.add(new_item)
 
         v_group.scale(scale_factor=scale).move_to(origin)
+
+        # set title to the top of the screen
+        title = (
+            Tex("All-Permutations Fuzzy Rule Base (APFRB)", font_size=24, color=BLACK)
+            .scale(1.5)
+            .next_to(v_group, UP, buff=1.0)
+        )
+        # add the citation
+        citation_vgroup: VGroup = (
+            Publications.convert_entry_to_long_pub(
+                self.bib, self.bib["hostetter2023leveraging"]
+            )
+            .scale(0.5)
+            .next_to(v_group, DOWN, buff=1.0)
+        )
+        v_group.add(title, citation_vgroup)
+
         if animate:
             target_scene.camera.frame.move_to(v_group.get_center()).set(
                 width=v_group.width * 1.5

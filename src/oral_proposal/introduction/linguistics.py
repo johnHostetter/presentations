@@ -97,8 +97,18 @@ class Background(SlideWithList):
             items=[
                 VGroup(
                     Tex(
-                        r"Linguistic terms, $\mathcal{M}$, are constrained fuzzy sets "
-                        r"\\w/ semantic meaning of some concept ",
+                        r"Condition attributes, $\mathcal{C}$",
+                        # r"Linguistic variables, $\mathcal{C}$, "
+                        # r"can take on values from a set of linguistic terms",
+                        tex_template=myTemplate,
+                        tex_environment="flushleft",
+                        color=BLACK,
+                    ),
+                ),
+                VGroup(
+                    Tex(
+                        r"Linguistic terms, $\mathcal{M}$, are constrained fuzzy sets",
+                        # r"\\w/ semantic meaning of some concept ",
                         tex_template=myTemplate,
                         tex_environment="flushleft",
                         color=BLACK,
@@ -114,15 +124,6 @@ class Background(SlideWithList):
                 #         ),
                 #     ],
                 # ),
-                VGroup(
-                    Tex(
-                        r"Linguistic variables, $\mathcal{C}$, "
-                        r"can take on values from a set of linguistic terms",
-                        tex_template=myTemplate,
-                        tex_environment="flushleft",
-                        color=BLACK,
-                    ),
-                ),
                 # BL(
                 #     items=[
                 #         VGroup(
@@ -135,8 +136,9 @@ class Background(SlideWithList):
                 # ),
                 VGroup(
                     Tex(
-                        r"Degree to which a linguistic term applies to a linguistic variable "
-                        r"\\is calculated by an atomic fuzzy proposition",
+                        r"Fuzzy propositions:",
+                        # r"Degree to which a linguistic term applies to a linguistic variable "
+                        # r"\\is calculated by an atomic fuzzy proposition",
                         tex_template=myTemplate,
                         tex_environment="flushleft",
                         color=BLACK,
@@ -146,31 +148,48 @@ class Background(SlideWithList):
                     items=[
                         VGroup(
                             Tex(
-                                r"Written as ``$x$ is $\mu$'' "
-                                r"(or $\mu(x)$) where $\mu \in \mathcal{M}$,",
+                                r"\textit{Atomic:} $\mu(x)$ where $\mu \in \mathcal{M}$",
+                                # r"Degree to which a linguistic term applies to a linguistic variable "
+                                # r"\\is calculated by an atomic fuzzy proposition",
                                 tex_template=myTemplate,
                                 tex_environment="flushleft",
                                 color=BLACK,
-                            ),
+                                font_size=36,
+                            )
                         ),
-                        # VGroup(
-                        #     Tex(
-                        #         r"e.g., ``the sky is blue'', ``the temperature is hot'', "
-                        #         r"\\``the person is tall'', ``the car is old'', etc.",
-                        #         tex_template=myTemplate, tex_environment="flushleft", color=BLACK
-                        #     )
-                        # ),
-                    ],
+                        VGroup(
+                            Tex(
+                                r"\textit{Compound:} AND ($\wedge$), OR ($\vee$), NOT ($\neg$)",
+                                # r"More complex (compound) propositions can be formed by combining atomic ",
+                                # r"\\propositions with logical operators (e.g., AND ($\wedge$), OR ($\vee$), NOT ($\neg$))",
+                                tex_template=myTemplate,
+                                tex_environment="flushleft",
+                                color=BLACK,
+                                font_size=36,
+                            )
+                        ),
+                    ]
                 ),
-                VGroup(
-                    Tex(
-                        r"More complex (compound) propositions can be formed by combining atomic ",
-                        r"\\propositions with logical operators (e.g., AND ($\wedge$), OR ($\vee$), NOT ($\neg$))",
-                        tex_template=myTemplate,
-                        tex_environment="flushleft",
-                        color=BLACK,
-                    )
-                ),
+                # BL(
+                #     items=[
+                #         VGroup(
+                #             Tex(
+                #                 r"Written as ``$x$ is $\mu$'' "
+                #                 r"(or $\mu(x)$) where $\mu \in \mathcal{M}$,",
+                #                 tex_template=myTemplate,
+                #                 tex_environment="flushleft",
+                #                 color=BLACK,
+                #             ),
+                #         ),
+                #         # VGroup(
+                #         #     Tex(
+                #         #         r"e.g., ``the sky is blue'', ``the temperature is hot'', "
+                #         #         r"\\``the person is tall'', ``the car is old'', etc.",
+                #         #         tex_template=myTemplate, tex_environment="flushleft", color=BLACK
+                #         #     )
+                #         # ),
+                #     ],
+                # ),
                 # BL(
                 #     items=[
                 #         VGroup(Tex(
@@ -182,12 +201,39 @@ class Background(SlideWithList):
                 # ),
                 VGroup(
                     Tex(
-                        r"Rules can be expressed as a set of fuzzy propositions, "
-                        r"which can be\\combined to form a fuzzy rule base",
+                        r"Fuzzy logic inference:",
+                        # r"Degree to which a linguistic term applies to a linguistic variable "
+                        # r"\\is calculated by an atomic fuzzy proposition",
                         tex_template=myTemplate,
                         tex_environment="flushleft",
                         color=BLACK,
                     )
+                ),
+                BL(
+                    items=[
+                        VGroup(
+                            Tex(
+                                r"\textit{Fuzzy rules:} IF-THEN relationships",
+                                # r"Rules can be expressed as a set of fuzzy propositions, "
+                                # r"which can be\\combined to form a fuzzy rule base",
+                                tex_template=myTemplate,
+                                tex_environment="flushleft",
+                                color=BLACK,
+                                font_size=36,
+                            )
+                        ),
+                        VGroup(
+                            Tex(
+                                r"\textit{Fuzzy rule base:} Collection of fuzzy rules",
+                                # r"e.g., ``IF the temperature is hot THEN the fan is on'', "
+                                # r"\\``IF the person is tall AND the car is old THEN the person is wise'', etc.",
+                                tex_template=myTemplate,
+                                tex_environment="flushleft",
+                                color=BLACK,
+                                font_size=36,
+                            )
+                        ),
+                    ]
                 ),
                 # BL(
                 #     items=[

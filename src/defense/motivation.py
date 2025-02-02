@@ -30,21 +30,39 @@ def defense_outline() -> SlideWithList:
         width_buffer=12.0,
         beamer_list=ItemizedList(
             items=[
-                "Introduction & Background",
-                "Prior Research in Existing Construction Paradigms",
+                VGroup(Tex("Introduction \& Background", color=BLACK, font_size=42)),
+                VGroup(
+                    Tex(
+                        "Prior Research in Existing Construction Paradigms",
+                        color=BLACK,
+                        font_size=42,
+                    ),
+                ),
                 BL(
                     items=[
-                        "I: Translation",
-                        "II: Self-Organization",
+                        VGroup(Tex("I: Translation", color=BLACK, font_size=36)),
+                        VGroup(Tex("II: Self-Organization", color=BLACK, font_size=36)),
                     ]
                 ),
-                "A New Construction Paradigm",
+                VGroup(
+                    Tex(
+                        "A New Construction Paradigm",
+                        color=BLACK,
+                        font_size=42,
+                    ),
+                ),
                 BL(
                     items=[
-                        "III: Concurrent Optimization",
+                        VGroup(Tex("III: Concurrent Optimization", color=BLACK, font_size=36)),
                     ]
                 ),
-                "Conclusion",
+                VGroup(
+                    Tex(
+                        "Conclusion",
+                        color=BLACK,
+                        font_size=42,
+                    ),
+                ),
             ]
         ),
     )
@@ -56,7 +74,7 @@ class DefenseMotivation(SlideShow):
             slides=[
                 dnn_pros_and_cons(),
                 nfn_pros_and_cons(),
-                get_proposal(),
+                # get_proposal(),
                 defense_outline(),
             ],
             **kwargs

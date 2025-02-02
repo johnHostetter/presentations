@@ -1,4 +1,4 @@
-Task, $|U|$, $w_{u}$, $\eta$, $\overline{w}_{u}'$, GMT, CF, LN, $\tau$, $\theta$, $\epsilon$,$\mathbf{N}$, $+\mu$, Mean, $\sigma$, $m$
+Task, $|U|$, $w_{u}$, $\eta$, $\overline{w}_{u}$, GMT, CF, LN, $\tau$, $\theta$, $\epsilon$,$\mathbf{N}$, $+\mu$, Mean, $\sigma$, $m$
 Basic, 192, \texttt{Sum}, 8.5e-4, \texttt{entmax}, F, T, T, -, -, 0.36, -, 3, \textbf{86.56}, \textbf{9.24}, 20.3
 Rocket Basic, 256, \texttt{Sum}, 3.0e-4, \texttt{softmax}, F, T, F, -, -, 0.35, -, 5, 30.68, 29.5, 17.2
 Predict Position, 128, \texttt{Mean}, 8.8e-4, \texttt{softmax}, T, F, F, 0.86, 0.0, 0.22, 256, 5, 0.26, 0.52, 0.01

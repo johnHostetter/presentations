@@ -35,9 +35,7 @@ def get_proposal() -> SlideWithBlocks:
         title=None,
         content=DisadvantagesList(
             items=[
-                VGroup(
-                    Tex("Difficult \& expensive to design", color=BLACK)
-                ),
+                VGroup(Tex("Difficult \& expensive to design", color=BLACK)),
             ]
         ),
     )
@@ -47,8 +45,12 @@ def get_proposal() -> SlideWithBlocks:
             items=[
                 VGroup(
                     Tex("Data-driven construction", color=BLACK),
-                    bib.slide_short_cite("hostetter2023leveraging", abbrev=True, kwargs=kwargs),
-                    bib.slide_short_cite("hostetter2023latent", abbrev=True, kwargs=kwargs),
+                    bib.slide_short_cite(
+                        "hostetter2023leveraging", abbrev=True, kwargs=kwargs
+                    ),
+                    bib.slide_short_cite(
+                        "hostetter2023latent", abbrev=True, kwargs=kwargs
+                    ),
                 ).arrange(RIGHT, buff=0.1),
             ]
         ),
@@ -69,7 +71,9 @@ def get_proposal() -> SlideWithBlocks:
             items=[
                 VGroup(
                     Tex("Capable of adding new knowledge just in time", color=BLACK),
-                    bib.slide_short_cite("hostetter2023self", abbrev=True, kwargs=kwargs),
+                    bib.slide_short_cite(
+                        "hostetter2023self", abbrev=True, kwargs=kwargs
+                    ),
                 ),
             ]
         ),
@@ -79,7 +83,9 @@ def get_proposal() -> SlideWithBlocks:
         content=DisadvantagesList(
             items=[
                 VGroup(
-                    Tex("NFN research is often specific to a certain task", color=BLACK),
+                    Tex(
+                        "NFN research is often specific to a certain task", color=BLACK
+                    ),
                 )
             ]
         ),
@@ -92,9 +98,9 @@ def get_proposal() -> SlideWithBlocks:
                 VGroup(
                     Tex(
                         "A task-independent solution (i.e., gradient-based learning)",
-                        color=BLACK
+                        color=BLACK,
                     ),
-                    Tex("$[$This Dissertation$]$", **kwargs)
+                    Tex("$[$This Dissertation$]$", **kwargs),
                 ).arrange(RIGHT, buff=0.1),
             ]
         ),

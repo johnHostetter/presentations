@@ -5,6 +5,7 @@ from pyrr.rectangle import height
 from manim_beamer.bibtex import BibTexManager
 from manim_beamer.slides import SlideWithList, SlideWithBlocks
 from src.defense.amplify_firing_levels import AmplifyFiringLevels
+from src.defense.publications import Publications
 
 from src.manim_presentation.utils import get_project_root
 
@@ -60,11 +61,18 @@ class CurseOfDimensionality(AmplifyFiringLevels, MovingCameraScene):
 
     def construct(self):
         self.camera.frame.save_state()
-        citation: str = self.bibtex_manager.cite_entry(
-            self.bibtex_manager["cui_curse_2021"], num_of_words=8
-        )
+        # citation: str = self.bibtex_manager.cite_entry(
+        #     self.bibtex_manager["cui_curse_2021"], num_of_words=8
+        # )
 
-        citation_tex = Tex(citation, color=DARK_BLUE).to_edge(UP).scale(0.75)
+        # citation_tex = Tex(citation, color=DARK_BLUE).to_edge(UP).scale(0.75)
+        citation_tex: VGroup = (
+            Publications.convert_entry_to_long_pub(
+                self.bibtex_manager, self.bibtex_manager["Cui2021CurseOD"]
+            )
+            .scale(0.5)
+            .to_edge(UP)
+        )
         # group: VGroup = VGroup(citation_tex)
 
         self.play(Create(citation_tex))
@@ -343,9 +351,9 @@ class CurseOfDimensionality(AmplifyFiringLevels, MovingCameraScene):
                     ["Set of Universal Identifiers for Fuzzy Rules"],
                     ["Set of Condition Attributes"],
                     ["Index Set of Condition Attributes"],
-                    ["$i^{th}$ condition attribute"],
-                    ["$j^{th}$ fuzzy set (i.e., linguistic term)"],
-                    ["$u^{th}$ fuzzy rule"],
+                    ["$i^{th}$ Condition Attribute"],
+                    ["$j^{th}$ Fuzzy Set (i.e., Linguistic Term)"],
+                    ["$u^{th}$ Fuzzy Rule"],
                     ["Function to Retrieve Fuzzy Rule's Premises"],
                     ["Fuzzy Rule Consequent"],
                     ["Gaussian Center"],
@@ -443,7 +451,9 @@ class CurseOfDimensionality(AmplifyFiringLevels, MovingCameraScene):
             r"\sqrt{\frac{1}{|U|} "
             r"\sum_{u \in U} "
             r"(\mathcolorbox{blue}{w_{u}(\mathbf{x})} "
-            r"- \mathcolorbox{yellow}{\overline{\mu}})^2 + \text{1e-5}}",
+            r"- \mathcolorbox{yellow}{\overline{\mu}})^2 "
+            # r"+ \text{1e-5}"  # remove implementation detail - this is a common trick to avoid division by zero
+            r"}",
             color=BLACK,
             tex_template=myTemplate,  # IMPORTANT
         )

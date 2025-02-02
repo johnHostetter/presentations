@@ -105,13 +105,15 @@ class Flowchart(Slide, MovingCameraScene):
                     .move_to(occlusion_jpg)
                     .shift(1.7 * UP)
                 )  # used to cover up the plot's titles
+                self.add(rectangle)
                 self.play(
-                    FadeIn(occlusion_jpg, rectangle),
+                    FadeIn(occlusion_jpg),
                     self.camera.frame.animate.move_to(occlusion_jpg),
                 )
                 self.wait(1)
                 self.next_slide()
-                self.play(FadeOut(occlusion_jpg, rectangle))
+                self.play(FadeOut(occlusion_jpg))
+                self.remove(rectangle)
                 del occlusion_jpg, rectangle  # free up memory
 
                 self.shift_objects(direction=LEFT)  # bring back into view

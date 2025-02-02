@@ -1,6 +1,8 @@
 from manim import *
 
+from manim_beamer.bibtex import BibTexManager
 from manim_beamer.slides import SlideShow
+from src.manim_presentation.utils import get_project_root
 from src.oral_proposal.prototype.notation import get_notation
 
 config.background_color = WHITE
@@ -90,6 +92,14 @@ def constrained_gumbel_softmax() -> SlideWithBlocks:
     Returns:
         The slide with the issue, proposed solution, formula and remarks.
     """
+    bib = BibTexManager(path=get_project_root() / "oral_proposal" / "ref.bib")
+
+    cite_kwargs = {
+        "color": DARK_BLUE,
+        "opacity": 0.0,
+        "font_size": 32,
+    }
+
     alert_block_1 = AlertBlock(
         title="Issue 1",
         content=DisadvantagesList(
@@ -168,36 +178,90 @@ def constrained_gumbel_softmax() -> SlideWithBlocks:
     myTemplate.add_to_preamble(r"\usepackage{amsmath}")  # for piecewise formula
     myTemplate.add_to_preamble(r"\usepackage{mathrsfs}")
     myTemplate.add_to_preamble(r"\usepackage[cal=boondox]{mathalfa}")
+    myTemplate.add_to_preamble(r"\usepackage{soul, xcolor}")
+    myTemplate.add_to_preamble(
+        r"\newcommand{\mathcolorbox}[2]{\fcolorbox{#1!90!black}{#1!10!white}{$\displaystyle #2$}}"
+    )
 
     # original_constrained_gumbel_formula = MathTex(
-    #     r"\varphi(\tilde{\mathbf{I'}}) = \frac{"
-    #     r"\exp{(\texttt{BoundSigmoid}(\tilde{\mathbf{I'}}))} \odot \mathbf{M'}}"
+    #     r"\varphi(\tilde{\mathbf{I}}') = \frac{"
+    #     r"\exp{(\texttt{BoundSigmoid}(\tilde{\mathbf{I}}'))} \odot \mathbf{M}'}"
     #     r"{\sum_{j=1}^{\max_{i \in I_{\mathcal{C}}} ( | \mathcal{M}_{i} | )} "
-    #     r"\exp{(\texttt{BoundSigmoid}(\tilde{\mathbf{I'}}))} \odot \mathbf{M'}}",
+    #     r"\exp{(\texttt{BoundSigmoid}(\tilde{\mathbf{I}}'))} \odot \mathbf{M}'}",
     #     color=BLACK, tex_template=myTemplate
     # )
 
     constrained_gumbel_formula = MathTex(
-        r"\varphi(\tilde{\mathbf{I'}}) = \frac{"
-        r"\exp{(\tilde{\mathbf{I'}})} \odot \mathbf{M'}}"
+        r"\varphi(\tilde{\mathbf{I}}') = \frac{"
+        r"\exp{(\tilde{\mathbf{I}}')} \odot \mathbf{M}'}"
         r"{\sum_{j=1}^{\max_{i \in I_{\mathcal{C}}} ( | \mathcal{M}_{i} | )} "
-        r"\exp{(\tilde{\mathbf{I'}})} \odot \mathbf{M'}}",
+        r"\exp{(\tilde{\mathbf{I}}')} \odot \mathbf{M}'}",
         color=BLACK,
         tex_template=myTemplate,
     )
+    constrained_gumbel_formula = VGroup(
+        Tex("Constrained Gumbel-Softmax", color=BLACK, font_size=36),
+        Brace(constrained_gumbel_formula, UP, buff=0.1, color=BLACK),
+        constrained_gumbel_formula,
+    ).arrange(DOWN, buff=0.1)
+
+    constrained_gumbel_formula = VGroup(
+        constrained_gumbel_formula,
+        bib.slide_short_cite(
+            "jang2017categoricalreparameterizationgumbelsoftmax", kwargs=cite_kwargs
+        ),
+    ).arrange(RIGHT, buff=0.5)
+
     noise_formula = MathTex(
-        r"\tilde{\mathbf{I}'} = \frac{\tilde{\mathbf{I}} + \mathbf{N}}{\tau^2}",
+        r"\tilde{\mathbf{I}}' = \frac{\tilde{\mathbf{I}} + \mathbf{N}}{\tau^2}",
         color=BLACK,
     )
+
+    noise_formula = VGroup(
+        Tex("Gumbel Noise", color=BLACK, font_size=36),
+        Brace(noise_formula, UP, buff=0.1, color=BLACK),
+        noise_formula,
+    ).arrange(DOWN, buff=0.1)
+
+    noise_formula = VGroup(
+        noise_formula,
+        bib.slide_short_cite(
+            "jang2017categoricalreparameterizationgumbelsoftmax", kwargs=cite_kwargs
+        ),
+    ).arrange(RIGHT, buff=0.5)
+
     constrained_mask = MathTex(
-        r"\mathbf{M'} = (\mathbf{M} \odot \mathbf{S}) > \theta", color=BLACK
+        r"\mathbf{M}' = (\mathbf{M} \odot \mathbf{S}) > \theta", color=BLACK
     )
+
+    constrained_mask = VGroup(
+        Tex("Constrained Mask", color=BLACK, font_size=36),
+        Brace(constrained_mask, UP, buff=0.1, color=BLACK),
+        constrained_mask,
+    ).arrange(DOWN, buff=0.1)
+
     ste_formula = MathTex(
-        r"\mathbf{I} = \hat{\mathbf{I}'} "
-        r"- {{\varphi (\tilde{\mathbf{I}'})^{T}}_\texttt{detached}} "
-        r"+ {\varphi (\tilde{\mathbf{I}'})^{T}}",
+        r"\mathbf{I} = "
+        r"\big("
+        r"\varphi (\tilde{\mathbf{I}}')"
+        r" + {(\hat{\mathbf{I}}' - {\varphi (\tilde{\mathbf{I}}'))}_\texttt{detached}}"
+        r"\big)^{T}",
+        # r"\mathbf{I} = \hat{\mathbf{I}}' "
+        # r"- {{\varphi (\tilde{\mathbf{I}}')^{T}}_\texttt{detached}} "
+        # r"+ {\varphi (\tilde{\mathbf{I}}')^{T}}",
         color=BLACK,
     )
+    ste_trick_cite = bib.slide_short_cite(
+        "oord2018neuraldiscreterepresentationlearning"
+    )
+    ste_formula = VGroup(
+        Tex("Straight-Through Estimator", color=BLACK, font_size=36),
+        Brace(ste_formula, UP, buff=0.1, color=BLACK),
+        ste_formula,
+    ).arrange(DOWN, buff=0.1)
+    # ste_brace = Brace(ste_formula, UP, buff=0.1, color=BLACK)
+    # ste_labeled_brace = ste_brace.get_text("Straight-Through Estimator", buff=0.1, color=BLACK)
+    ste_formula = VGroup(ste_formula, ste_trick_cite).arrange(RIGHT, buff=0.5)
     # argmax_formula = MathTex(
     #     r"\hat{\mathbf{I}}_{i, u, j} = argmax_{j} \left( \varphi(\tilde{\mathbf{I}})_{i, u, j} \right)",
     #     color=BLACK,
@@ -213,6 +277,13 @@ def constrained_gumbel_softmax() -> SlideWithBlocks:
         color=BLACK,
         tex_template=myTemplate,
     )
+
+    argmax_formula = VGroup(
+        Tex("One-Hot Argmax", color=BLACK, font_size=36),
+        Brace(argmax_formula, UP, buff=0.1, color=BLACK),
+        argmax_formula,
+    ).arrange(DOWN, buff=0.1)
+
     return SlideWithBlocks(
         title="Constrained Gumbel-Softmax",
         subtitle=None,

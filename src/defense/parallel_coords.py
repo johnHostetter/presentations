@@ -168,13 +168,15 @@ class ParallelCoords(Slide, MovingCameraScene):
                 top_params = []
                 total_importance = 0
                 IMPORTANCE_THRESHOLD = 0.90
-                sorted_importance_results: List[Tuple[str, float]] = list(
-                    hyperparameter_importance_df.loc[evaluator_name].items()
-                )
+                sorted_importance_results: List[Tuple[str, float]] = sorted(
+                    list(hyperparameter_importance_df.loc[evaluator_name].items()),
+                    key=lambda x: x[1],
+                    reverse=True,
+                )  # sort by importance (1th element)
                 for param, importance in sorted_importance_results:
                     total_importance += importance
                     if (
-                        round(total_importance, ndigits=2) < IMPORTANCE_THRESHOLD
+                        round(total_importance, ndigits=2) <= IMPORTANCE_THRESHOLD
                     ):  # keep the top % of the importance
                         top_params.append(param)
                     else:
